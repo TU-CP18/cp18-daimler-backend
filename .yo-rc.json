@@ -1,0 +1,42 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.cpdaimler",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "5.5.0",
+    "applicationType": "monolith",
+    "baseName": "cpdaimler",
+    "packageName": "com.cpdaimler",
+    "packageFolder": "com/cpdaimler",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": false,
+    "websocket": "spring-websocket",
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "mysql",
+    "searchEngine": "elasticsearch",
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "NzE4NmVjNjdkOWUwYjVmNmQ3NmIyMDNkYjhjNWIzZWJhNzhhZGEwZGU0NWU0ZjExMDU2ODVmOGYxNDI4OTYyZmUzYjhmNmMwNDZlOWFlMjYyM2M1NjQ4NjVlM2Y5ZmZjNzBlZDFmYzE0ZGUxNjFhYmUzNjAyM2VmYzE4NzAxZTk=",
+    "clientFramework": "angularX",
+    "useSass": false,
+    "clientPackageManager": "npm",
+    "testFrameworks": [
+      "gatling",
+      "cucumber",
+      "protractor"
+    ],
+    "jhiPrefix": "jhi",
+    "enableTranslation": true,
+    "nativeLanguage": "en",
+    "languages": [
+      "en",
+      "de"
+    ]
+  }
+}
