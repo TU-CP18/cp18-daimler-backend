@@ -73,6 +73,7 @@ class CarGatlingTest extends Simulation {
             .body(StringBody("""{
                 "id":null
                 , "model":"SAMPLE_TEXT"
+                , "status":"DRIVING_EMPTY"
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_car_url"))).exitHereIfFailed

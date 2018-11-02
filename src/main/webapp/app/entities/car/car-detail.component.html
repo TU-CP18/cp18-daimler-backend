@@ -9,6 +9,10 @@
                 <dd>
                     <span>{{car.model}}</span>
                 </dd>
+                <dt><span jhiTranslate="cpdaimlerApp.car.status">Status</span></dt>
+                <dd>
+                    <span jhiTranslate="{{'cpdaimlerApp.CARSTATUS.' + car.status}}">{{car.status}}</span>
+                </dd>
                 <dt><span jhiTranslate="cpdaimlerApp.car.licnece">Licnece</span></dt>
                 <dd>
                     <div *ngIf="car.licnece">

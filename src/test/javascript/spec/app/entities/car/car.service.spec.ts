@@ -5,7 +5,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { of } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 import { CarService } from 'app/entities/car/car.service';
-import { ICar, Car } from 'app/shared/model/car.model';
+import { ICar, Car, CARSTATUS } from 'app/shared/model/car.model';
 
 describe('Service Tests', () => {
     describe('Car Service', () => {
@@ -21,7 +21,7 @@ describe('Service Tests', () => {
             service = injector.get(CarService);
             httpMock = injector.get(HttpTestingController);
 
-            elemDefault = new Car(0, 'AAAAAAA');
+            elemDefault = new Car(0, 'AAAAAAA', CARSTATUS.DRIVING_EMPTY);
         });
 
         describe('Service methods', async () => {
@@ -55,7 +55,8 @@ describe('Service Tests', () => {
             it('should update a Car', async () => {
                 const returnedFromService = Object.assign(
                     {
-                        model: 'BBBBBB'
+                        model: 'BBBBBB',
+                        status: 'BBBBBB'
                     },
                     elemDefault
                 );
@@ -72,7 +73,8 @@ describe('Service Tests', () => {
             it('should return a list of Car', async () => {
                 const returnedFromService = Object.assign(
                     {
-                        model: 'BBBBBB'
+                        model: 'BBBBBB',
+                        status: 'BBBBBB'
                     },
                     elemDefault
                 );

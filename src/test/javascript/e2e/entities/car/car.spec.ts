@@ -38,7 +38,11 @@ describe('Car e2e test', () => {
         const nbButtonsBeforeCreate = await carComponentsPage.countDeleteButtons();
 
         await carComponentsPage.clickOnCreateButton();
-        await promise.all([carUpdatePage.setModelInput('model'), carUpdatePage.licneceSelectLastOption()]);
+        await promise.all([
+            carUpdatePage.setModelInput('model'),
+            carUpdatePage.statusSelectLastOption(),
+            carUpdatePage.licneceSelectLastOption()
+        ]);
         expect(await carUpdatePage.getModelInput()).to.eq('model');
         await carUpdatePage.save();
         expect(await carUpdatePage.getSaveButton().isPresent()).to.be.false;

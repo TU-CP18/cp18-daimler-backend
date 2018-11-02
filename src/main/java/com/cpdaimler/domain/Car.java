@@ -8,6 +8,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.cpdaimler.domain.enumeration.CARSTATUS;
+
 /**
  * A Car.
  */
@@ -24,6 +26,10 @@ public class Car implements Serializable {
 
     @Column(name = "model")
     private String model;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private CARSTATUS status;
 
     @ManyToOne
     @JsonIgnoreProperties("")
@@ -49,6 +55,19 @@ public class Car implements Serializable {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public CARSTATUS getStatus() {
+        return status;
+    }
+
+    public Car status(CARSTATUS status) {
+        this.status = status;
+        return this;
+    }
+
+    public void setStatus(CARSTATUS status) {
+        this.status = status;
     }
 
     public CarLicence getLicnece() {
@@ -90,6 +109,7 @@ public class Car implements Serializable {
         return "Car{" +
             "id=" + getId() +
             ", model='" + getModel() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }

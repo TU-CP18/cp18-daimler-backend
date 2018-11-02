@@ -18,6 +18,7 @@
                 "title": "Car"
             },
             "model": "Model",
+            "status": "Status",
             "licnece": "Licnece"
         }
     }

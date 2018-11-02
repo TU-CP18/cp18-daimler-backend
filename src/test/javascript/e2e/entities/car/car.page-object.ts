@@ -27,6 +27,7 @@ export class CarUpdatePage {
     saveButton = element(by.id('save-entity'));
     cancelButton = element(by.id('cancel-save'));
     modelInput = element(by.id('field_model'));
+    statusSelect = element(by.id('field_status'));
     licneceSelect = element(by.id('field_licnece'));
 
     async getPageTitle() {
@@ -39,6 +40,21 @@ export class CarUpdatePage {
 
     async getModelInput() {
         return this.modelInput.getAttribute('value');
+    }
+
+    async setStatusSelect(status) {
+        await this.statusSelect.sendKeys(status);
+    }
+
+    async getStatusSelect() {
+        return this.statusSelect.element(by.css('option:checked')).getText();
+    }
+
+    async statusSelectLastOption() {
+        await this.statusSelect
+            .all(by.tagName('option'))
+            .last()
+            .click();
     }
 
     async licneceSelectLastOption() {

@@ -36,6 +36,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.cpdaimler.domain.enumeration.CARSTATUS;
 /**
  * Test class for the CarResource REST controller.
  *
@@ -47,6 +48,9 @@ public class CarResourceIntTest {
 
     private static final String DEFAULT_MODEL = "AAAAAAAAAA";
     private static final String UPDATED_MODEL = "BBBBBBBBBB";
+
+    private static final CARSTATUS DEFAULT_STATUS = CARSTATUS.DRIVING_EMPTY;
+    private static final CARSTATUS UPDATED_STATUS = CARSTATUS.DRIVING_FULL;
 
     @Autowired
     private CarRepository carRepository;
@@ -94,7 +98,8 @@ public class CarResourceIntTest {
      */
     public static Car createEntity(EntityManager em) {
         Car car = new Car()
-            .model(DEFAULT_MODEL);
+            .model(DEFAULT_MODEL)
+            .status(DEFAULT_STATUS);
         return car;
     }
 
@@ -119,6 +124,7 @@ public class CarResourceIntTest {
         assertThat(carList).hasSize(databaseSizeBeforeCreate + 1);
         Car testCar = carList.get(carList.size() - 1);
         assertThat(testCar.getModel()).isEqualTo(DEFAULT_MODEL);
+        assertThat(testCar.getStatus()).isEqualTo(DEFAULT_STATUS);
 
         // Validate the Car in Elasticsearch
         verify(mockCarSearchRepository, times(1)).save(testCar);
@@ -157,7 +163,8 @@ public class CarResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(car.getId().intValue())))
-            .andExpect(jsonPath("$.[*].model").value(hasItem(DEFAULT_MODEL.toString())));
+            .andExpect(jsonPath("$.[*].model").value(hasItem(DEFAULT_MODEL.toString())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
     }
     
     @Test
@@ -171,7 +178,8 @@ public class CarResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(car.getId().intValue()))
-            .andExpect(jsonPath("$.model").value(DEFAULT_MODEL.toString()));
+            .andExpect(jsonPath("$.model").value(DEFAULT_MODEL.toString()))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()));
     }
 
     @Test
@@ -195,7 +203,8 @@ public class CarResourceIntTest {
         // Disconnect from session so that the updates on updatedCar are not directly saved in db
         em.detach(updatedCar);
         updatedCar
-            .model(UPDATED_MODEL);
+            .model(UPDATED_MODEL)
+            .status(UPDATED_STATUS);
 
         restCarMockMvc.perform(put("/api/cars")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -207,6 +216,7 @@ public class CarResourceIntTest {
         assertThat(carList).hasSize(databaseSizeBeforeUpdate);
         Car testCar = carList.get(carList.size() - 1);
         assertThat(testCar.getModel()).isEqualTo(UPDATED_MODEL);
+        assertThat(testCar.getStatus()).isEqualTo(UPDATED_STATUS);
 
         // Validate the Car in Elasticsearch
         verify(mockCarSearchRepository, times(1)).save(testCar);
@@ -266,7 +276,8 @@ public class CarResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(car.getId().intValue())))
-            .andExpect(jsonPath("$.[*].model").value(hasItem(DEFAULT_MODEL.toString())));
+            .andExpect(jsonPath("$.[*].model").value(hasItem(DEFAULT_MODEL.toString())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
     }
 
     @Test

@@ -4,6 +4,11 @@
         {
             "fieldName": "model",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "CARSTATUS",
+            "fieldValues": "DRIVING_EMPTY,DRIVING_FULL,MAINTENANCE,AVAILABLE"
         }
     ],
     "relationships": [
