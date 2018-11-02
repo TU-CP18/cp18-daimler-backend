@@ -1,0 +1,24 @@
+
+{
+    "cpdaimlerApp": {
+        "car" : {
+            "home": {
+                "title": "Cars",
+                "createLabel": "Car erstellen",
+                "createOrEditLabel": "Car erstellen oder bearbeiten",
+                "search": "Suche nach Car"
+            },
+            "created": "Car erstellt mit ID {{ param }}",
+            "updated": "Car aktualisiert mit ID {{ param }}",
+            "deleted": "Car gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Car {{ id }} wirklich dauerhaft gelöscht werden?"
+            },
+            "detail": {
+                "title": "Car"
+            },
+            "model": "Model",
+            "licnece": "Licnece"
+        }
+    }
+}

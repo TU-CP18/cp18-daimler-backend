@@ -1,0 +1,25 @@
+
+{
+    "cpdaimlerApp": {
+        "safetyDriver" : {
+            "home": {
+                "title": "Safety Drivers",
+                "createLabel": "Safety Driver erstellen",
+                "createOrEditLabel": "Safety Driver erstellen oder bearbeiten",
+                "search": "Suche nach Safety Driver"
+            },
+            "created": "Safety Driver erstellt mit ID {{ param }}",
+            "updated": "Safety Driver aktualisiert mit ID {{ param }}",
+            "deleted": "Safety Driver gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Safety Driver {{ id }} wirklich dauerhaft gelöscht werden?"
+            },
+            "detail": {
+                "title": "Safety Driver"
+            },
+            "login": "Login",
+            "user": "User",
+            "licences": "Licences"
+        }
+    }
+}

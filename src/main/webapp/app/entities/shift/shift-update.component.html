@@ -1,0 +1,68 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-shift-heading" jhiTranslate="cpdaimlerApp.shift.home.createOrEditLabel">Create or edit a Shift</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!shift.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="shift.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.start" for="field_start">Start</label>
+                    <input type="number" class="form-control" name="start" id="field_start"
+                        [(ngModel)]="shift.start" required/>
+                    <div [hidden]="!(editForm.controls.start?.dirty && editForm.controls.start?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.start?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.start?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.end" for="field_end">End</label>
+                    <input type="number" class="form-control" name="end" id="field_end"
+                        [(ngModel)]="shift.end" required/>
+                    <div [hidden]="!(editForm.controls.end?.dirty && editForm.controls.end?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.end?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.end?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.car" for="field_car">Car</label>
+                    <select class="form-control" id="field_car" name="car" [(ngModel)]="shift.car" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="carOption.id === shift.car?.id ? shift.car : carOption" *ngFor="let carOption of cars; trackBy: trackCarById">{{carOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.safetyDriver" for="field_safetyDriver">Safety Driver</label>
+                    <select class="form-control" id="field_safetyDriver" name="safetyDriver" [(ngModel)]="shift.safetyDriver" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="safetyDriverOption.id === shift.safetyDriver?.id ? shift.safetyDriver : safetyDriverOption" *ngFor="let safetyDriverOption of safetydrivers; trackBy: trackSafetyDriverById">{{safetyDriverOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

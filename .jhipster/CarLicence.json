@@ -1,0 +1,20 @@
+{
+    "name": "CarLicence",
+    "fields": [
+        {
+            "fieldName": "carLicence",
+            "fieldType": "LICENCE",
+            "fieldValues": "A,B,B96,BE,C1,C1E,C,CE,D1,D1E,D,DE"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20181102120757",
+    "entityTableName": "car_licence",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

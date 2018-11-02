@@ -1,0 +1,25 @@
+
+{
+    "cpdaimlerApp": {
+        "safetyDriver" : {
+            "home": {
+                "title": "Safety Drivers",
+                "createLabel": "Create a new Safety Driver",
+                "createOrEditLabel": "Create or edit a Safety Driver",
+                "search": "Search for Safety Driver"
+            },
+            "created": "A new Safety Driver is created with identifier {{ param }}",
+            "updated": "A Safety Driver is updated with identifier {{ param }}",
+            "deleted": "A Safety Driver is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Safety Driver {{ id }}?"
+            },
+            "detail": {
+                "title": "Safety Driver"
+            },
+            "login": "Login",
+            "user": "User",
+            "licences": "Licences"
+        }
+    }
+}

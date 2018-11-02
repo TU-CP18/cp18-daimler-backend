@@ -1,0 +1,26 @@
+{
+    "name": "Car",
+    "fields": [
+        {
+            "fieldName": "model",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "licnece",
+            "otherEntityName": "carLicence",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20181102120754",
+    "entityTableName": "car",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

@@ -1,0 +1,23 @@
+
+{
+    "cpdaimlerApp": {
+        "carLicence" : {
+            "home": {
+                "title": "Car Licences",
+                "createLabel": "Car Licence erstellen",
+                "createOrEditLabel": "Car Licence erstellen oder bearbeiten",
+                "search": "Suche nach Car Licence"
+            },
+            "created": "Car Licence erstellt mit ID {{ param }}",
+            "updated": "Car Licence aktualisiert mit ID {{ param }}",
+            "deleted": "Car Licence gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Car Licence {{ id }} wirklich dauerhaft gelöscht werden?"
+            },
+            "detail": {
+                "title": "Car Licence"
+            },
+            "carLicence": "Car Licence"
+        }
+    }
+}

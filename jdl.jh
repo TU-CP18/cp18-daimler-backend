@@ -1,0 +1,38 @@
+
+entity Car {
+	model String,
+    
+}
+
+entity SafetyDriver {
+	login String required
+}
+
+entity Shift {
+	start Long required,
+    end Long required,
+    
+}
+
+entity CarLicence {
+	carLicence LICENCE
+}
+
+enum LICENCE {
+	A, B, B96, BE, C1, C1E, C, CE, D1, D1E, D, DE
+}
+
+relationship OneToOne {
+	SafetyDriver{user} to User
+}
+
+relationship ManyToOne {
+	Shift{car} to Car
+	Shift{safetyDriver} to SafetyDriver
+    Car{licnece} to CarLicence,
+}
+
+relationship ManyToMany {
+	SafetyDriver {licences} to CarLicence
+}
+paginate * with pagination

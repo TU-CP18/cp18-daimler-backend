@@ -1,0 +1,42 @@
+{
+    "name": "Shift",
+    "fields": [
+        {
+            "fieldName": "start",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "end",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "car",
+            "otherEntityName": "car",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "safetyDriver",
+            "otherEntityName": "safetyDriver",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20181102120756",
+    "entityTableName": "shift",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

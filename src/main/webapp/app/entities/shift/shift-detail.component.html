@@ -1,0 +1,43 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="shift">
+            <h2><span jhiTranslate="cpdaimlerApp.shift.detail.title">Shift</span> {{shift.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="cpdaimlerApp.shift.start">Start</span></dt>
+                <dd>
+                    <span>{{shift.start}}</span>
+                </dd>
+                <dt><span jhiTranslate="cpdaimlerApp.shift.end">End</span></dt>
+                <dd>
+                    <span>{{shift.end}}</span>
+                </dd>
+                <dt><span jhiTranslate="cpdaimlerApp.shift.car">Car</span></dt>
+                <dd>
+                    <div *ngIf="shift.car">
+                        <a [routerLink]="['/car', shift.car?.id, 'view']">{{shift.car?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="cpdaimlerApp.shift.safetyDriver">Safety Driver</span></dt>
+                <dd>
+                    <div *ngIf="shift.safetyDriver">
+                        <a [routerLink]="['/safety-driver', shift.safetyDriver?.id, 'view']">{{shift.safetyDriver?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/shift', shift.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
