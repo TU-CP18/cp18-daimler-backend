@@ -32,7 +32,7 @@ relationship OneToOne {
 relationship ManyToOne {
 	Shift{car} to Car
 	Shift{safetyDriver} to SafetyDriver
-    Car{licnece} to CarLicence,
+    Car{licence} to CarLicence,
 }
 
 relationship ManyToMany {

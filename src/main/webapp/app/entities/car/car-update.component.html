@@ -25,10 +25,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.car.licnece" for="field_licnece">Licnece</label>
-                    <select class="form-control" id="field_licnece" name="licnece" [(ngModel)]="car.licnece" >
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.car.licence" for="field_licence">Licence</label>
+                    <select class="form-control" id="field_licence" name="licence" [(ngModel)]="car.licence" >
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="carLicenceOption.id === car.licnece?.id ? car.licnece : carLicenceOption" *ngFor="let carLicenceOption of carlicences; trackBy: trackCarLicenceById">{{carLicenceOption.id}}</option>
+                        <option [ngValue]="carLicenceOption.id === car.licence?.id ? car.licence : carLicenceOption" *ngFor="let carLicenceOption of carlicences; trackBy: trackCarLicenceById">{{carLicenceOption.id}}</option>
                     </select>
                 </div>
             </div>

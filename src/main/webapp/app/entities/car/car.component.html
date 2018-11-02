@@ -32,7 +32,7 @@
             <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="model"><span jhiTranslate="cpdaimlerApp.car.model">Model</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="status"><span jhiTranslate="cpdaimlerApp.car.status">Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="licnece.id"><span jhiTranslate="cpdaimlerApp.car.licnece">Licnece</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="licence.id"><span jhiTranslate="cpdaimlerApp.car.licence">Licence</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -42,8 +42,8 @@
                 <td>{{car.model}}</td>
                 <td jhiTranslate="{{'cpdaimlerApp.CARSTATUS.' + car.status}}">{{car.status}}</td>
                 <td>
-                    <div *ngIf="car.licnece">
-                        <a [routerLink]="['../car-licence', car.licnece?.id, 'view' ]" >{{car.licnece?.id}}</a>
+                    <div *ngIf="car.licence">
+                        <a [routerLink]="['../car-licence', car.licence?.id, 'view' ]" >{{car.licence?.id}}</a>
                     </div>
                 </td>
                 <td class="text-right">

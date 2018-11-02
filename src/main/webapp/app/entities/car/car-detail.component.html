@@ -13,10 +13,10 @@
                 <dd>
                     <span jhiTranslate="{{'cpdaimlerApp.CARSTATUS.' + car.status}}">{{car.status}}</span>
                 </dd>
-                <dt><span jhiTranslate="cpdaimlerApp.car.licnece">Licnece</span></dt>
+                <dt><span jhiTranslate="cpdaimlerApp.car.licence">Licence</span></dt>
                 <dd>
-                    <div *ngIf="car.licnece">
-                        <a [routerLink]="['/car-licence', car.licnece?.id, 'view']">{{car.licnece?.id}}</a>
+                    <div *ngIf="car.licence">
+                        <a [routerLink]="['/car-licence', car.licence?.id, 'view']">{{car.licence?.id}}</a>
                     </div>
                 </dd>
             </dl>

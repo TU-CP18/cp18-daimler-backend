@@ -41,7 +41,7 @@ describe('Car e2e test', () => {
         await promise.all([
             carUpdatePage.setModelInput('model'),
             carUpdatePage.statusSelectLastOption(),
-            carUpdatePage.licneceSelectLastOption()
+            carUpdatePage.licenceSelectLastOption()
         ]);
         expect(await carUpdatePage.getModelInput()).to.eq('model');
         await carUpdatePage.save();

@@ -28,7 +28,7 @@ export class CarUpdatePage {
     cancelButton = element(by.id('cancel-save'));
     modelInput = element(by.id('field_model'));
     statusSelect = element(by.id('field_status'));
-    licneceSelect = element(by.id('field_licnece'));
+    licenceSelect = element(by.id('field_licence'));
 
     async getPageTitle() {
         return this.pageTitle.getAttribute('jhiTranslate');
@@ -57,23 +57,23 @@ export class CarUpdatePage {
             .click();
     }
 
-    async licneceSelectLastOption() {
-        await this.licneceSelect
+    async licenceSelectLastOption() {
+        await this.licenceSelect
             .all(by.tagName('option'))
             .last()
             .click();
     }
 
-    async licneceSelectOption(option) {
-        await this.licneceSelect.sendKeys(option);
+    async licenceSelectOption(option) {
+        await this.licenceSelect.sendKeys(option);
     }
 
-    getLicneceSelect(): ElementFinder {
-        return this.licneceSelect;
+    getLicenceSelect(): ElementFinder {
+        return this.licenceSelect;
     }
 
-    async getLicneceSelectedOption() {
-        return this.licneceSelect.element(by.css('option:checked')).getText();
+    async getLicenceSelectedOption() {
+        return this.licenceSelect.element(by.css('option:checked')).getText();
     }
 
     async save() {

@@ -33,7 +33,7 @@ public class Car implements Serializable {
 
     @ManyToOne
     @JsonIgnoreProperties("")
-    private CarLicence licnece;
+    private CarLicence licence;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -70,17 +70,17 @@ public class Car implements Serializable {
         this.status = status;
     }
 
-    public CarLicence getLicnece() {
-        return licnece;
+    public CarLicence getLicence() {
+        return licence;
     }
 
-    public Car licnece(CarLicence carLicence) {
-        this.licnece = carLicence;
+    public Car licence(CarLicence carLicence) {
+        this.licence = carLicence;
         return this;
     }
 
-    public void setLicnece(CarLicence carLicence) {
-        this.licnece = carLicence;
+    public void setLicence(CarLicence carLicence) {
+        this.licence = carLicence;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

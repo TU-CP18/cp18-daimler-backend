@@ -14,7 +14,7 @@
     "relationships": [
         {
             "relationshipType": "many-to-one",
-            "relationshipName": "licnece",
+            "relationshipName": "licence",
             "otherEntityName": "carLicence",
             "otherEntityField": "id"
         }

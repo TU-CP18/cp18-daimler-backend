@@ -11,9 +11,9 @@ export interface ICar {
     id?: number;
     model?: string;
     status?: CARSTATUS;
-    licnece?: ICarLicence;
+    licence?: ICarLicence;
 }
 
 export class Car implements ICar {
-    constructor(public id?: number, public model?: string, public status?: CARSTATUS, public licnece?: ICarLicence) {}
+    constructor(public id?: number, public model?: string, public status?: CARSTATUS, public licence?: ICarLicence) {}
 }

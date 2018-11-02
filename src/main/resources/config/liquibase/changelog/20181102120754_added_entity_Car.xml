@@ -30,7 +30,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="licnece_id" type="bigint">
+            <column name="licence_id" type="bigint">
                 <constraints nullable="true" />
             </column>
 
