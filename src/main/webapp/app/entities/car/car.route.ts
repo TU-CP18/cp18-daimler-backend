@@ -34,7 +34,7 @@ export const carRoute: Routes = [
             pagingParams: JhiResolvePagingParams
         },
         data: {
-            authorities: ['ROLE_FLEETMANAGER'],
+            authorities: ['ROLE_USER'],
             defaultSort: 'id,asc',
             pageTitle: 'cpdaimlerApp.car.home.title'
         },
@@ -47,7 +47,7 @@ export const carRoute: Routes = [
             car: CarResolve
         },
         data: {
-            authorities: ['ROLE_FLEETMANAGER'],
+            authorities: ['ROLE_USER'],
             pageTitle: 'cpdaimlerApp.car.home.title'
         },
         canActivate: [UserRouteAccessService]
@@ -59,7 +59,7 @@ export const carRoute: Routes = [
             car: CarResolve
         },
         data: {
-            authorities: ['ROLE_FLEETMANAGER'],
+            authorities: ['ROLE_USER'],
             pageTitle: 'cpdaimlerApp.car.home.title'
         },
         canActivate: [UserRouteAccessService]
@@ -71,7 +71,7 @@ export const carRoute: Routes = [
             car: CarResolve
         },
         data: {
-            authorities: ['ROLE_FLEETMANAGER'],
+            authorities: ['ROLE_USER'],
             pageTitle: 'cpdaimlerApp.car.home.title'
         },
         canActivate: [UserRouteAccessService]
@@ -86,7 +86,7 @@ export const carPopupRoute: Routes = [
             car: CarResolve
         },
         data: {
-            authorities: ['ROLE_FLEETMANAGER'],
+            authorities: ['ROLE_USER'],
             pageTitle: 'cpdaimlerApp.car.home.title'
         },
         canActivate: [UserRouteAccessService],

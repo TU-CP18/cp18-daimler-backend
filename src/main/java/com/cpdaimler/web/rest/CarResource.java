@@ -2,8 +2,7 @@ package com.cpdaimler.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.cpdaimler.domain.Car;
-import com.cpdaimler.repository.CarRepository;
-import com.cpdaimler.repository.search.CarSearchRepository;
+import com.cpdaimler.service.CarService;
 import com.cpdaimler.web.rest.errors.BadRequestAlertException;
 import com.cpdaimler.web.rest.util.HeaderUtil;
 import com.cpdaimler.web.rest.util.PaginationUtil;
@@ -22,7 +21,6 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -38,13 +36,10 @@ public class CarResource {
 
     private static final String ENTITY_NAME = "car";
 
-    private CarRepository carRepository;
+    private CarService carService;
 
-    private CarSearchRepository carSearchRepository;
-
-    public CarResource(CarRepository carRepository, CarSearchRepository carSearchRepository) {
-        this.carRepository = carRepository;
-        this.carSearchRepository = carSearchRepository;
+    public CarResource(CarService carService) {
+        this.carService = carService;
     }
 
     /**
@@ -61,8 +56,7 @@ public class CarResource {
         if (car.getId() != null) {
             throw new BadRequestAlertException("A new car cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Car result = carRepository.save(car);
-        carSearchRepository.save(result);
+        Car result = carService.save(car);
         return ResponseEntity.created(new URI("/api/cars/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -84,8 +78,7 @@ public class CarResource {
         if (car.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Car result = carRepository.save(car);
-        carSearchRepository.save(result);
+        Car result = carService.save(car);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, car.getId().toString()))
             .body(result);
@@ -101,7 +94,7 @@ public class CarResource {
     @Timed
     public ResponseEntity<List<Car>> getAllCars(Pageable pageable) {
         log.debug("REST request to get a page of Cars");
-        Page<Car> page = carRepository.findAll(pageable);
+        Page<Car> page = carService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/cars");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -116,7 +109,7 @@ public class CarResource {
     @Timed
     public ResponseEntity<Car> getCar(@PathVariable Long id) {
         log.debug("REST request to get Car : {}", id);
-        Optional<Car> car = carRepository.findById(id);
+        Optional<Car> car = carService.findOne(id);
         return ResponseUtil.wrapOrNotFound(car);
     }
 
@@ -130,9 +123,7 @@ public class CarResource {
     @Timed
     public ResponseEntity<Void> deleteCar(@PathVariable Long id) {
         log.debug("REST request to delete Car : {}", id);
-
-        carRepository.deleteById(id);
-        carSearchRepository.deleteById(id);
+        carService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
@@ -148,7 +139,7 @@ public class CarResource {
     @Timed
     public ResponseEntity<List<Car>> searchCars(@RequestParam String query, Pageable pageable) {
         log.debug("REST request to search for a page of Cars for query {}", query);
-        Page<Car> page = carSearchRepository.search(queryStringQuery(query), pageable);
+        Page<Car> page = carService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/cars");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

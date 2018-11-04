@@ -5,6 +5,7 @@ import com.cpdaimler.CpdaimlerApp;
 import com.cpdaimler.domain.Shift;
 import com.cpdaimler.repository.ShiftRepository;
 import com.cpdaimler.repository.search.ShiftSearchRepository;
+import com.cpdaimler.service.ShiftService;
 import com.cpdaimler.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -53,6 +54,9 @@ public class ShiftResourceIntTest {
 
     @Autowired
     private ShiftRepository shiftRepository;
+    
+    @Autowired
+    private ShiftService shiftService;
 
     /**
      * This repository is mocked in the com.cpdaimler.repository.search test package.
@@ -81,7 +85,7 @@ public class ShiftResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final ShiftResource shiftResource = new ShiftResource(shiftRepository, mockShiftSearchRepository);
+        final ShiftResource shiftResource = new ShiftResource(shiftService);
         this.restShiftMockMvc = MockMvcBuilders.standaloneSetup(shiftResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -229,7 +233,9 @@ public class ShiftResourceIntTest {
     @Transactional
     public void updateShift() throws Exception {
         // Initialize the database
-        shiftRepository.saveAndFlush(shift);
+        shiftService.save(shift);
+        // As the test used the service layer, reset the Elasticsearch mock repository
+        reset(mockShiftSearchRepository);
 
         int databaseSizeBeforeUpdate = shiftRepository.findAll().size();
 
@@ -282,7 +288,7 @@ public class ShiftResourceIntTest {
     @Transactional
     public void deleteShift() throws Exception {
         // Initialize the database
-        shiftRepository.saveAndFlush(shift);
+        shiftService.save(shift);
 
         int databaseSizeBeforeDelete = shiftRepository.findAll().size();
 
@@ -303,7 +309,7 @@ public class ShiftResourceIntTest {
     @Transactional
     public void searchShift() throws Exception {
         // Initialize the database
-        shiftRepository.saveAndFlush(shift);
+        shiftService.save(shift);
         when(mockShiftSearchRepository.search(queryStringQuery("id:" + shift.getId()), PageRequest.of(0, 20)))
             .thenReturn(new PageImpl<>(Collections.singletonList(shift), PageRequest.of(0, 1), 1));
         // Search the shift

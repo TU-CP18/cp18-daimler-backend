@@ -34,7 +34,7 @@ export const carLicenceRoute: Routes = [
             pagingParams: JhiResolvePagingParams
         },
         data: {
-            authorities: ['ROLE_FLEETMANAGER'],
+            authorities: ['ROLE_USER'],
             defaultSort: 'id,asc',
             pageTitle: 'cpdaimlerApp.carLicence.home.title'
         },
@@ -47,7 +47,7 @@ export const carLicenceRoute: Routes = [
             carLicence: CarLicenceResolve
         },
         data: {
-            authorities: ['ROLE_FLEETMANAGER'],
+            authorities: ['ROLE_USER'],
             pageTitle: 'cpdaimlerApp.carLicence.home.title'
         },
         canActivate: [UserRouteAccessService]
@@ -59,7 +59,7 @@ export const carLicenceRoute: Routes = [
             carLicence: CarLicenceResolve
         },
         data: {
-            authorities: ['ROLE_FLEETMANAGER'],
+            authorities: ['ROLE_USER'],
             pageTitle: 'cpdaimlerApp.carLicence.home.title'
         },
         canActivate: [UserRouteAccessService]
@@ -71,7 +71,7 @@ export const carLicenceRoute: Routes = [
             carLicence: CarLicenceResolve
         },
         data: {
-            authorities: ['ROLE_FLEETMANAGER'],
+            authorities: ['ROLE_USER'],
             pageTitle: 'cpdaimlerApp.carLicence.home.title'
         },
         canActivate: [UserRouteAccessService]
@@ -86,7 +86,7 @@ export const carLicencePopupRoute: Routes = [
             carLicence: CarLicenceResolve
         },
         data: {
-            authorities: ['ROLE_FLEETMANAGER'],
+            authorities: ['ROLE_USER'],
             pageTitle: 'cpdaimlerApp.carLicence.home.title'
         },
         canActivate: [UserRouteAccessService],

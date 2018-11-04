@@ -2,8 +2,7 @@ package com.cpdaimler.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.cpdaimler.domain.CarLicence;
-import com.cpdaimler.repository.CarLicenceRepository;
-import com.cpdaimler.repository.search.CarLicenceSearchRepository;
+import com.cpdaimler.service.CarLicenceService;
 import com.cpdaimler.web.rest.errors.BadRequestAlertException;
 import com.cpdaimler.web.rest.util.HeaderUtil;
 import com.cpdaimler.web.rest.util.PaginationUtil;
@@ -22,7 +21,6 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -38,13 +36,10 @@ public class CarLicenceResource {
 
     private static final String ENTITY_NAME = "carLicence";
 
-    private CarLicenceRepository carLicenceRepository;
+    private CarLicenceService carLicenceService;
 
-    private CarLicenceSearchRepository carLicenceSearchRepository;
-
-    public CarLicenceResource(CarLicenceRepository carLicenceRepository, CarLicenceSearchRepository carLicenceSearchRepository) {
-        this.carLicenceRepository = carLicenceRepository;
-        this.carLicenceSearchRepository = carLicenceSearchRepository;
+    public CarLicenceResource(CarLicenceService carLicenceService) {
+        this.carLicenceService = carLicenceService;
     }
 
     /**
@@ -61,8 +56,7 @@ public class CarLicenceResource {
         if (carLicence.getId() != null) {
             throw new BadRequestAlertException("A new carLicence cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        CarLicence result = carLicenceRepository.save(carLicence);
-        carLicenceSearchRepository.save(result);
+        CarLicence result = carLicenceService.save(carLicence);
         return ResponseEntity.created(new URI("/api/car-licences/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -84,8 +78,7 @@ public class CarLicenceResource {
         if (carLicence.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        CarLicence result = carLicenceRepository.save(carLicence);
-        carLicenceSearchRepository.save(result);
+        CarLicence result = carLicenceService.save(carLicence);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, carLicence.getId().toString()))
             .body(result);
@@ -101,7 +94,7 @@ public class CarLicenceResource {
     @Timed
     public ResponseEntity<List<CarLicence>> getAllCarLicences(Pageable pageable) {
         log.debug("REST request to get a page of CarLicences");
-        Page<CarLicence> page = carLicenceRepository.findAll(pageable);
+        Page<CarLicence> page = carLicenceService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/car-licences");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -116,7 +109,7 @@ public class CarLicenceResource {
     @Timed
     public ResponseEntity<CarLicence> getCarLicence(@PathVariable Long id) {
         log.debug("REST request to get CarLicence : {}", id);
-        Optional<CarLicence> carLicence = carLicenceRepository.findById(id);
+        Optional<CarLicence> carLicence = carLicenceService.findOne(id);
         return ResponseUtil.wrapOrNotFound(carLicence);
     }
 
@@ -130,9 +123,7 @@ public class CarLicenceResource {
     @Timed
     public ResponseEntity<Void> deleteCarLicence(@PathVariable Long id) {
         log.debug("REST request to delete CarLicence : {}", id);
-
-        carLicenceRepository.deleteById(id);
-        carLicenceSearchRepository.deleteById(id);
+        carLicenceService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
@@ -148,7 +139,7 @@ public class CarLicenceResource {
     @Timed
     public ResponseEntity<List<CarLicence>> searchCarLicences(@RequestParam String query, Pageable pageable) {
         log.debug("REST request to search for a page of CarLicences for query {}", query);
-        Page<CarLicence> page = carLicenceSearchRepository.search(queryStringQuery(query), pageable);
+        Page<CarLicence> page = carLicenceService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/car-licences");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

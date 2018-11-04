@@ -2,8 +2,7 @@ package com.cpdaimler.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.cpdaimler.domain.Shift;
-import com.cpdaimler.repository.ShiftRepository;
-import com.cpdaimler.repository.search.ShiftSearchRepository;
+import com.cpdaimler.service.ShiftService;
 import com.cpdaimler.web.rest.errors.BadRequestAlertException;
 import com.cpdaimler.web.rest.util.HeaderUtil;
 import com.cpdaimler.web.rest.util.PaginationUtil;
@@ -23,7 +22,6 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -39,13 +37,10 @@ public class ShiftResource {
 
     private static final String ENTITY_NAME = "shift";
 
-    private ShiftRepository shiftRepository;
+    private ShiftService shiftService;
 
-    private ShiftSearchRepository shiftSearchRepository;
-
-    public ShiftResource(ShiftRepository shiftRepository, ShiftSearchRepository shiftSearchRepository) {
-        this.shiftRepository = shiftRepository;
-        this.shiftSearchRepository = shiftSearchRepository;
+    public ShiftResource(ShiftService shiftService) {
+        this.shiftService = shiftService;
     }
 
     /**
@@ -62,8 +57,7 @@ public class ShiftResource {
         if (shift.getId() != null) {
             throw new BadRequestAlertException("A new shift cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Shift result = shiftRepository.save(shift);
-        shiftSearchRepository.save(result);
+        Shift result = shiftService.save(shift);
         return ResponseEntity.created(new URI("/api/shifts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -85,8 +79,7 @@ public class ShiftResource {
         if (shift.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Shift result = shiftRepository.save(shift);
-        shiftSearchRepository.save(result);
+        Shift result = shiftService.save(shift);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, shift.getId().toString()))
             .body(result);
@@ -102,7 +95,7 @@ public class ShiftResource {
     @Timed
     public ResponseEntity<List<Shift>> getAllShifts(Pageable pageable) {
         log.debug("REST request to get a page of Shifts");
-        Page<Shift> page = shiftRepository.findAll(pageable);
+        Page<Shift> page = shiftService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/shifts");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -117,7 +110,7 @@ public class ShiftResource {
     @Timed
     public ResponseEntity<Shift> getShift(@PathVariable Long id) {
         log.debug("REST request to get Shift : {}", id);
-        Optional<Shift> shift = shiftRepository.findById(id);
+        Optional<Shift> shift = shiftService.findOne(id);
         return ResponseUtil.wrapOrNotFound(shift);
     }
 
@@ -131,9 +124,7 @@ public class ShiftResource {
     @Timed
     public ResponseEntity<Void> deleteShift(@PathVariable Long id) {
         log.debug("REST request to delete Shift : {}", id);
-
-        shiftRepository.deleteById(id);
-        shiftSearchRepository.deleteById(id);
+        shiftService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
@@ -149,7 +140,7 @@ public class ShiftResource {
     @Timed
     public ResponseEntity<List<Shift>> searchShifts(@RequestParam String query, Pageable pageable) {
         log.debug("REST request to search for a page of Shifts for query {}", query);
-        Page<Shift> page = shiftSearchRepository.search(queryStringQuery(query), pageable);
+        Page<Shift> page = shiftService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/shifts");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

@@ -5,6 +5,7 @@ import com.cpdaimler.CpdaimlerApp;
 import com.cpdaimler.domain.CarLicence;
 import com.cpdaimler.repository.CarLicenceRepository;
 import com.cpdaimler.repository.search.CarLicenceSearchRepository;
+import com.cpdaimler.service.CarLicenceService;
 import com.cpdaimler.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -51,6 +52,9 @@ public class CarLicenceResourceIntTest {
 
     @Autowired
     private CarLicenceRepository carLicenceRepository;
+    
+    @Autowired
+    private CarLicenceService carLicenceService;
 
     /**
      * This repository is mocked in the com.cpdaimler.repository.search test package.
@@ -79,7 +83,7 @@ public class CarLicenceResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CarLicenceResource carLicenceResource = new CarLicenceResource(carLicenceRepository, mockCarLicenceSearchRepository);
+        final CarLicenceResource carLicenceResource = new CarLicenceResource(carLicenceService);
         this.restCarLicenceMockMvc = MockMvcBuilders.standaloneSetup(carLicenceResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -187,7 +191,9 @@ public class CarLicenceResourceIntTest {
     @Transactional
     public void updateCarLicence() throws Exception {
         // Initialize the database
-        carLicenceRepository.saveAndFlush(carLicence);
+        carLicenceService.save(carLicence);
+        // As the test used the service layer, reset the Elasticsearch mock repository
+        reset(mockCarLicenceSearchRepository);
 
         int databaseSizeBeforeUpdate = carLicenceRepository.findAll().size();
 
@@ -238,7 +244,7 @@ public class CarLicenceResourceIntTest {
     @Transactional
     public void deleteCarLicence() throws Exception {
         // Initialize the database
-        carLicenceRepository.saveAndFlush(carLicence);
+        carLicenceService.save(carLicence);
 
         int databaseSizeBeforeDelete = carLicenceRepository.findAll().size();
 
@@ -259,7 +265,7 @@ public class CarLicenceResourceIntTest {
     @Transactional
     public void searchCarLicence() throws Exception {
         // Initialize the database
-        carLicenceRepository.saveAndFlush(carLicence);
+        carLicenceService.save(carLicence);
         when(mockCarLicenceSearchRepository.search(queryStringQuery("id:" + carLicence.getId()), PageRequest.of(0, 20)))
             .thenReturn(new PageImpl<>(Collections.singletonList(carLicence), PageRequest.of(0, 1), 1));
         // Search the carLicence

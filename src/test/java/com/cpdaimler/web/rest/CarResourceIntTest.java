@@ -5,6 +5,7 @@ import com.cpdaimler.CpdaimlerApp;
 import com.cpdaimler.domain.Car;
 import com.cpdaimler.repository.CarRepository;
 import com.cpdaimler.repository.search.CarSearchRepository;
+import com.cpdaimler.service.CarService;
 import com.cpdaimler.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -54,6 +55,9 @@ public class CarResourceIntTest {
 
     @Autowired
     private CarRepository carRepository;
+    
+    @Autowired
+    private CarService carService;
 
     /**
      * This repository is mocked in the com.cpdaimler.repository.search test package.
@@ -82,7 +86,7 @@ public class CarResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final CarResource carResource = new CarResource(carRepository, mockCarSearchRepository);
+        final CarResource carResource = new CarResource(carService);
         this.restCarMockMvc = MockMvcBuilders.standaloneSetup(carResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -194,7 +198,9 @@ public class CarResourceIntTest {
     @Transactional
     public void updateCar() throws Exception {
         // Initialize the database
-        carRepository.saveAndFlush(car);
+        carService.save(car);
+        // As the test used the service layer, reset the Elasticsearch mock repository
+        reset(mockCarSearchRepository);
 
         int databaseSizeBeforeUpdate = carRepository.findAll().size();
 
@@ -247,7 +253,7 @@ public class CarResourceIntTest {
     @Transactional
     public void deleteCar() throws Exception {
         // Initialize the database
-        carRepository.saveAndFlush(car);
+        carService.save(car);
 
         int databaseSizeBeforeDelete = carRepository.findAll().size();
 
@@ -268,7 +274,7 @@ public class CarResourceIntTest {
     @Transactional
     public void searchCar() throws Exception {
         // Initialize the database
-        carRepository.saveAndFlush(car);
+        carService.save(car);
         when(mockCarSearchRepository.search(queryStringQuery("id:" + car.getId()), PageRequest.of(0, 20)))
             .thenReturn(new PageImpl<>(Collections.singletonList(car), PageRequest.of(0, 1), 1));
         // Search the car

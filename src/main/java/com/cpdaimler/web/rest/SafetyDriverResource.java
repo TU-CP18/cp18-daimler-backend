@@ -2,8 +2,7 @@ package com.cpdaimler.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.cpdaimler.domain.SafetyDriver;
-import com.cpdaimler.repository.SafetyDriverRepository;
-import com.cpdaimler.repository.search.SafetyDriverSearchRepository;
+import com.cpdaimler.service.SafetyDriverService;
 import com.cpdaimler.web.rest.errors.BadRequestAlertException;
 import com.cpdaimler.web.rest.util.HeaderUtil;
 import com.cpdaimler.web.rest.util.PaginationUtil;
@@ -23,7 +22,6 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -39,13 +37,10 @@ public class SafetyDriverResource {
 
     private static final String ENTITY_NAME = "safetyDriver";
 
-    private SafetyDriverRepository safetyDriverRepository;
+    private SafetyDriverService safetyDriverService;
 
-    private SafetyDriverSearchRepository safetyDriverSearchRepository;
-
-    public SafetyDriverResource(SafetyDriverRepository safetyDriverRepository, SafetyDriverSearchRepository safetyDriverSearchRepository) {
-        this.safetyDriverRepository = safetyDriverRepository;
-        this.safetyDriverSearchRepository = safetyDriverSearchRepository;
+    public SafetyDriverResource(SafetyDriverService safetyDriverService) {
+        this.safetyDriverService = safetyDriverService;
     }
 
     /**
@@ -62,8 +57,7 @@ public class SafetyDriverResource {
         if (safetyDriver.getId() != null) {
             throw new BadRequestAlertException("A new safetyDriver cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        SafetyDriver result = safetyDriverRepository.save(safetyDriver);
-        safetyDriverSearchRepository.save(result);
+        SafetyDriver result = safetyDriverService.save(safetyDriver);
         return ResponseEntity.created(new URI("/api/safety-drivers/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -85,8 +79,7 @@ public class SafetyDriverResource {
         if (safetyDriver.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        SafetyDriver result = safetyDriverRepository.save(safetyDriver);
-        safetyDriverSearchRepository.save(result);
+        SafetyDriver result = safetyDriverService.save(safetyDriver);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, safetyDriver.getId().toString()))
             .body(result);
@@ -105,9 +98,9 @@ public class SafetyDriverResource {
         log.debug("REST request to get a page of SafetyDrivers");
         Page<SafetyDriver> page;
         if (eagerload) {
-            page = safetyDriverRepository.findAllWithEagerRelationships(pageable);
+            page = safetyDriverService.findAllWithEagerRelationships(pageable);
         } else {
-            page = safetyDriverRepository.findAll(pageable);
+            page = safetyDriverService.findAll(pageable);
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, String.format("/api/safety-drivers?eagerload=%b", eagerload));
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -123,7 +116,7 @@ public class SafetyDriverResource {
     @Timed
     public ResponseEntity<SafetyDriver> getSafetyDriver(@PathVariable Long id) {
         log.debug("REST request to get SafetyDriver : {}", id);
-        Optional<SafetyDriver> safetyDriver = safetyDriverRepository.findOneWithEagerRelationships(id);
+        Optional<SafetyDriver> safetyDriver = safetyDriverService.findOne(id);
         return ResponseUtil.wrapOrNotFound(safetyDriver);
     }
 
@@ -137,9 +130,7 @@ public class SafetyDriverResource {
     @Timed
     public ResponseEntity<Void> deleteSafetyDriver(@PathVariable Long id) {
         log.debug("REST request to delete SafetyDriver : {}", id);
-
-        safetyDriverRepository.deleteById(id);
-        safetyDriverSearchRepository.deleteById(id);
+        safetyDriverService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
@@ -155,7 +146,7 @@ public class SafetyDriverResource {
     @Timed
     public ResponseEntity<List<SafetyDriver>> searchSafetyDrivers(@RequestParam String query, Pageable pageable) {
         log.debug("REST request to search for a page of SafetyDrivers for query {}", query);
-        Page<SafetyDriver> page = safetyDriverSearchRepository.search(queryStringQuery(query), pageable);
+        Page<SafetyDriver> page = safetyDriverService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/safety-drivers");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

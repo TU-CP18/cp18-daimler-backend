@@ -5,6 +5,7 @@ import com.cpdaimler.CpdaimlerApp;
 import com.cpdaimler.domain.SafetyDriver;
 import com.cpdaimler.repository.SafetyDriverRepository;
 import com.cpdaimler.repository.search.SafetyDriverSearchRepository;
+import com.cpdaimler.service.SafetyDriverService;
 import com.cpdaimler.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -55,6 +56,13 @@ public class SafetyDriverResourceIntTest {
 
     @Mock
     private SafetyDriverRepository safetyDriverRepositoryMock;
+    
+
+    @Mock
+    private SafetyDriverService safetyDriverServiceMock;
+
+    @Autowired
+    private SafetyDriverService safetyDriverService;
 
     /**
      * This repository is mocked in the com.cpdaimler.repository.search test package.
@@ -83,7 +91,7 @@ public class SafetyDriverResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final SafetyDriverResource safetyDriverResource = new SafetyDriverResource(safetyDriverRepository, mockSafetyDriverSearchRepository);
+        final SafetyDriverResource safetyDriverResource = new SafetyDriverResource(safetyDriverService);
         this.restSafetyDriverMockMvc = MockMvcBuilders.standaloneSetup(safetyDriverResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -184,8 +192,8 @@ public class SafetyDriverResourceIntTest {
     }
     
     public void getAllSafetyDriversWithEagerRelationshipsIsEnabled() throws Exception {
-        SafetyDriverResource safetyDriverResource = new SafetyDriverResource(safetyDriverRepositoryMock, mockSafetyDriverSearchRepository);
-        when(safetyDriverRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        SafetyDriverResource safetyDriverResource = new SafetyDriverResource(safetyDriverServiceMock);
+        when(safetyDriverServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         MockMvc restSafetyDriverMockMvc = MockMvcBuilders.standaloneSetup(safetyDriverResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -196,12 +204,12 @@ public class SafetyDriverResourceIntTest {
         restSafetyDriverMockMvc.perform(get("/api/safety-drivers?eagerload=true"))
         .andExpect(status().isOk());
 
-        verify(safetyDriverRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+        verify(safetyDriverServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     public void getAllSafetyDriversWithEagerRelationshipsIsNotEnabled() throws Exception {
-        SafetyDriverResource safetyDriverResource = new SafetyDriverResource(safetyDriverRepositoryMock, mockSafetyDriverSearchRepository);
-            when(safetyDriverRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        SafetyDriverResource safetyDriverResource = new SafetyDriverResource(safetyDriverServiceMock);
+            when(safetyDriverServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
             MockMvc restSafetyDriverMockMvc = MockMvcBuilders.standaloneSetup(safetyDriverResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -211,7 +219,7 @@ public class SafetyDriverResourceIntTest {
         restSafetyDriverMockMvc.perform(get("/api/safety-drivers?eagerload=true"))
         .andExpect(status().isOk());
 
-            verify(safetyDriverRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+            verify(safetyDriverServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
@@ -240,7 +248,9 @@ public class SafetyDriverResourceIntTest {
     @Transactional
     public void updateSafetyDriver() throws Exception {
         // Initialize the database
-        safetyDriverRepository.saveAndFlush(safetyDriver);
+        safetyDriverService.save(safetyDriver);
+        // As the test used the service layer, reset the Elasticsearch mock repository
+        reset(mockSafetyDriverSearchRepository);
 
         int databaseSizeBeforeUpdate = safetyDriverRepository.findAll().size();
 
@@ -291,7 +301,7 @@ public class SafetyDriverResourceIntTest {
     @Transactional
     public void deleteSafetyDriver() throws Exception {
         // Initialize the database
-        safetyDriverRepository.saveAndFlush(safetyDriver);
+        safetyDriverService.save(safetyDriver);
 
         int databaseSizeBeforeDelete = safetyDriverRepository.findAll().size();
 
@@ -312,7 +322,7 @@ public class SafetyDriverResourceIntTest {
     @Transactional
     public void searchSafetyDriver() throws Exception {
         // Initialize the database
-        safetyDriverRepository.saveAndFlush(safetyDriver);
+        safetyDriverService.save(safetyDriver);
         when(mockSafetyDriverSearchRepository.search(queryStringQuery("id:" + safetyDriver.getId()), PageRequest.of(0, 20)))
             .thenReturn(new PageImpl<>(Collections.singletonList(safetyDriver), PageRequest.of(0, 1), 1));
         // Search the safetyDriver

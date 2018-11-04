@@ -38,4 +38,5 @@ relationship ManyToOne {
 relationship ManyToMany {
 	SafetyDriver {licences} to CarLicence
 }
+service all with serviceClass
 paginate * with pagination
