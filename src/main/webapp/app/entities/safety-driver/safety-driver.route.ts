@@ -34,7 +34,7 @@ export const safetyDriverRoute: Routes = [
             pagingParams: JhiResolvePagingParams
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_FLEETMANAGER'],
             defaultSort: 'id,asc',
             pageTitle: 'cpdaimlerApp.safetyDriver.home.title'
         },
@@ -47,7 +47,7 @@ export const safetyDriverRoute: Routes = [
             safetyDriver: SafetyDriverResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_FLEETMANAGER'],
             pageTitle: 'cpdaimlerApp.safetyDriver.home.title'
         },
         canActivate: [UserRouteAccessService]
@@ -59,7 +59,7 @@ export const safetyDriverRoute: Routes = [
             safetyDriver: SafetyDriverResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_FLEETMANAGER'],
             pageTitle: 'cpdaimlerApp.safetyDriver.home.title'
         },
         canActivate: [UserRouteAccessService]
@@ -71,7 +71,7 @@ export const safetyDriverRoute: Routes = [
             safetyDriver: SafetyDriverResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_FLEETMANAGER'],
             pageTitle: 'cpdaimlerApp.safetyDriver.home.title'
         },
         canActivate: [UserRouteAccessService]
@@ -86,7 +86,7 @@ export const safetyDriverPopupRoute: Routes = [
             safetyDriver: SafetyDriverResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_FLEETMANAGER'],
             pageTitle: 'cpdaimlerApp.safetyDriver.home.title'
         },
         canActivate: [UserRouteAccessService],

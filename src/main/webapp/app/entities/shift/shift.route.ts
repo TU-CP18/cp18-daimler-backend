@@ -34,7 +34,7 @@ export const shiftRoute: Routes = [
             pagingParams: JhiResolvePagingParams
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_FLEETMANAGER'],
             defaultSort: 'id,asc',
             pageTitle: 'cpdaimlerApp.shift.home.title'
         },
@@ -47,7 +47,7 @@ export const shiftRoute: Routes = [
             shift: ShiftResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_FLEETMANAGER'],
             pageTitle: 'cpdaimlerApp.shift.home.title'
         },
         canActivate: [UserRouteAccessService]
@@ -59,7 +59,7 @@ export const shiftRoute: Routes = [
             shift: ShiftResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_FLEETMANAGER'],
             pageTitle: 'cpdaimlerApp.shift.home.title'
         },
         canActivate: [UserRouteAccessService]
@@ -71,7 +71,7 @@ export const shiftRoute: Routes = [
             shift: ShiftResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_FLEETMANAGER'],
             pageTitle: 'cpdaimlerApp.shift.home.title'
         },
         canActivate: [UserRouteAccessService]
@@ -86,7 +86,7 @@ export const shiftPopupRoute: Routes = [
             shift: ShiftResolve
         },
         data: {
-            authorities: ['ROLE_USER'],
+            authorities: ['ROLE_FLEETMANAGER'],
             pageTitle: 'cpdaimlerApp.shift.home.title'
         },
         canActivate: [UserRouteAccessService],
