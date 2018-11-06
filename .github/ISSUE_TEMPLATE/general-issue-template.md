@@ -4,9 +4,9 @@ about: Describe this issue template's purpose here.
 
 ---
 
-*Description:*
+**Description:**
 
-*Acceptance criteria:*
+**Acceptance criteria:**
 
 - [ ]
 - [ ]
