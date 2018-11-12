@@ -34,19 +34,11 @@ pipeline {
 				sh "./mvnw com.github.eirslett:frontend-maven-plugin:npm"
 			}
 		}
-
-		stage('packaging') {
-			steps {
-				sh "./mvnw verify -Pprod -DskipTests"
-				archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
-			}
-		}
 	}
 	
 	post {
 		success {
 			sh "./mvnw"
-			sh "./npm start"
 		}
 	}
 }
