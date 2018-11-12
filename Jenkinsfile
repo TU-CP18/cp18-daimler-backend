@@ -28,6 +28,7 @@ node {
     }
 	
 	stage('launch') {
-	sh "./mvnw"
-	sh "./npm start"
+		sh "./mvnw"
+		sh "./npm start"
+	}
 }
