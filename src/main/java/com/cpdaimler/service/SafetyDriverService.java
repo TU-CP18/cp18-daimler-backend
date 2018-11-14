@@ -138,6 +138,10 @@ public class SafetyDriverService {
      */
     public void delete(Long id) {
         log.debug("Request to delete SafetyDriver : {}", id);
+
+        SafetyDriver safetyDriver = safetyDriverSearchRepository.findById(id).get();
+        userRepository.deleteById(userRepository.findOneByLogin(safetyDriver.getLogin()).get().getId());
+
         safetyDriverRepository.deleteById(id);
         safetyDriverSearchRepository.deleteById(id);
     }

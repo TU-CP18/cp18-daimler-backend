@@ -132,6 +132,8 @@ public class SafetyDriverResource {
     @Timed
     public ResponseEntity<Void> deleteSafetyDriver(@PathVariable Long id) {
         log.debug("REST request to delete SafetyDriver : {}", id);
+
+
         safetyDriverService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
