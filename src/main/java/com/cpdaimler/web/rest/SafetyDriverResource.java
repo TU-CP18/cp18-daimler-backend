@@ -57,11 +57,13 @@ public class SafetyDriverResource {
         if (safetyDriver.getId() != null) {
             throw new BadRequestAlertException("A new safetyDriver cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        SafetyDriver result = safetyDriverService.save(safetyDriver);
+        SafetyDriver result = safetyDriverService.register(safetyDriver);
         return ResponseEntity.created(new URI("/api/safety-drivers/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
+
+
 
     /**
      * PUT  /safety-drivers : Updates an existing safetyDriver.
