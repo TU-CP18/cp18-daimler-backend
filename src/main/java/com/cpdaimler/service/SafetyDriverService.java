@@ -1,13 +1,16 @@
 package com.cpdaimler.service;
 
 import com.cpdaimler.domain.SafetyDriver;
+import com.cpdaimler.domain.User;
 import com.cpdaimler.repository.SafetyDriverRepository;
 import com.cpdaimler.repository.search.SafetyDriverSearchRepository;
+import com.cpdaimler.service.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +31,15 @@ public class SafetyDriverService {
 
     private SafetyDriverSearchRepository safetyDriverSearchRepository;
 
-    public SafetyDriverService(SafetyDriverRepository safetyDriverRepository, SafetyDriverSearchRepository safetyDriverSearchRepository) {
+    private UserService userService;
+
+    private PasswordEncoder passwordEncoder;
+
+    public SafetyDriverService(SafetyDriverRepository safetyDriverRepository, UserService userService , PasswordEncoder passwordEncoder, SafetyDriverSearchRepository safetyDriverSearchRepository) {
         this.safetyDriverRepository = safetyDriverRepository;
         this.safetyDriverSearchRepository = safetyDriverSearchRepository;
+        this.userService=userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -41,6 +50,12 @@ public class SafetyDriverService {
      */
     public SafetyDriver save(SafetyDriver safetyDriver) {
         log.debug("Request to save SafetyDriver : {}", safetyDriver);
+
+        safetyDriver.getUser().setLogin(safetyDriver.getLogin());
+        UserDTO userDTO = new UserDTO(safetyDriver.getUser());
+
+        User u= userService.registerUser(userDTO,("abcd"));
+        safetyDriver.setUser(u);
         SafetyDriver result = safetyDriverRepository.save(safetyDriver);
         safetyDriverSearchRepository.save(result);
         return result;
