@@ -21,24 +21,14 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.safetyDriver.firstname" for="field_firstname">Vorname</label>
+                    <label class="form-control-label" jhiTranslate="userManagement.firstName" for="field_firstname">Vorname</label>
                     <input type="text" class="form-control" name="firstname" id="field_firstname"
                            [(ngModel)]="safetyDriver.user.firstName" required/>
-                    <div>
-                        <small>
-                            This field is required.
-                        </small>
-                    </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.safetyDriver.lastname" for="field_lastname">Name</label>
+                    <label class="form-control-label" jhiTranslate="userManagement.lastName" for="field_lastname">Name</label>
                     <input type="text" class="form-control" name="lastname" id="field_lastname"
                            [(ngModel)]="safetyDriver.user.lastName" required/>
-                    <div>
-                        <small>
-                            This field is required.
-                        </small>
-                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="email" jhiTranslate="global.form.email">Email</label>
