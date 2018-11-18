@@ -1,10 +1,12 @@
 package com.cpdaimler.service;
 
+import com.cpdaimler.config.Constants;
 import com.cpdaimler.domain.SafetyDriver;
 import com.cpdaimler.domain.User;
 import com.cpdaimler.repository.SafetyDriverRepository;
 import com.cpdaimler.repository.UserRepository;
 import com.cpdaimler.repository.search.SafetyDriverSearchRepository;
+import com.cpdaimler.security.AuthoritiesConstants;
 import com.cpdaimler.service.dto.UserDTO;
 import io.undertow.util.BadRequestException;
 import org.slf4j.Logger;
@@ -88,8 +90,9 @@ public class SafetyDriverService {
 
         safetyDriver.getUser().setLogin(safetyDriver.getLogin());
         UserDTO userDTO = new UserDTO(safetyDriver.getUser());
-
-        User u= userService.registerUser(userDTO,("abcd"));
+        userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
+        userDTO.setActivated(true);
+        User u= userService.registerUser(userDTO,userDTO.getFirstName().toLowerCase().substring(0,3) + userDTO.getLastName().toLowerCase().substring(0,3) + userDTO.getLogin().toLowerCase());
         safetyDriver.setUser(u);
         SafetyDriver result = safetyDriverRepository.save(safetyDriver);
         safetyDriverSearchRepository.save(result);

@@ -10,7 +10,12 @@
             Dear
         </p>
         <p th:text="#{email.creation.text1}">
-            Your JHipster account has been created, please click on the URL below to access it:
+            Your SafetyDriver account has been created, please click on the URL below to access it:
+        </p>
+        <p>
+            Your password is first 3 letters from your first name + first 3 letters from your last name + your login. All written in lower case.
+            If your name is Peter Parker and your login pparker your password is: petparpparker
+            Please change your password immediately using the link:
         </p>
         <p>
             <a th:with="url=(@{|${baseUrl}/#/reset/finish?key=${user.resetKey}|})" th:href="${url}"
