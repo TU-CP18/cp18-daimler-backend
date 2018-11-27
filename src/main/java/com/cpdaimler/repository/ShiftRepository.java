@@ -15,5 +15,5 @@ import java.util.Optional;
 @Repository
 public interface ShiftRepository extends JpaRepository<Shift, Long> {
 
-    Optional<Shift> findOneBySafetyDriver(SafetyDriver safetyDriver);
+    Optional<Shift> findOneBySafetyDriverAndStartGreaterThanEqualOrderByStartAsc(SafetyDriver safetyDriver, Long start);
 }

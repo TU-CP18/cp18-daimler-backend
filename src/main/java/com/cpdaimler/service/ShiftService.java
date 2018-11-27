@@ -88,7 +88,7 @@ public class ShiftService {
 
     public Optional<Shift> findNextShift(Long userId) {
 
-        return shiftRepository.findOneBySafetyDriver(safetyDriverRepository.findById(userId).get());
+        return shiftRepository.findOneBySafetyDriverAndStartGreaterThanEqualOrderByStartAsc(safetyDriverRepository.findById(userId).get(), System.currentTimeMillis());
     }
 
     /**
