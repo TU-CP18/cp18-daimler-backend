@@ -27,4 +27,6 @@ public interface SafetyDriverRepository extends JpaRepository<SafetyDriver, Long
     @Query("select safety_driver from SafetyDriver safety_driver left join fetch safety_driver.licences where safety_driver.id =:id")
     Optional<SafetyDriver> findOneWithEagerRelationships(@Param("id") Long id);
 
+    Optional<SafetyDriver> findByLogin(String login);
+
 }

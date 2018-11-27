@@ -4,6 +4,7 @@ import com.cpdaimler.domain.Shift;
 import com.cpdaimler.repository.SafetyDriverRepository;
 import com.cpdaimler.repository.ShiftRepository;
 import com.cpdaimler.repository.search.ShiftSearchRepository;
+import com.cpdaimler.service.util.UserToSafetyDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +32,13 @@ public class ShiftService {
 
     private SafetyDriverRepository safetyDriverRepository;
 
-    public ShiftService(ShiftRepository shiftRepository, ShiftSearchRepository shiftSearchRepository, SafetyDriverRepository safetyDriverRepository) {
+    private UserToSafetyDriver userToSafetyDriver;
+
+    public ShiftService(ShiftRepository shiftRepository, ShiftSearchRepository shiftSearchRepository, SafetyDriverRepository safetyDriverRepository, UserToSafetyDriver userToSafetyDriver) {
         this.shiftRepository = shiftRepository;
         this.shiftSearchRepository = shiftSearchRepository;
         this.safetyDriverRepository=safetyDriverRepository;
+        this.userToSafetyDriver=userToSafetyDriver;
     }
 
     /**
@@ -86,9 +90,9 @@ public class ShiftService {
         shiftSearchRepository.deleteById(id);
     }
 
-    public Optional<Shift> findNextShift(Long userId) {
+    public Optional<Shift> findNextShift() {
 
-        return shiftRepository.findOneBySafetyDriverAndStartGreaterThanEqualOrderByStartAsc(safetyDriverRepository.findById(userId).get(), System.currentTimeMillis());
+        return shiftRepository.findOneBySafetyDriverAndStartGreaterThanEqualOrderByStartAsc(userToSafetyDriver.getCustomerForUser().get(), System.currentTimeMillis());
     }
 
     /**
