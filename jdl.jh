@@ -10,6 +10,8 @@ entity SafetyDriver {
 entity Shift {
 	start Long required,
     end Long required,
+    longStart Double,
+    latStart Double
 
 }
 

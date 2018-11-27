@@ -21,7 +21,7 @@ describe('Service Tests', () => {
             service = injector.get(ShiftService);
             httpMock = injector.get(HttpTestingController);
 
-            elemDefault = new Shift(0, 0, 0);
+            elemDefault = new Shift(0, 0, 0, 0, 0);
         });
 
         describe('Service methods', async () => {
@@ -56,7 +56,9 @@ describe('Service Tests', () => {
                 const returnedFromService = Object.assign(
                     {
                         start: 1,
-                        end: 1
+                        end: 1,
+                        longStart: 1,
+                        latStart: 1
                     },
                     elemDefault
                 );
@@ -74,7 +76,9 @@ describe('Service Tests', () => {
                 const returnedFromService = Object.assign(
                     {
                         start: 1,
-                        end: 1
+                        end: 1,
+                        longStart: 1,
+                        latStart: 1
                     },
                     elemDefault
                 );

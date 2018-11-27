@@ -155,7 +155,11 @@ public class ShiftResource {
     @Timed
     public ResponseEntity<Shift> getNextShiftForUser(@PathVariable Long userId) {
         log.debug("REST request to get Shift : {}", userId);
-        Optional<Shift> shift = shiftService.findNextShift(userId);
+        Optional<Shift> shift = shiftService.findNextShift();
+        if(shift.isPresent()) {
+            shift.get().setLatStart(52.521918);
+            shift.get().setLongStart(13.413215);
+        }
         return ResponseUtil.wrapOrNotFound(shift);
     }
 
