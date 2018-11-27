@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -144,5 +145,20 @@ public class ShiftResource {
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/shifts");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
+    /**
+     * GET  /shifts/:id : get the "id" shift.
+     *
+     * @param userId the id of the shift to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the shift, or with status 404 (Not Found)
+     */
+    @GetMapping("/shifts/next/{userId}")
+    @Timed
+    public ResponseEntity<Shift> getNextShiftForUser(@PathVariable Long userId) {
+        log.debug("REST request to get Shift : {}", userId);
+        Optional<Shift> shift = shiftService.findNextShift(userId);
+        return ResponseUtil.wrapOrNotFound(shift);
+    }
+
+
 
 }

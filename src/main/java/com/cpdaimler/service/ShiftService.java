@@ -1,6 +1,7 @@
 package com.cpdaimler.service;
 
 import com.cpdaimler.domain.Shift;
+import com.cpdaimler.repository.SafetyDriverRepository;
 import com.cpdaimler.repository.ShiftRepository;
 import com.cpdaimler.repository.search.ShiftSearchRepository;
 import org.slf4j.Logger;
@@ -28,9 +29,12 @@ public class ShiftService {
 
     private ShiftSearchRepository shiftSearchRepository;
 
-    public ShiftService(ShiftRepository shiftRepository, ShiftSearchRepository shiftSearchRepository) {
+    private SafetyDriverRepository safetyDriverRepository;
+
+    public ShiftService(ShiftRepository shiftRepository, ShiftSearchRepository shiftSearchRepository, SafetyDriverRepository safetyDriverRepository) {
         this.shiftRepository = shiftRepository;
         this.shiftSearchRepository = shiftSearchRepository;
+        this.safetyDriverRepository=safetyDriverRepository;
     }
 
     /**
@@ -82,6 +86,11 @@ public class ShiftService {
         shiftSearchRepository.deleteById(id);
     }
 
+    public Optional<Shift> findNextShift(Long userId) {
+
+        return shiftRepository.findOneBySafetyDriver(safetyDriverRepository.findById(userId).get());
+    }
+
     /**
      * Search for the shift corresponding to the query.
      *
@@ -93,4 +102,6 @@ public class ShiftService {
     public Page<Shift> search(String query, Pageable pageable) {
         log.debug("Request to search for a page of Shifts for query {}", query);
         return shiftSearchRepository.search(queryStringQuery(query), pageable);    }
+
+
 }
