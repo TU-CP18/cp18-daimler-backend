@@ -3,6 +3,7 @@ Name | PW
 admin, admin  
 user, user  
 fleetmanager, user
+driver, user
 
 ## Development
 
