@@ -148,13 +148,12 @@ public class ShiftResource {
     /**
      * GET  /shifts/:id : get the "id" shift.
      *
-     * @param userId the id of the shift to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the shift, or with status 404 (Not Found)
      */
-    @GetMapping("/shifts/next/{userId}")
+    @GetMapping("/shifts/next")
     @Timed
-    public ResponseEntity<Shift> getNextShiftForUser(@PathVariable Long userId) {
-        log.debug("REST request to get Shift : {}", userId);
+    public ResponseEntity<Shift> getNextShiftForUser() {
+        log.debug("REST request to get next Shift");
         Optional<Shift> shift = shiftService.findNextShift();
         if(shift.isPresent()) {
             shift.get().setLatStart(52.521918);
