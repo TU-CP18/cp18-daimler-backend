@@ -71,6 +71,24 @@ public class CPBootstrap implements CommandLineRunner {
         safetyDriver.getLicences().add(carLicence);
 
         safetyDriverRepository.save(safetyDriver);
+
+        u= userRepository.findOneByLogin("user").get();
+
+        safetyDriver = new SafetyDriver();
+        safetyDriver.setLogin("user");
+        safetyDriver.setUser(u);
+        safetyDriver.getLicences().add(carLicence);
+
+        safetyDriverRepository.save(safetyDriver);
+
+        u= userRepository.findOneByLogin("admin").get();
+
+        safetyDriver = new SafetyDriver();
+        safetyDriver.setLogin("admin");
+        safetyDriver.setUser(u);
+        safetyDriver.getLicences().add(carLicence);
+
+        safetyDriverRepository.save(safetyDriver);
     }
 
     private void initCars() {
