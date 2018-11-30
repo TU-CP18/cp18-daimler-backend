@@ -81,7 +81,7 @@
                     <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.safetyDriver" for="field_safetyDriver">Safety Driver</label>
                     <select class="form-control" id="field_safetyDriver" name="safetyDriver" [(ngModel)]="shift.safetyDriver" >
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="safetyDriverOption.id === shift.safetyDriver?.id ? shift.safetyDriver : safetyDriverOption" *ngFor="let safetyDriverOption of safetydrivers; trackBy: trackSafetyDriverById">{{safetyDriverOption.id}}</option>
+                        <option [ngValue]="safetyDriverOption.id === shift.safetyDriver?.id ? shift.safetyDriver : safetyDriverOption" *ngFor="let safetyDriverOption of safetydrivers; trackBy: trackSafetyDriverById">{{safetyDriverOption.user.firstName+' '+safetyDriverOption.user.lastName}}</option>
                     </select>
                 </div>
             </div>
