@@ -39,6 +39,36 @@
                         </small>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.latStart" for="field_lat">End</label>
+                    <input type="number" class="form-control" name="latStart" id="field_lat"
+                           [(ngModel)]="shift.latStart" maxlength="10" required/>
+                    <div [hidden]="!(editForm.controls.latStart?.dirty && editForm.controls.latStart?.invalid)">
+                        <small class="form-text text-danger"
+                               [hidden]="!editForm.controls.latStart?.errors?.required" jhiTranslate="entity.validation.required">
+                            This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                               [hidden]="!editForm.controls.latStart?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.longStart" for="field_lon">End</label>
+                    <input type="number" class="form-control" name="longStart" id="field_lon"
+                           [(ngModel)]="shift.longStart" maxlength="10" required/>
+                    <div [hidden]="!(editForm.controls.longStart?.dirty && editForm.controls.longStart?.invalid)">
+                        <small class="form-text text-danger"
+                               [hidden]="!editForm.controls.longStart?.errors?.required" jhiTranslate="entity.validation.required">
+                            This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                               [hidden]="!editForm.controls.longStart?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.car" for="field_car">Car</label>
