@@ -55,7 +55,8 @@ public class CPBootstrap implements CommandLineRunner {
         s.setSafetyDriver(safetyDriverRepository.getOne(1L));
         s.setStart(System.currentTimeMillis() + 518400000);
         s.setEnd(System.currentTimeMillis() + 532800000);
-
+        s.setLatStart(52.521918);
+        s.setLongStart(13.413215);
         shiftRepository.save(s);
 
     }
