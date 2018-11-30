@@ -74,7 +74,7 @@
                     <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.car" for="field_car">Car</label>
                     <select class="form-control" id="field_car" name="car" [(ngModel)]="shift.car" >
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="carOption.id === shift.car?.id ? shift.car : carOption" *ngFor="let carOption of cars; trackBy: trackCarById">{{carOption.id}}</option>
+                        <option [ngValue]="carOption.model === shift.car?.model ? shift.car : carOption" *ngFor="let carOption of cars; trackBy: trackCarById">{{carOption.model}}</option>
                     </select>
                 </div>
                 <div class="form-group">

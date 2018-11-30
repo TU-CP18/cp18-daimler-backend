@@ -36,7 +36,7 @@ export class ShiftUpdateComponent implements OnInit {
         this.activatedRoute.data.subscribe(({ shift }) => {
             this.shift = shift;
         });
-        this.carService.query().subscribe(
+        this.carService.getActiveCars().subscribe(
             (res: HttpResponse<ICar[]>) => {
                 this.cars = res.body;
             },
