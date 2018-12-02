@@ -19,6 +19,9 @@ export class ShiftUpdateComponent implements OnInit {
     shift: IShift;
     isSaving: boolean;
 
+    start: any;
+    end: any;
+
     cars: ICar[];
 
     safetydrivers: ISafetyDriver[];
@@ -48,6 +51,9 @@ export class ShiftUpdateComponent implements OnInit {
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
+
+        this.start = { date: null, time: null };
+        this.end = { date: null, time: null };
     }
 
     previousState() {
@@ -59,6 +65,9 @@ export class ShiftUpdateComponent implements OnInit {
         if (this.shift.id !== undefined) {
             this.subscribeToSaveResponse(this.shiftService.update(this.shift));
         } else {
+            this.shift.start = new Date(this.combineDateAndTime(this.start)).getTime();
+            this.shift.end = new Date(this.combineDateAndTime(this.end)).getTime();
+
             this.subscribeToSaveResponse(this.shiftService.create(this.shift));
         }
     }
@@ -86,5 +95,31 @@ export class ShiftUpdateComponent implements OnInit {
 
     trackSafetyDriverById(index: number, item: ISafetyDriver) {
         return item.id;
+    }
+
+    getLocalDateTime(time: number) {
+        const year: any = new Date(time).getFullYear();
+        let month: any = new Date(time).getMonth() + 1;
+        let day: any = new Date(time).getDate();
+        let hour: any = new Date(time).getHours();
+        let minute: any = new Date(time).getMinutes();
+
+        if (month < 10) {
+            month = '0' + month;
+        }
+        if (day < 10) {
+            day = '0' + day;
+        }
+        if (hour < 10) {
+            hour = '0' + hour;
+        }
+        if (minute < 10) {
+            minute = '0' + minute;
+        }
+        return year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
+    }
+
+    combineDateAndTime(date_time) {
+        return date_time.date + 'T' + date_time.time;
     }
 }

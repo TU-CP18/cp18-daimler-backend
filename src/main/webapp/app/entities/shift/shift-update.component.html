@@ -10,34 +10,15 @@
                         [(ngModel)]="shift.id" readonly />
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.start" for="field_start">Start</label>
-                    <input type="number" class="form-control" name="start" id="field_start"
-                        [(ngModel)]="shift.start" required/>
-                    <div [hidden]="!(editForm.controls.start?.dirty && editForm.controls.start?.invalid)">
-                        <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.start?.errors?.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
-                        <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.start?.errors?.number" jhiTranslate="entity.validation.number">
-                            This field should be a number.
-                        </small>
-                    </div>
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.start" for="field_start_date">Start</label>
+                        <input type="date" class="form-control" id="field_start_date" [(ngModel)]="start.date" name="start_date"/>
+                        <input type="time" class="form-control" id="field_start_time" [(ngModel)]="start.time" name="start_time"/>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.end" for="field_end">End</label>
-                    <input type="number" class="form-control" name="end" id="field_end"
-                        [(ngModel)]="shift.end" required/>
-                    <div [hidden]="!(editForm.controls.end?.dirty && editForm.controls.end?.invalid)">
-                        <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.end?.errors?.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
-                        <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.end?.errors?.number" jhiTranslate="entity.validation.number">
-                            This field should be a number.
-                        </small>
-                    </div>
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.end" for="field_end_date">End</label>
+                    <input type="date" class="form-control" id="field_end_date" [(ngModel)]="end.date" name="start_date"/>
+                    <input type="time" class="form-control" id="field_end_time" [(ngModel)]="end.time" name="start_time"/>
+
                 </div>
 
                 <div class="form-group">

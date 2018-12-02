@@ -43,7 +43,7 @@
                 <td jhiTranslate="{{'cpdaimlerApp.CARSTATUS.' + car.status}}">{{car.status}}</td>
                 <td>
                     <div *ngIf="car.licence">
-                        <a [routerLink]="['../car-licence', car.licence?.id, 'view' ]" >{{car.licence?.id}}</a>
+                        <a [routerLink]="['../car-licence', car.licence?.id, 'view' ]" >{{car.licence?.carLicence}}</a>
                     </div>
                 </td>
                 <td class="text-right">
