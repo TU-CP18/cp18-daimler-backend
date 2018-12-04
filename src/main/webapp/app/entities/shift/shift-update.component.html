@@ -11,12 +11,12 @@
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.start" for="field_start_date">Start</label>
-                        <input type="date" class="form-control" id="field_start_date" [(ngModel)]="start.date" name="start_date"/>
+                        <input type="date" class="form-control" id="field_start_date" [(ngModel)]="start.date" name="start_date" (change)="checkDateInputStart($event)">
                         <input type="time" class="form-control" id="field_start_time" [(ngModel)]="start.time" name="start_time"/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.end" for="field_end_date">End</label>
-                    <input type="date" class="form-control" id="field_end_date" [(ngModel)]="end.date" name="start_date"/>
+                    <input type="date" class="form-control" id="field_end_date" [(ngModel)]="end.date" name="start_date" (change)="checkDateInputEnd($event)">
                     <input type="time" class="form-control" id="field_end_time" [(ngModel)]="end.time" name="start_time"/>
 
                 </div>

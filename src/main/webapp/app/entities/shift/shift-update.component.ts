@@ -22,6 +22,8 @@ export class ShiftUpdateComponent implements OnInit {
     start: any;
     end: any;
 
+    earliestDate: Date;
+
     cars: ICar[];
 
     safetydrivers: ISafetyDriver[];
@@ -54,6 +56,8 @@ export class ShiftUpdateComponent implements OnInit {
 
         this.start = { date: null, time: null };
         this.end = { date: null, time: null };
+
+        this.earliestDate = new Date(Date.now() + 12096e5); // 12096e5 = 2 weeks in milliseconds
     }
 
     previousState() {
@@ -121,5 +125,25 @@ export class ShiftUpdateComponent implements OnInit {
 
     combineDateAndTime(date_time) {
         return date_time.date + 'T' + date_time.time;
+    }
+
+    checkDateInputStart(event) {
+        const input_date_str = event.target.value;
+        const input_date = new Date(input_date_str);
+
+        if (input_date < this.earliestDate || input_date_str === '') {
+            this.start.date = null;
+        } else {
+            this.end.date = this.start.date;
+        }
+    }
+
+    checkDateInputEnd(event) {
+        const input_date_str = event.target.value;
+        const input_date = new Date(input_date_str);
+
+        if (input_date < new Date(this.start.date)) {
+            this.end.date = this.start.date;
+        }
     }
 }
