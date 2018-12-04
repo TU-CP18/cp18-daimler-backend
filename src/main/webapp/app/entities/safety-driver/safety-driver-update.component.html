@@ -23,12 +23,12 @@
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="userManagement.firstName" for="field_firstname">Vorname</label>
                     <input type="text" class="form-control" name="firstname" id="field_firstname"
-                           [(ngModel)]="safetyDriver.user.firstName" required/>
+                           [(ngModel)]="safetyDriver.user.firstName" required minlength=4 />
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="userManagement.lastName" for="field_lastname">Name</label>
                     <input type="text" class="form-control" name="lastname" id="field_lastname"
-                           [(ngModel)]="safetyDriver.user.lastName" required/>
+                           [(ngModel)]="safetyDriver.user.lastName" required minlength=4/>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="email" jhiTranslate="global.form.email">Email</label>
