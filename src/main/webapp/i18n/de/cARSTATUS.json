@@ -2,10 +2,11 @@
     "cpdaimlerApp": {
         "CARSTATUS" : {
             "null": "",
-            "DRIVING_EMPTY": "DRIVING_EMPTY",
-            "DRIVING_FULL": "DRIVING_FULL",
-            "MAINTENANCE": "MAINTENANCE",
-            "AVAILABLE": "AVAILABLE"
+            "DRIVING_EMPTY": "Unterwegs - leer",
+            "DRIVING_FULL": "Unterwegs - voll",
+            "MAINTENANCE": "Wartung",
+            "AVAILABLE": "Verfügbar",
+            "INACTIVE": "Inaktiv"
         }
     }
 }

@@ -8,7 +8,7 @@
         {
             "fieldName": "status",
             "fieldType": "CARSTATUS",
-            "fieldValues": "DRIVING_EMPTY,DRIVING_FULL,MAINTENANCE,AVAILABLE"
+            "fieldValues": "DRIVING_EMPTY,DRIVING_FULL,MAINTENANCE,AVAILABLE,INACTIVE"
         }
     ],
     "relationships": [
