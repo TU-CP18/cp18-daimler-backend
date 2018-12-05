@@ -32,6 +32,8 @@
             <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="start"><span jhiTranslate="cpdaimlerApp.shift.start">Start</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="end"><span jhiTranslate="cpdaimlerApp.shift.end">End</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="longStart"><span jhiTranslate="cpdaimlerApp.shift.longStart">Lat</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="latStart"><span jhiTranslate="cpdaimlerApp.shift.latStart">Long</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="car.id"><span jhiTranslate="cpdaimlerApp.shift.car">Car</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="safetyDriver.id"><span jhiTranslate="cpdaimlerApp.shift.safetyDriver">Safety Driver</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
@@ -40,8 +42,10 @@
             <tbody>
             <tr *ngFor="let shift of shifts ;trackBy: trackId">
                 <td><a [routerLink]="['/shift', shift.id, 'view' ]">{{shift.id}}</a></td>
-                <td>{{shift.start}}</td>
-                <td>{{shift.end}}</td>
+                <td>{{shift.start | date:'dd.MM.yyyy HH:mm'}}</td>
+                <td>{{shift.end | date:'dd.MM.yyyy HH:mm'}}</td>
+                <td>{{shift.latStart}}</td>
+                <td>{{shift.longStart}}</td>
                 <td>
                     <div *ngIf="shift.car">
                         <a [routerLink]="['../car', shift.car?.id, 'view' ]" >{{shift.car?.id}}</a>

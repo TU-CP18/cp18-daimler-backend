@@ -10,31 +10,42 @@
                         [(ngModel)]="shift.id" readonly />
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.start" for="field_start">Start</label>
-                    <input type="number" class="form-control" name="start" id="field_start"
-                        [(ngModel)]="shift.start" required/>
-                    <div [hidden]="!(editForm.controls.start?.dirty && editForm.controls.start?.invalid)">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.start" for="field_start_date">Start</label>
+                        <input type="date" class="form-control" id="field_start_date" [(ngModel)]="start.date" name="start_date" (change)="checkDateInputStart($event)">
+                        <input type="time" class="form-control" id="field_start_time" [(ngModel)]="start.time" name="start_time" (change)="checkTimeInputEnd($event)">
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.end" for="field_end_date">End</label>
+                    <input type="date" class="form-control" id="field_end_date" [(ngModel)]="end.date" name="start_date" (change)="checkDateInputEnd($event)">
+                    <input type="time" class="form-control" id="field_end_time" [(ngModel)]="end.time" name="start_time" (change)="checkTimeInputEnd($event)">
+
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.latStart" for="field_lat">End</label>
+                    <input type="number" class="form-control" name="latStart" id="field_lat"
+                           [(ngModel)]="shift.latStart" maxlength="10" required/>
+                    <div [hidden]="!(editForm.controls.latStart?.dirty && editForm.controls.latStart?.invalid)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.start?.errors?.required" jhiTranslate="entity.validation.required">
-                        This field is required.
+                               [hidden]="!editForm.controls.latStart?.errors?.required" jhiTranslate="entity.validation.required">
+                            This field is required.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.start?.errors?.number" jhiTranslate="entity.validation.number">
+                               [hidden]="!editForm.controls.latStart?.errors?.number" jhiTranslate="entity.validation.number">
                             This field should be a number.
                         </small>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.end" for="field_end">End</label>
-                    <input type="number" class="form-control" name="end" id="field_end"
-                        [(ngModel)]="shift.end" required/>
-                    <div [hidden]="!(editForm.controls.end?.dirty && editForm.controls.end?.invalid)">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.longStart" for="field_lon">End</label>
+                    <input type="number" class="form-control" name="longStart" id="field_lon"
+                           [(ngModel)]="shift.longStart" maxlength="10" required/>
+                    <div [hidden]="!(editForm.controls.longStart?.dirty && editForm.controls.longStart?.invalid)">
                         <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.end?.errors?.required" jhiTranslate="entity.validation.required">
-                        This field is required.
+                               [hidden]="!editForm.controls.longStart?.errors?.required" jhiTranslate="entity.validation.required">
+                            This field is required.
                         </small>
                         <small class="form-text text-danger"
-                            [hidden]="!editForm.controls.end?.errors?.number" jhiTranslate="entity.validation.number">
+                               [hidden]="!editForm.controls.longStart?.errors?.number" jhiTranslate="entity.validation.number">
                             This field should be a number.
                         </small>
                     </div>
@@ -44,14 +55,14 @@
                     <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.car" for="field_car">Car</label>
                     <select class="form-control" id="field_car" name="car" [(ngModel)]="shift.car" >
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="carOption.id === shift.car?.id ? shift.car : carOption" *ngFor="let carOption of cars; trackBy: trackCarById">{{carOption.id}}</option>
+                        <option [ngValue]="carOption.model === shift.car?.model ? shift.car : carOption" *ngFor="let carOption of cars; trackBy: trackCarById">{{carOption.model}}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="cpdaimlerApp.shift.safetyDriver" for="field_safetyDriver">Safety Driver</label>
                     <select class="form-control" id="field_safetyDriver" name="safetyDriver" [(ngModel)]="shift.safetyDriver" >
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="safetyDriverOption.id === shift.safetyDriver?.id ? shift.safetyDriver : safetyDriverOption" *ngFor="let safetyDriverOption of safetydrivers; trackBy: trackSafetyDriverById">{{safetyDriverOption.id}}</option>
+                        <option [ngValue]="safetyDriverOption.id === shift.safetyDriver?.id ? shift.safetyDriver : safetyDriverOption" *ngFor="let safetyDriverOption of safetydrivers; trackBy: trackSafetyDriverById">{{safetyDriverOption.user.firstName+' '+safetyDriverOption.user.lastName}}</option>
                     </select>
                 </div>
             </div>

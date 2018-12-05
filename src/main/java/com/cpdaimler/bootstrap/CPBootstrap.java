@@ -55,7 +55,8 @@ public class CPBootstrap implements CommandLineRunner {
         s.setSafetyDriver(safetyDriverRepository.getOne(1L));
         s.setStart(System.currentTimeMillis() + 518400000);
         s.setEnd(System.currentTimeMillis() + 532800000);
-
+        s.setLatStart(52.521918);
+        s.setLongStart(13.413215);
         shiftRepository.save(s);
 
     }
@@ -66,6 +67,24 @@ public class CPBootstrap implements CommandLineRunner {
 
         SafetyDriver safetyDriver = new SafetyDriver();
         safetyDriver.setLogin("driver");
+        safetyDriver.setUser(u);
+        safetyDriver.getLicences().add(carLicence);
+
+        safetyDriverRepository.save(safetyDriver);
+
+        u= userRepository.findOneByLogin("user").get();
+
+        safetyDriver = new SafetyDriver();
+        safetyDriver.setLogin("user");
+        safetyDriver.setUser(u);
+        safetyDriver.getLicences().add(carLicence);
+
+        safetyDriverRepository.save(safetyDriver);
+
+        u= userRepository.findOneByLogin("admin").get();
+
+        safetyDriver = new SafetyDriver();
+        safetyDriver.setLogin("admin");
         safetyDriver.setUser(u);
         safetyDriver.getLicences().add(carLicence);
 
