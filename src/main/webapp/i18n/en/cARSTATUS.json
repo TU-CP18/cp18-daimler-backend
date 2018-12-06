@@ -2,10 +2,11 @@
     "cpdaimlerApp": {
         "CARSTATUS" : {
             "null": "",
-            "DRIVING_EMPTY": "DRIVING_EMPTY",
-            "DRIVING_FULL": "DRIVING_FULL",
-            "MAINTENANCE": "MAINTENANCE",
-            "AVAILABLE": "AVAILABLE"
+            "DRIVING_EMPTY": "driving - no passanger",
+            "DRIVING_FULL": "driving - passengers inside",
+            "MAINTENANCE": "maintenance",
+            "AVAILABLE": "available",
+            "INACTIVE": "inactive"
         }
     }
 }

@@ -17,10 +17,9 @@
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="cpdaimlerApp.car.status" for="field_status">Status</label>
                     <select class="form-control" name="status" [(ngModel)]="car.status" id="field_status" >
-                        <option value="DRIVING_EMPTY">{{'cpdaimlerApp.CARSTATUS.DRIVING_EMPTY' | translate}}</option>
-                        <option value="DRIVING_FULL">{{'cpdaimlerApp.CARSTATUS.DRIVING_FULL' | translate}}</option>
                         <option value="MAINTENANCE">{{'cpdaimlerApp.CARSTATUS.MAINTENANCE' | translate}}</option>
                         <option value="AVAILABLE">{{'cpdaimlerApp.CARSTATUS.AVAILABLE' | translate}}</option>
+                        <option value="AVAILABLE">{{'cpdaimlerApp.CARSTATUS.INACTIVE' | translate}}</option>
                     </select>
                 </div>
 
