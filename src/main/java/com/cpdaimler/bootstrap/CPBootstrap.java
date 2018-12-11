@@ -54,9 +54,24 @@ public class CPBootstrap implements CommandLineRunner {
         s.setCar(carRepository.getOne(1L));
         s.setSafetyDriver(safetyDriverRepository.getOne(1L));
         s.setStart(System.currentTimeMillis() + 518400000);
-        s.setEnd(System.currentTimeMillis() + 532800000);
-        s.setLatStart(52.521918);
-        s.setLongStart(13.413215);
+        s.setEnd(System.currentTimeMillis() + 518400000 + 14400000);
+        getRandomLatLon(s);
+        shiftRepository.save(s);
+
+        s= new Shift();
+        s.setCar(carRepository.getOne(1L));
+        s.setSafetyDriver(safetyDriverRepository.getOne(1L));
+        s.setStart(System.currentTimeMillis() + 518400000*2);
+        s.setEnd(System.currentTimeMillis() + 518400000*2 + 14400000);
+        getRandomLatLon(s);
+        shiftRepository.save(s);
+
+        s= new Shift();
+        s.setCar(carRepository.getOne(1L));
+        s.setSafetyDriver(safetyDriverRepository.getOne(1L));
+        s.setStart(System.currentTimeMillis() + 518400000*8);
+        s.setEnd(System.currentTimeMillis() + 518400000*8 + 14400000);
+        getRandomLatLon(s);
         shiftRepository.save(s);
 
     }
@@ -121,5 +136,22 @@ public class CPBootstrap implements CommandLineRunner {
 
         carRepository.save(c1);
 
+    }
+
+
+    private void getRandomLatLon(Shift shift) {
+
+        Double random = Math.random() * 0.1;
+        Double sign = Math.random();
+
+        if(sign > 0.5) {
+            random = random * -1;
+        }
+
+        Double lat = 52.531677 +random;
+        Double lng= 13.381777 +random;
+
+        shift.setLatStart(lat);
+        shift.setLongStart(lng);
     }
 }
