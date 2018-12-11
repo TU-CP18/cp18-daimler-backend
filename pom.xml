@@ -654,7 +654,8 @@
 				<configuration>
 				<resourceGroup>cp18-westeurope</resourceGroup>
 					<appName>cp18-webapp</appName>
-					<linuxRuntime>tomcat 9.0-jre8</linuxRuntime>
+					<javaVersion>1.8</javaVersion>
+					<javaWebContainer>tomcat 8.5</javaWebContainer>
 				</configuration>
 			</plugin>
             <plugin>
