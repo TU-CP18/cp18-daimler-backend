@@ -636,6 +636,7 @@
                     </execution>
                 </executions>
                 <configuration>
+					<skip>true</skip>
                     <mainClass>${start-class}</mainClass>
                     <executable>true</executable>
                     <fork>true</fork>
