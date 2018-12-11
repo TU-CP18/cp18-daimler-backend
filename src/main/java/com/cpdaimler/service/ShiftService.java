@@ -13,6 +13,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.Max;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -49,6 +53,13 @@ public class ShiftService {
      */
     public Shift save(Shift shift) {
         log.debug("Request to save Shift : {}", shift);
+
+        List<Shift> parallel= shiftRepository.findAllByCarOrSafetyDriverAndStartBetweenOrEndBetweenOrStartLessThanEqualAndEndGreaterThanEqual(shift.getCar(), shift.getSafetyDriver() ,shift.getStart(), shift.getEnd());
+
+        if(! parallel.isEmpty()) {
+            return null;
+        }
+
         Shift result = shiftRepository.save(shift);
         shiftSearchRepository.save(result);
         return result;

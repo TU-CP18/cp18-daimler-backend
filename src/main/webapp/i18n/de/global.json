@@ -133,7 +133,8 @@
         "userexists": "Benutzername bereits vergeben!",
         "emailexists": "Email wird bereits verwendet!",
         "idexists": "Ein neuer {{entityName}} kann noch keine ID haben",
-        "idnull": "Ungültige ID"
+        "idnull": "Ungültige ID",
+        "carused": "Dieses Auto wird bereits zur angegebenen Zeit genutzt"
     },
     "footer": ""
 }

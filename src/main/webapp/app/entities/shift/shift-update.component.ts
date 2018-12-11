@@ -77,7 +77,13 @@ export class ShiftUpdateComponent implements OnInit {
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<IShift>>) {
-        result.subscribe((res: HttpResponse<IShift>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<IShift>) => this.onSaveSuccess(),
+            (res: HttpErrorResponse) => {
+                this.onSaveError();
+                this.onError(res.message);
+            }
+        );
     }
 
     private onSaveSuccess() {
