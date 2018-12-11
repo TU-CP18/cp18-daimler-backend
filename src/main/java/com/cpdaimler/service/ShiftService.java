@@ -54,7 +54,7 @@ public class ShiftService {
     public Shift save(Shift shift) {
         log.debug("Request to save Shift : {}", shift);
 
-        List<Shift> parallel= shiftRepository.findAllByCarOrSafetyDriverAndStartBetweenOrEndBetweenOrStartLessThanEqualAndEndGreaterThanEqual(shift.getCar(), shift.getSafetyDriver() ,shift.getStart(), shift.getEnd());
+        List<Shift> parallel= shiftRepository.findAllByCarOrSafetyDriverAndStartBetweenOrEndBetweenOrStartLessThanEqualAndEndGreaterThanEqual(shift.getId() ,shift.getCar(), shift.getSafetyDriver() ,shift.getStart(), shift.getEnd());
 
         if(! parallel.isEmpty()) {
             return null;

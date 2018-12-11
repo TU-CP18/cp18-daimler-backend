@@ -135,7 +135,7 @@
         "emailexists": "Email is already in use!",
         "idexists": "A new {{ entityName }} cannot already have an ID",
         "idnull": "Invalid ID",
-        "carused": "This car is already used in the chosen time"
+        "carused": "This car / this safety driver is already used in the chosen time"
     },
     "footer": ""
 }
