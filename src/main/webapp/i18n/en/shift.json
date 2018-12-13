@@ -19,6 +19,8 @@
             },
             "start": "Start",
             "end": "End",
+            "longStart": "Lon",
+            "latStart": "Lat",
             "car": "Car",
             "safetyDriver": "Safety Driver"
         }

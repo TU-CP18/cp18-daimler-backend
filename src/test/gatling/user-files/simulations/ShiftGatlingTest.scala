@@ -74,6 +74,8 @@ class ShiftGatlingTest extends Simulation {
                 "id":null
                 , "start":null
                 , "end":null
+                , "longStart":null
+                , "latStart":null
                 }""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_shift_url"))).exitHereIfFailed

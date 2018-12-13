@@ -636,6 +636,7 @@
                     </execution>
                 </executions>
                 <configuration>
+					<skip>true</skip>
                     <mainClass>${start-class}</mainClass>
                     <executable>true</executable>
                     <fork>true</fork>
@@ -645,6 +646,18 @@
                     -->
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>com.microsoft.azure</groupId>
+				<artifactId>azure-webapp-maven-plugin</artifactId>
+				<!-- check Maven Central for the latest version -->
+				<version>1.5.1</version>
+				<configuration>
+				<resourceGroup>cp18-westeurope</resourceGroup>
+					<appName>cp18-webapp</appName>
+					<javaVersion>1.8</javaVersion>
+					<javaWebContainer>tomcat 8.5</javaWebContainer>
+				</configuration>
+			</plugin>
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>

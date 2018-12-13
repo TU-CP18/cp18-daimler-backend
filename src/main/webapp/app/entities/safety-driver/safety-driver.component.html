@@ -31,7 +31,10 @@
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
             <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="login"><span jhiTranslate="cpdaimlerApp.safetyDriver.login">Login</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="user.id"><span jhiTranslate="cpdaimlerApp.safetyDriver.user">User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="user.id"><span>User Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="user.firstName"><span jhiTranslate="userManagement.firstName">Firstname</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="user.lastName"><span jhiTranslate="userManagement.lastName">Lastname</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="user.email"><span jhiTranslate="userManagement.email">Email</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -40,7 +43,16 @@
                 <td><a [routerLink]="['/safety-driver', safetyDriver.id, 'view' ]">{{safetyDriver.id}}</a></td>
                 <td>{{safetyDriver.login}}</td>
                 <td>
-                    {{safetyDriver.user?.id}}
+                    {{safetyDriver.user.id}}
+                </td>
+                <td>
+                    {{safetyDriver.user.firstName}}
+                </td>
+                <td>
+                    {{safetyDriver.user.lastName}}
+                </td>
+                <td>
+                    {{safetyDriver.user.email}}
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">

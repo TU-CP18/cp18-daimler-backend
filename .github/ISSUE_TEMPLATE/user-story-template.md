@@ -1,12 +1,15 @@
 ---
 name: User Story Template
-about: Provides a template for back-end user stories.
+about: Provides a template for user stories.
 
 ---
 
-**Front-end twin:**
+**Details:**
 
-**Description:**
+**Tasks:**
+
+- [ ]
+- [ ]
 
 **Acceptance criteria:**
 

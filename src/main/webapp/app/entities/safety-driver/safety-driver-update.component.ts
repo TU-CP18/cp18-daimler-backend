@@ -6,7 +6,7 @@ import { JhiAlertService } from 'ng-jhipster';
 
 import { ISafetyDriver } from 'app/shared/model/safety-driver.model';
 import { SafetyDriverService } from './safety-driver.service';
-import { IUser, UserService } from 'app/core';
+import { IUser, User, UserService } from 'app/core';
 import { ICarLicence } from 'app/shared/model/car-licence.model';
 import { CarLicenceService } from 'app/entities/car-licence';
 
@@ -18,7 +18,7 @@ export class SafetyDriverUpdateComponent implements OnInit {
     safetyDriver: ISafetyDriver;
     isSaving: boolean;
 
-    users: IUser[];
+    user: IUser;
 
     carlicences: ICarLicence[];
 
@@ -34,13 +34,11 @@ export class SafetyDriverUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ safetyDriver }) => {
             this.safetyDriver = safetyDriver;
+
+            if (this.safetyDriver.user === undefined) {
+                this.safetyDriver.user = new User();
+            }
         });
-        this.userService.query().subscribe(
-            (res: HttpResponse<IUser[]>) => {
-                this.users = res.body;
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
         this.carLicenceService.query().subscribe(
             (res: HttpResponse<ICarLicence[]>) => {
                 this.carlicences = res.body;

@@ -28,6 +28,8 @@ export class ShiftUpdatePage {
     cancelButton = element(by.id('cancel-save'));
     startInput = element(by.id('field_start'));
     endInput = element(by.id('field_end'));
+    longStartInput = element(by.id('field_longStart'));
+    latStartInput = element(by.id('field_latStart'));
     carSelect = element(by.id('field_car'));
     safetyDriverSelect = element(by.id('field_safetyDriver'));
 
@@ -49,6 +51,22 @@ export class ShiftUpdatePage {
 
     async getEndInput() {
         return this.endInput.getAttribute('value');
+    }
+
+    async setLongStartInput(longStart) {
+        await this.longStartInput.sendKeys(longStart);
+    }
+
+    async getLongStartInput() {
+        return this.longStartInput.getAttribute('value');
+    }
+
+    async setLatStartInput(latStart) {
+        await this.latStartInput.sendKeys(latStart);
+    }
+
+    async getLatStartInput() {
+        return this.latStartInput.getAttribute('value');
     }
 
     async carSelectLastOption() {

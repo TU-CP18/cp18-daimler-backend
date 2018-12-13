@@ -41,11 +41,15 @@ describe('Shift e2e test', () => {
         await promise.all([
             shiftUpdatePage.setStartInput('5'),
             shiftUpdatePage.setEndInput('5'),
+            shiftUpdatePage.setLongStartInput('5'),
+            shiftUpdatePage.setLatStartInput('5'),
             shiftUpdatePage.carSelectLastOption(),
             shiftUpdatePage.safetyDriverSelectLastOption()
         ]);
         expect(await shiftUpdatePage.getStartInput()).to.eq('5');
         expect(await shiftUpdatePage.getEndInput()).to.eq('5');
+        expect(await shiftUpdatePage.getLongStartInput()).to.eq('5');
+        expect(await shiftUpdatePage.getLatStartInput()).to.eq('5');
         await shiftUpdatePage.save();
         expect(await shiftUpdatePage.getSaveButton().isPresent()).to.be.false;
 

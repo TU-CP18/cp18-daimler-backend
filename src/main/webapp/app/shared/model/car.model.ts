@@ -4,7 +4,8 @@ export const enum CARSTATUS {
     DRIVING_EMPTY = 'DRIVING_EMPTY',
     DRIVING_FULL = 'DRIVING_FULL',
     MAINTENANCE = 'MAINTENANCE',
-    AVAILABLE = 'AVAILABLE'
+    AVAILABLE = 'AVAILABLE',
+    INACTIVE = 'INACTIVE'
 }
 
 export interface ICar {

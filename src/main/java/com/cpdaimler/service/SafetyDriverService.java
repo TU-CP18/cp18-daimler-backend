@@ -1,13 +1,20 @@
 package com.cpdaimler.service;
 
+import com.cpdaimler.config.Constants;
 import com.cpdaimler.domain.SafetyDriver;
+import com.cpdaimler.domain.User;
 import com.cpdaimler.repository.SafetyDriverRepository;
+import com.cpdaimler.repository.UserRepository;
 import com.cpdaimler.repository.search.SafetyDriverSearchRepository;
+import com.cpdaimler.security.AuthoritiesConstants;
+import com.cpdaimler.service.dto.UserDTO;
+import io.undertow.util.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +35,18 @@ public class SafetyDriverService {
 
     private SafetyDriverSearchRepository safetyDriverSearchRepository;
 
-    public SafetyDriverService(SafetyDriverRepository safetyDriverRepository, SafetyDriverSearchRepository safetyDriverSearchRepository) {
+    private UserService userService;
+
+    private PasswordEncoder passwordEncoder;
+
+    private UserRepository userRepository;
+
+    public SafetyDriverService(SafetyDriverRepository safetyDriverRepository, UserService userService , PasswordEncoder passwordEncoder, SafetyDriverSearchRepository safetyDriverSearchRepository, UserRepository userRepository) {
         this.safetyDriverRepository = safetyDriverRepository;
         this.safetyDriverSearchRepository = safetyDriverSearchRepository;
+        this.userService=userService;
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -41,9 +57,47 @@ public class SafetyDriverService {
      */
     public SafetyDriver save(SafetyDriver safetyDriver) {
         log.debug("Request to save SafetyDriver : {}", safetyDriver);
+
+        SafetyDriver result = safetyDriverRepository.save(safetyDriver);
+        safetyDriverSearchRepository.save(result);
+
+        Optional<User> userOpt= userRepository.findOneByLogin(safetyDriver.getLogin());
+
+        if(!userOpt.isPresent()) {
+            try {
+                throw new BadRequestException();
+            } catch (BadRequestException e) {
+                e.printStackTrace();
+            }
+        }
+
+        User u = userOpt.get();
+
+        u.setLogin(safetyDriver.getLogin());
+        u.setEmail(safetyDriver.getUser().getEmail());
+        u.setFirstName(safetyDriver.getUser().getFirstName());
+        u.setLastName(safetyDriver.getUser().getLastName());
+
+        userRepository.save(u);
+
+        return result;
+
+    }
+
+    public SafetyDriver register(SafetyDriver safetyDriver) {
+        log.debug("Request to save SafetyDriver : {}", safetyDriver);
+
+
+        safetyDriver.getUser().setLogin(safetyDriver.getLogin());
+        UserDTO userDTO = new UserDTO(safetyDriver.getUser());
+        userDTO.setLangKey(Constants.DEFAULT_LANGUAGE);
+        userDTO.setActivated(true);
+        User u= userService.registerUser(userDTO,userDTO.getFirstName().toLowerCase().substring(0,3) + userDTO.getLastName().toLowerCase().substring(0,3) + userDTO.getLogin().toLowerCase());
+        safetyDriver.setUser(u);
         SafetyDriver result = safetyDriverRepository.save(safetyDriver);
         safetyDriverSearchRepository.save(result);
         return result;
+
     }
 
     /**
@@ -87,6 +141,10 @@ public class SafetyDriverService {
      */
     public void delete(Long id) {
         log.debug("Request to delete SafetyDriver : {}", id);
+
+        SafetyDriver safetyDriver = safetyDriverSearchRepository.findById(id).get();
+        userRepository.deleteById(userRepository.findOneByLogin(safetyDriver.getLogin()).get().getId());
+
         safetyDriverRepository.deleteById(id);
         safetyDriverSearchRepository.deleteById(id);
     }

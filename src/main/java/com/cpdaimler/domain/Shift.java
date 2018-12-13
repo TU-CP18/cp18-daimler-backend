@@ -31,6 +31,12 @@ public class Shift implements Serializable {
     @Column(name = "jhi_end", nullable = false)
     private Long end;
 
+    @Column(name = "long_start")
+    private Double longStart;
+
+    @Column(name = "lat_start")
+    private Double latStart;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private Car car;
@@ -72,6 +78,32 @@ public class Shift implements Serializable {
 
     public void setEnd(Long end) {
         this.end = end;
+    }
+
+    public Double getLongStart() {
+        return longStart;
+    }
+
+    public Shift longStart(Double longStart) {
+        this.longStart = longStart;
+        return this;
+    }
+
+    public void setLongStart(Double longStart) {
+        this.longStart = longStart;
+    }
+
+    public Double getLatStart() {
+        return latStart;
+    }
+
+    public Shift latStart(Double latStart) {
+        this.latStart = latStart;
+        return this;
+    }
+
+    public void setLatStart(Double latStart) {
+        this.latStart = latStart;
     }
 
     public Car getCar() {
@@ -127,6 +159,8 @@ public class Shift implements Serializable {
             "id=" + getId() +
             ", start=" + getStart() +
             ", end=" + getEnd() +
+            ", longStart=" + getLongStart() +
+            ", latStart=" + getLatStart() +
             "}";
     }
 }

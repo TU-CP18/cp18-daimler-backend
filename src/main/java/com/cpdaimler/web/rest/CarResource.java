@@ -100,6 +100,19 @@ public class CarResource {
     }
 
     /**
+     * GET  /cars : get all active the cars.
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of cars in body
+     */
+    @GetMapping("/cars/active")
+    @Timed
+    public ResponseEntity<List<Car>> getAllActiveCars() {
+        log.debug("REST request to get a page of Cars");
+        List<Car> cars = carService.findAllActive();
+        return new ResponseEntity<>(cars, HttpStatus.OK);
+    }
+
+    /**
      * GET  /cars/:id : get the "id" car.
      *
      * @param id the id of the car to retrieve

@@ -1,6 +1,7 @@
 package com.cpdaimler.service;
 
 import com.cpdaimler.domain.Car;
+import com.cpdaimler.domain.enumeration.CARSTATUS;
 import com.cpdaimler.repository.CarRepository;
 import com.cpdaimler.repository.search.CarSearchRepository;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -56,6 +58,17 @@ public class CarService {
     public Page<Car> findAll(Pageable pageable) {
         log.debug("Request to get all Cars");
         return carRepository.findAll(pageable);
+    }
+
+    /**
+     * Get all the cars.
+     *
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public List<Car> findAllActive() {
+        log.debug("Request to get all Cars");
+        return carRepository.findAllByStatus(CARSTATUS.AVAILABLE);
     }
 
 

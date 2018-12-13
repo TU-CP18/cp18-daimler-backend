@@ -2,6 +2,7 @@ package com.cpdaimler.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.cpdaimler.domain.SafetyDriver;
+import com.cpdaimler.service.MailService;
 import com.cpdaimler.service.SafetyDriverService;
 import com.cpdaimler.web.rest.errors.BadRequestAlertException;
 import com.cpdaimler.web.rest.util.HeaderUtil;
@@ -39,8 +40,11 @@ public class SafetyDriverResource {
 
     private SafetyDriverService safetyDriverService;
 
-    public SafetyDriverResource(SafetyDriverService safetyDriverService) {
+    private MailService mailService;
+
+    public SafetyDriverResource(SafetyDriverService safetyDriverService, MailService mailService) {
         this.safetyDriverService = safetyDriverService;
+        this.mailService=mailService;
     }
 
     /**
@@ -57,11 +61,14 @@ public class SafetyDriverResource {
         if (safetyDriver.getId() != null) {
             throw new BadRequestAlertException("A new safetyDriver cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        SafetyDriver result = safetyDriverService.save(safetyDriver);
+        SafetyDriver result = safetyDriverService.register(safetyDriver);
+        mailService.sendCreationEmail(result.getUser());
         return ResponseEntity.created(new URI("/api/safety-drivers/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
+
+
 
     /**
      * PUT  /safety-drivers : Updates an existing safetyDriver.
@@ -130,6 +137,8 @@ public class SafetyDriverResource {
     @Timed
     public ResponseEntity<Void> deleteSafetyDriver(@PathVariable Long id) {
         log.debug("REST request to delete SafetyDriver : {}", id);
+
+
         safetyDriverService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

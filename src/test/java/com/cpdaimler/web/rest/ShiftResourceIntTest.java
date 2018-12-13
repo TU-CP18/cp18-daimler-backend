@@ -52,6 +52,12 @@ public class ShiftResourceIntTest {
     private static final Long DEFAULT_END = 1L;
     private static final Long UPDATED_END = 2L;
 
+    private static final Double DEFAULT_LONG_START = 1D;
+    private static final Double UPDATED_LONG_START = 2D;
+
+    private static final Double DEFAULT_LAT_START = 1D;
+    private static final Double UPDATED_LAT_START = 2D;
+
     @Autowired
     private ShiftRepository shiftRepository;
     
@@ -102,7 +108,9 @@ public class ShiftResourceIntTest {
     public static Shift createEntity(EntityManager em) {
         Shift shift = new Shift()
             .start(DEFAULT_START)
-            .end(DEFAULT_END);
+            .end(DEFAULT_END)
+            .longStart(DEFAULT_LONG_START)
+            .latStart(DEFAULT_LAT_START);
         return shift;
     }
 
@@ -128,6 +136,8 @@ public class ShiftResourceIntTest {
         Shift testShift = shiftList.get(shiftList.size() - 1);
         assertThat(testShift.getStart()).isEqualTo(DEFAULT_START);
         assertThat(testShift.getEnd()).isEqualTo(DEFAULT_END);
+        assertThat(testShift.getLongStart()).isEqualTo(DEFAULT_LONG_START);
+        assertThat(testShift.getLatStart()).isEqualTo(DEFAULT_LAT_START);
 
         // Validate the Shift in Elasticsearch
         verify(mockShiftSearchRepository, times(1)).save(testShift);
@@ -203,7 +213,9 @@ public class ShiftResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(shift.getId().intValue())))
             .andExpect(jsonPath("$.[*].start").value(hasItem(DEFAULT_START.intValue())))
-            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.intValue())));
+            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.intValue())))
+            .andExpect(jsonPath("$.[*].longStart").value(hasItem(DEFAULT_LONG_START.doubleValue())))
+            .andExpect(jsonPath("$.[*].latStart").value(hasItem(DEFAULT_LAT_START.doubleValue())));
     }
     
     @Test
@@ -218,7 +230,9 @@ public class ShiftResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(shift.getId().intValue()))
             .andExpect(jsonPath("$.start").value(DEFAULT_START.intValue()))
-            .andExpect(jsonPath("$.end").value(DEFAULT_END.intValue()));
+            .andExpect(jsonPath("$.end").value(DEFAULT_END.intValue()))
+            .andExpect(jsonPath("$.longStart").value(DEFAULT_LONG_START.doubleValue()))
+            .andExpect(jsonPath("$.latStart").value(DEFAULT_LAT_START.doubleValue()));
     }
 
     @Test
@@ -245,7 +259,9 @@ public class ShiftResourceIntTest {
         em.detach(updatedShift);
         updatedShift
             .start(UPDATED_START)
-            .end(UPDATED_END);
+            .end(UPDATED_END)
+            .longStart(UPDATED_LONG_START)
+            .latStart(UPDATED_LAT_START);
 
         restShiftMockMvc.perform(put("/api/shifts")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -258,6 +274,8 @@ public class ShiftResourceIntTest {
         Shift testShift = shiftList.get(shiftList.size() - 1);
         assertThat(testShift.getStart()).isEqualTo(UPDATED_START);
         assertThat(testShift.getEnd()).isEqualTo(UPDATED_END);
+        assertThat(testShift.getLongStart()).isEqualTo(UPDATED_LONG_START);
+        assertThat(testShift.getLatStart()).isEqualTo(UPDATED_LAT_START);
 
         // Validate the Shift in Elasticsearch
         verify(mockShiftSearchRepository, times(1)).save(testShift);
@@ -318,7 +336,9 @@ public class ShiftResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(shift.getId().intValue())))
             .andExpect(jsonPath("$.[*].start").value(hasItem(DEFAULT_START.intValue())))
-            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.intValue())));
+            .andExpect(jsonPath("$.[*].end").value(hasItem(DEFAULT_END.intValue())))
+            .andExpect(jsonPath("$.[*].longStart").value(hasItem(DEFAULT_LONG_START.doubleValue())))
+            .andExpect(jsonPath("$.[*].latStart").value(hasItem(DEFAULT_LAT_START.doubleValue())));
     }
 
     @Test
