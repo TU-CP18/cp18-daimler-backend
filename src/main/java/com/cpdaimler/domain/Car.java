@@ -1,11 +1,14 @@
 package com.cpdaimler.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 import com.cpdaimler.domain.enumeration.CARSTATUS;
@@ -31,6 +34,8 @@ public class Car implements Serializable {
     @Column(name = "status")
     private CARSTATUS status;
 
+    @OneToMany(mappedBy = "car")
+    private Set<CarIssue> issues = new HashSet<>();
     @ManyToOne
     @JsonIgnoreProperties("")
     private CarLicence licence;
@@ -68,6 +73,31 @@ public class Car implements Serializable {
 
     public void setStatus(CARSTATUS status) {
         this.status = status;
+    }
+
+    public Set<CarIssue> getIssues() {
+        return issues;
+    }
+
+    public Car issues(Set<CarIssue> carIssues) {
+        this.issues = carIssues;
+        return this;
+    }
+
+    public Car addIssues(CarIssue carIssue) {
+        this.issues.add(carIssue);
+        carIssue.setCar(this);
+        return this;
+    }
+
+    public Car removeIssues(CarIssue carIssue) {
+        this.issues.remove(carIssue);
+        carIssue.setCar(null);
+        return this;
+    }
+
+    public void setIssues(Set<CarIssue> carIssues) {
+        this.issues = carIssues;
     }
 
     public CarLicence getLicence() {

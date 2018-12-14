@@ -19,6 +19,7 @@
             },
             "model": "Model",
             "status": "Status",
+            "issues": "Issues",
             "licence": "Licence"
         }
     }
