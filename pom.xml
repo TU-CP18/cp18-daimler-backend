@@ -652,8 +652,10 @@
 				<!-- check Maven Central for the latest version -->
 				<version>1.5.1</version>
 				<configuration>
-				<resourceGroup>cp18-westeurope</resourceGroup>
+					<resourceGroup>cp18-westeurope</resourceGroup>
 					<appName>cp18-webapp</appName>
+					<pricingTier>F1</pricingTier>
+					<appServicePlanName>cp18-serviceplan</appServicePlanName>
 					<javaVersion>1.8</javaVersion>
 					<javaWebContainer>tomcat 8.5</javaWebContainer>
 				</configuration>
