@@ -636,7 +636,6 @@
                     </execution>
                 </executions>
                 <configuration>
-					<skip>true</skip>
                     <mainClass>${start-class}</mainClass>
                     <executable>true</executable>
                     <fork>true</fork>
@@ -652,10 +651,13 @@
 				<!-- check Maven Central for the latest version -->
 				<version>1.5.1</version>
 				<configuration>
-				<resourceGroup>cp18-westeurope</resourceGroup>
-					<appName>cp18-webapp</appName>
+					<resourceGroup>cp18-westeurope</resourceGroup>
+					<appName>cp18-linuxapp</appName>
+<!--				<appServicePlanName>cp18-serviceplanlinux</appServicePlanName>
+					<pricingTier>F1</pricingTier>
 					<javaVersion>1.8</javaVersion>
-					<javaWebContainer>tomcat 8.5</javaWebContainer>
+					<javaWebContainer>tomcat 8.5</javaWebContainer>-->
+					<linuxRuntime>tomcat 9.0-jre8</linuxRuntime>
 				</configuration>
 			</plugin>
             <plugin>
