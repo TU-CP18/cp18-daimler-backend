@@ -80,20 +80,6 @@ public class CarIssueResource {
     }
 
     /**
-     * GET  /car-issues/:id : get the "id" carIssue.
-     *
-     * @param id the id of the carIssue to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the carIssue, or with status 404 (Not Found)
-     */
-    @GetMapping("/car-issues/{id}")
-    @Timed
-    public ResponseEntity<CarIssue> getCarIssue(@PathVariable Long id) {
-        log.debug("REST request to get CarIssue : {}", id);
-        Optional<CarIssue> carIssue = carIssueService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(carIssue);
-    }
-
-    /**
      * DELETE  /car-issues/:id : delete the "id" carIssue.
      *
      * @param id the id of the carIssue to delete

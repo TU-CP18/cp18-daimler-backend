@@ -1,7 +1,9 @@
 package com.cpdaimler.service;
 
+import com.cpdaimler.domain.Car;
 import com.cpdaimler.domain.CarIssue;
 import com.cpdaimler.repository.CarIssueRepository;
+import com.cpdaimler.repository.CarRepository;
 import com.cpdaimler.repository.search.CarIssueSearchRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -28,9 +31,12 @@ public class CarIssueService {
 
     private CarIssueSearchRepository carIssueSearchRepository;
 
-    public CarIssueService(CarIssueRepository carIssueRepository, CarIssueSearchRepository carIssueSearchRepository) {
+    private CarRepository carRepository;
+
+    public CarIssueService(CarIssueRepository carIssueRepository, CarIssueSearchRepository carIssueSearchRepository, CarRepository carRepository) {
         this.carIssueRepository = carIssueRepository;
         this.carIssueSearchRepository = carIssueSearchRepository;
+        this.carRepository = carRepository;
     }
 
     /**
@@ -69,6 +75,24 @@ public class CarIssueService {
     public Optional<CarIssue> findOne(Long id) {
         log.debug("Request to get CarIssue : {}", id);
         return carIssueRepository.findById(id);
+    }
+
+    /**
+     * Get one carIssue by id.
+     *
+     * @param carId the id of the entity
+     * @return the entity
+     */
+    @Transactional(readOnly = true)
+    public List<CarIssue> findAllByCar(Long carId) {
+
+        Optional<Car> car= carRepository.findById(carId);
+
+        if(!car.isPresent()) {
+            return null;
+        }
+
+        return carIssueRepository.findAllByCar(car.get());
     }
 
     /**

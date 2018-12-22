@@ -183,4 +183,17 @@ public class CarResource {
             .body(result);
     }
 
+    /**
+     * GET  /car-issues/:id : get the "id" carIssue.
+     *
+     * @param carId the id of the carIssue to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the carIssue, or with status 404 (Not Found)
+     */
+    @GetMapping("/cars/{carId}/issues")
+    @Timed
+    public ResponseEntity<List<CarIssue>> getCarIssueByCarId(@PathVariable Long carId) {
+        log.debug("REST request to get CarIssue for the car with the id : {}", carId);
+        List<CarIssue> carIssues = carIssueService.findAllByCar(carId);
+        return new ResponseEntity<List<CarIssue>>(carIssues, HttpStatus.OK);
+    }
 }
