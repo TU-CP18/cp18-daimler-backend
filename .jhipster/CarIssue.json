@@ -1,0 +1,38 @@
+{
+    "name": "CarIssue",
+    "fields": [
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "part",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "posX",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "posY",
+            "fieldType": "Double"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipName": "car",
+            "otherEntityName": "car",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20181214133641",
+    "entityTableName": "car_issue",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

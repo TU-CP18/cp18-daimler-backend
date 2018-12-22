@@ -2,6 +2,8 @@ package com.cpdaimler.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.cpdaimler.domain.Car;
+import com.cpdaimler.domain.CarIssue;
+import com.cpdaimler.service.CarIssueService;
 import com.cpdaimler.service.CarService;
 import com.cpdaimler.web.rest.errors.BadRequestAlertException;
 import com.cpdaimler.web.rest.util.HeaderUtil;
@@ -38,8 +40,11 @@ public class CarResource {
 
     private CarService carService;
 
-    public CarResource(CarService carService) {
+    private CarIssueService carIssueService;
+
+    public CarResource(CarService carService, CarIssueService carIssueService) {
         this.carService = carService;
+        this.carIssueService = carIssueService;
     }
 
     /**
@@ -144,7 +149,7 @@ public class CarResource {
      * SEARCH  /_search/cars?query=:query : search for the car corresponding
      * to the query.
      *
-     * @param query the query of the car search
+     * @param query    the query of the car search
      * @param pageable the pagination information
      * @return the result of the search
      */
@@ -155,6 +160,27 @@ public class CarResource {
         Page<Car> page = carService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/cars");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/cars/{carId}/issues")
+    @Timed
+    public ResponseEntity<CarIssue> createCarIssueForCar(@PathVariable Long carId, @RequestBody CarIssue carIssue) throws URISyntaxException {
+        log.debug("REST request to save CarIssue : {}", carIssue);
+        if (carIssue.getId() != null) {
+            throw new BadRequestAlertException("A new carIssue cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+
+        Optional<Car> car = carService.findOne(carId);
+
+        if (!car.isPresent()) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        carIssue.setCar(car.get());
+
+        CarIssue result = carIssueService.save(carIssue);
+        return ResponseEntity.created(new URI("/api/car-issues/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 
 }

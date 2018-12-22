@@ -43,26 +43,6 @@ public class CarIssueResource {
     }
 
     /**
-     * POST  /car-issues : Create a new carIssue.
-     *
-     * @param carIssue the carIssue to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new carIssue, or with status 400 (Bad Request) if the carIssue has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/car-issues")
-    @Timed
-    public ResponseEntity<CarIssue> createCarIssue(@RequestBody CarIssue carIssue) throws URISyntaxException {
-        log.debug("REST request to save CarIssue : {}", carIssue);
-        if (carIssue.getId() != null) {
-            throw new BadRequestAlertException("A new carIssue cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        CarIssue result = carIssueService.save(carIssue);
-        return ResponseEntity.created(new URI("/api/car-issues/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
-    }
-
-    /**
      * PUT  /car-issues : Updates an existing carIssue.
      *
      * @param carIssue the carIssue to update
