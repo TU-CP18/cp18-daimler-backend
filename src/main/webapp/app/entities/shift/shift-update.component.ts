@@ -58,6 +58,14 @@ export class ShiftUpdateComponent implements OnInit {
         this.end = { date: null, time: null };
 
         this.earliestDate = new Date(Date.now());
+
+        if (this.shift !== undefined && this.shift !== null) {
+            this.start.date = this.getLocalDateTime(this.shift.start).split('T')[0];
+            this.start.time = this.getLocalDateTime(this.shift.start).split('T')[1];
+
+            this.end.date = this.getLocalDateTime(this.shift.end).split('T')[0];
+            this.end.time = this.getLocalDateTime(this.shift.end).split('T')[1];
+        }
     }
 
     previousState() {
@@ -66,12 +74,13 @@ export class ShiftUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+
+        this.shift.start = new Date(this.combineDateAndTime(this.start)).getTime();
+        this.shift.end = new Date(this.combineDateAndTime(this.end)).getTime();
+
         if (this.shift.id !== undefined) {
             this.subscribeToSaveResponse(this.shiftService.update(this.shift));
         } else {
-            this.shift.start = new Date(this.combineDateAndTime(this.start)).getTime();
-            this.shift.end = new Date(this.combineDateAndTime(this.end)).getTime();
-
             this.subscribeToSaveResponse(this.shiftService.create(this.shift));
         }
     }
@@ -120,6 +129,7 @@ export class ShiftUpdateComponent implements OnInit {
         if (minute < 10) {
             minute = '0' + minute;
         }
+
         return year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
     }
 

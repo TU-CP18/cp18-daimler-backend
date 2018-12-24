@@ -645,6 +645,21 @@
                     -->
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>com.microsoft.azure</groupId>
+				<artifactId>azure-webapp-maven-plugin</artifactId>
+				<!-- check Maven Central for the latest version -->
+				<version>1.5.1</version>
+				<configuration>
+					<resourceGroup>cp18-westeurope</resourceGroup>
+					<appName>cp18-linuxapp</appName>
+<!--				<appServicePlanName>cp18-serviceplanlinux</appServicePlanName>
+					<pricingTier>F1</pricingTier>
+					<javaVersion>1.8</javaVersion>
+					<javaWebContainer>tomcat 8.5</javaWebContainer>-->
+					<linuxRuntime>tomcat 9.0-jre8</linuxRuntime>
+				</configuration>
+			</plugin>
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
