@@ -11,6 +11,7 @@
                 "safetyDriver": "Safety Driver",
                 "shift": "Shift",
                 "carLicence": "Car Licence",
+                "carIssue": "Car Issue",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

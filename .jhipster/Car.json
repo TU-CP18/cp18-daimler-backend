@@ -13,6 +13,12 @@
     ],
     "relationships": [
         {
+            "relationshipType": "one-to-many",
+            "relationshipName": "issues",
+            "otherEntityName": "carIssue",
+            "otherEntityRelationshipName": "car"
+        },
+        {
             "relationshipType": "many-to-one",
             "relationshipName": "licence",
             "otherEntityName": "carLicence",

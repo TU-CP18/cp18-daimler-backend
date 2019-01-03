@@ -15,6 +15,14 @@ entity Shift {
 
 }
 
+entity CarIssue {
+    description String,
+    part String,
+    posX Double,
+    posY Double
+
+}
+
 entity CarLicence {
 	carLicence LICENCE
 }
@@ -35,6 +43,11 @@ relationship ManyToOne {
 	Shift{car} to Car
 	Shift{safetyDriver} to SafetyDriver
     Car{licence} to CarLicence,
+}
+
+relationship OneToMany {
+    Car{issues} to CarIssue
+
 }
 
 relationship ManyToMany {

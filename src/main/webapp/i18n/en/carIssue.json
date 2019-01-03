@@ -1,0 +1,27 @@
+
+{
+    "cpdaimlerApp": {
+        "carIssue" : {
+            "home": {
+                "title": "Car Issues",
+                "createLabel": "Create a new Car Issue",
+                "createOrEditLabel": "Create or edit a Car Issue",
+                "search": "Search for Car Issue"
+            },
+            "created": "A new Car Issue is created with identifier {{ param }}",
+            "updated": "A Car Issue is updated with identifier {{ param }}",
+            "deleted": "A Car Issue is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Car Issue {{ id }}?"
+            },
+            "detail": {
+                "title": "Car Issue"
+            },
+            "description": "Description",
+            "part": "Part",
+            "posX": "Pos X",
+            "posY": "Pos Y",
+            "car": "Car"
+        }
+    }
+}
