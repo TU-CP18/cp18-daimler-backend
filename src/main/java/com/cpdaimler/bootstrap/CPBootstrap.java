@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 @Component
 public class CPBootstrap implements CommandLineRunner {
 
@@ -141,8 +143,8 @@ public class CPBootstrap implements CommandLineRunner {
 
     private void getRandomLatLon(Shift shift) {
 
-        Double random = Math.random() * 0.1;
-        Double sign = Math.random();
+        Double random = ThreadLocalRandom.current().nextDouble() * 0.1;
+        Double sign = ThreadLocalRandom.current().nextDouble();
 
         if(sign > 0.5) {
             random = random * -1;
