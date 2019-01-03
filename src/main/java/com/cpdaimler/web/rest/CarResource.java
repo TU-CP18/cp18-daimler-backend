@@ -3,6 +3,7 @@ package com.cpdaimler.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.cpdaimler.domain.Car;
 import com.cpdaimler.domain.CarIssue;
+import com.cpdaimler.domain.enumeration.CARSTATUS;
 import com.cpdaimler.service.CarIssueService;
 import com.cpdaimler.service.CarService;
 import com.cpdaimler.web.rest.errors.BadRequestAlertException;
@@ -129,6 +130,42 @@ public class CarResource {
         log.debug("REST request to get Car : {}", id);
         Optional<Car> car = carService.findOne(id);
         return ResponseUtil.wrapOrNotFound(car);
+    }
+
+    @GetMapping("/cars/status/available/number")
+    @Timed
+    public Long getNumberByStatusAvailable() {
+        log.debug("REST request to get Car : {}");
+        Long count = carService.countByCarStatus(CARSTATUS.AVAILABLE);
+        return count;
+    }
+    @GetMapping("/cars/status/drivingFull/number")
+    @Timed
+    public Long getNumberByStatusDrivingFull() {
+        log.debug("REST request to get Car : {}");
+        Long count = carService.countByCarStatus(CARSTATUS.DRIVING_FULL);
+        return count;
+    }
+    @GetMapping("/cars/status/maintenance/number")
+    @Timed
+    public Long getNumberByStatusMaintenance() {
+        log.debug("REST request to get Car : {}");
+        Long count = carService.countByCarStatus(CARSTATUS.MAINTENANCE);
+        return count;
+    }
+    @GetMapping("/cars/status/drivingEmpty/number")
+    @Timed
+    public Long getNumberByStatusDrivingEmpty() {
+        log.debug("REST request to get Car : {}");
+        Long count = carService.countByCarStatus(CARSTATUS.DRIVING_EMPTY);
+        return count;
+    }
+    @GetMapping("/cars/status/inactive/number")
+    @Timed
+    public Long getNumberByStatus() {
+        log.debug("REST request to get Car : {}");
+        Long count = carService.countByCarStatus(CARSTATUS.INACTIVE);
+        return count;
     }
 
     /**

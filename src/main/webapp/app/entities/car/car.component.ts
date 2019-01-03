@@ -10,6 +10,8 @@ import { Principal } from 'app/core';
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { CarService } from './car.service';
 
+import { Chart } from 'chart.js';
+
 @Component({
     selector: 'jhi-car',
     templateUrl: './car.component.html'
@@ -30,6 +32,14 @@ export class CarComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: any;
+
+    chart = [];
+
+    numberDrivingEmpty: Number;
+    numberDrivingFull: Number;
+    numberMaintenance: Number;
+    numberAvailable: Number;
+    numberInactive: Number;
 
     constructor(
         private carService: CarService,
@@ -135,6 +145,33 @@ export class CarComponent implements OnInit, OnDestroy {
             this.currentAccount = account;
         });
         this.registerChangeInCars();
+
+        this.carService.countAvailable().subscribe(
+            (res: HttpResponse<Number>) => {
+                this.numberAvailable = res.body;
+                this.carService.countInactive().subscribe(
+                    (innerRes: HttpResponse<Number>) => {
+                        this.numberInactive = innerRes.body;
+                        this.chart = new Chart('canvas', {
+                            type: 'pie',
+                            data: {
+                                datasets: [
+                                    {
+                                        data: [this.numberAvailable, this.numberInactive],
+                                        backgroundColor: ['#3e95cd', '#8e5ea2']
+                                    }
+                                ],
+                                // These labels appear in the legend and in the tooltips when hovering different arcs
+                                labels: ['available', 'inactive']
+                            },
+                            options: {}
+                        });
+                    },
+                    (innerRes: HttpErrorResponse) => this.onError(innerRes.message)
+                );
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     ngOnDestroy() {

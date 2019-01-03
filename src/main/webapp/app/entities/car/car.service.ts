@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
-import { ICar } from 'app/shared/model/car.model';
+import { CARSTATUS, ICar } from 'app/shared/model/car.model';
 
 type EntityResponseType = HttpResponse<ICar>;
 type EntityArrayResponseType = HttpResponse<ICar[]>;
@@ -45,5 +45,25 @@ export class CarService {
     search(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
         return this.http.get<ICar[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
+    }
+
+    countDrivingEmpty(): Observable<HttpResponse<Number>> {
+        return this.http.get<Number>(`${this.resourceUrl}/statusdrivingEmpty/number`, { observe: 'response' });
+    }
+
+    countDrivingFull(): Observable<HttpResponse<Number>> {
+        return this.http.get<Number>(`${this.resourceUrl}/status/drivingFull/number`, { observe: 'response' });
+    }
+
+    countMaintenance(): Observable<HttpResponse<Number>> {
+        return this.http.get<Number>(`${this.resourceUrl}/status/maintenance/number`, { observe: 'response' });
+    }
+
+    countAvailable(): Observable<HttpResponse<Number>> {
+        return this.http.get<Number>(`${this.resourceUrl}/status/available/number`, { observe: 'response' });
+    }
+
+    countInactive(): Observable<HttpResponse<Number>> {
+        return this.http.get<Number>(`${this.resourceUrl}/status/inactive/number`, { observe: 'response' });
     }
 }
