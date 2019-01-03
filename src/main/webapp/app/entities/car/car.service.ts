@@ -48,7 +48,7 @@ export class CarService {
     }
 
     countDrivingEmpty(): Observable<HttpResponse<Number>> {
-        return this.http.get<Number>(`${this.resourceUrl}/statusdrivingEmpty/number`, { observe: 'response' });
+        return this.http.get<Number>(`${this.resourceUrl}/status/drivingEmpty/number`, { observe: 'response' });
     }
 
     countDrivingFull(): Observable<HttpResponse<Number>> {

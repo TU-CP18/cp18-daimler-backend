@@ -146,31 +146,63 @@ export class CarComponent implements OnInit, OnDestroy {
         });
         this.registerChangeInCars();
 
+        // we should rewrite this code section
+        // how about promise hell :D
         this.carService.countAvailable().subscribe(
-            (res: HttpResponse<Number>) => {
-                this.numberAvailable = res.body;
-                this.carService.countInactive().subscribe(
-                    (innerRes: HttpResponse<Number>) => {
-                        this.numberInactive = innerRes.body;
-                        this.chart = new Chart('canvas', {
-                            type: 'pie',
-                            data: {
-                                datasets: [
-                                    {
-                                        data: [this.numberAvailable, this.numberInactive],
-                                        backgroundColor: ['#3e95cd', '#8e5ea2']
-                                    }
-                                ],
-                                // These labels appear in the legend and in the tooltips when hovering different arcs
-                                labels: ['available', 'inactive']
+            (res1: HttpResponse<Number>) => {
+                this.numberAvailable = res1.body;
+                this.carService.countDrivingEmpty().subscribe(
+                    (res2: HttpResponse<Number>) => {
+                        this.numberDrivingEmpty = res2.body;
+                        this.carService.countMaintenance().subscribe(
+                            (res3: HttpResponse<Number>) => {
+                                this.numberMaintenance = res3.body;
+                                this.carService.countDrivingFull().subscribe(
+                                    (res4: HttpResponse<Number>) => {
+                                        this.numberDrivingFull = res4.body;
+                                        this.carService.countInactive().subscribe(
+                                            (innerRes: HttpResponse<Number>) => {
+                                                this.numberInactive = innerRes.body;
+                                                this.chart = new Chart('canvas', {
+                                                    type: 'pie',
+                                                    data: {
+                                                        datasets: [
+                                                            {
+                                                                data: [
+                                                                    this.numberAvailable,
+                                                                    this.numberInactive,
+                                                                    this.numberDrivingFull,
+                                                                    this.numberDrivingEmpty,
+                                                                    this.numberMaintenance
+                                                                ],
+                                                                backgroundColor: ['#3e95cd', '#8e5ea2', '#43a234', '#1936a2', '#a20a15']
+                                                            }
+                                                        ],
+                                                        // These labels appear in the legend and in the tooltips when hovering different arcs
+                                                        labels: [
+                                                            'available',
+                                                            'inactive',
+                                                            'driving with passenger',
+                                                            'driving without passenger',
+                                                            'maintenance'
+                                                        ]
+                                                    },
+                                                    options: {}
+                                                });
+                                            },
+                                            (innerRes: HttpErrorResponse) => this.onError(innerRes.message)
+                                        );
+                                    },
+                                    (res4: HttpErrorResponse) => this.onError(res4.message)
+                                );
                             },
-                            options: {}
-                        });
+                            (res3: HttpErrorResponse) => this.onError(res3.message)
+                        );
                     },
-                    (innerRes: HttpErrorResponse) => this.onError(innerRes.message)
+                    (res2: HttpErrorResponse) => this.onError(res2.message)
                 );
             },
-            (res: HttpErrorResponse) => this.onError(res.message)
+            (res1: HttpErrorResponse) => this.onError(res1.message)
         );
     }
 
