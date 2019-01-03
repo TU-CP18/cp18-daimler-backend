@@ -41,4 +41,12 @@ export class SafetyDriverService {
         const options = createRequestOption(req);
         return this.http.get<ISafetyDriver[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
     }
+
+    getNumberActiveDrivers(): Observable<HttpResponse<Number>> {
+        return this.http.get<Number>(`${this.resourceUrl}/active/number`, { observe: 'response' });
+    }
+
+    getNumberInactiveDrivers(): Observable<HttpResponse<Number>> {
+        return this.http.get<Number>(`${this.resourceUrl}/inactive/number`, { observe: 'response' });
+    }
 }

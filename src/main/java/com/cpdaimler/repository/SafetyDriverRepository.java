@@ -1,6 +1,7 @@
 package com.cpdaimler.repository;
 
 import com.cpdaimler.domain.SafetyDriver;
+import com.cpdaimler.domain.Shift;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -28,5 +29,11 @@ public interface SafetyDriverRepository extends JpaRepository<SafetyDriver, Long
     Optional<SafetyDriver> findOneWithEagerRelationships(@Param("id") Long id);
 
     Optional<SafetyDriver> findByLogin(String login);
+
+    @Query("select COUNT(sd) from SafetyDriver sd left join Shift shift on sd.id=shift.safetyDriver where shift.start < :currentTime and shift.end > :currentTime")
+    Long findNumberOfWorkingSafetyDrivers(@Param("currentTime") Long currentTime);
+
+    @Query("select COUNT(sd) from SafetyDriver sd left join Shift shift on sd.id=shift.safetyDriver where NOT(shift.start < :currentTime) OR (NOT (shift.end > :currentTime))")
+    Long findNumberOfInactiveSafetyDrivers(@Param("currentTime") Long currentTime);
 
 }

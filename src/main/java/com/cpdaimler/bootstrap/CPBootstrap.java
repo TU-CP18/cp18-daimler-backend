@@ -2,13 +2,10 @@ package com.cpdaimler.bootstrap;
 
 import com.cpdaimler.domain.*;
 import com.cpdaimler.domain.enumeration.CARSTATUS;
-import com.cpdaimler.domain.enumeration.LICENCE;
 import com.cpdaimler.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 @Component
 public class CPBootstrap implements CommandLineRunner {
@@ -45,6 +42,9 @@ public class CPBootstrap implements CommandLineRunner {
         initCars();
 
         initShift();
+
+        System.out.println("Not working: "+safetyDriverRepository.findNumberOfInactiveSafetyDrivers(System.currentTimeMillis()));
+        System.out.println("Working: "+safetyDriverRepository.findNumberOfWorkingSafetyDrivers(System.currentTimeMillis()));
 
     }
 

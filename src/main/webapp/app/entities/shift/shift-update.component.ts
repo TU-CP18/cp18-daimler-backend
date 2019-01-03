@@ -57,7 +57,7 @@ export class ShiftUpdateComponent implements OnInit {
         this.start = { date: null, time: null };
         this.end = { date: null, time: null };
 
-        this.earliestDate = new Date(Date.now());
+        this.earliestDate = new Date(Date.now() - 1000 * 60 * 60 * 24);
     }
 
     previousState() {
