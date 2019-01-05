@@ -6,7 +6,6 @@ import com.cpdaimler.domain.User;
 import com.cpdaimler.repository.SafetyDriverRepository;
 import com.cpdaimler.repository.UserRepository;
 import com.cpdaimler.repository.search.SafetyDriverSearchRepository;
-import com.cpdaimler.security.AuthoritiesConstants;
 import com.cpdaimler.service.dto.UserDTO;
 import io.undertow.util.BadRequestException;
 import org.slf4j.Logger;
@@ -147,6 +146,18 @@ public class SafetyDriverService {
 
         safetyDriverRepository.deleteById(id);
         safetyDriverSearchRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Long getNumberCurrentActiveDrivers() {
+        log.debug("Request to get SafetyDriver : {}");
+        return safetyDriverRepository.findNumberOfWorkingSafetyDrivers(System.currentTimeMillis());
+    }
+
+    @Transactional(readOnly = true)
+    public Long getNumberCurrentInactiveDrivers() {
+        log.debug("Request to get SafetyDriver : {}");
+        return safetyDriverRepository.findNumberOfInactiveSafetyDrivers(System.currentTimeMillis());
     }
 
     /**

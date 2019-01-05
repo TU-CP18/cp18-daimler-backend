@@ -71,6 +71,12 @@ public class CarService {
         return carRepository.findAllByStatus(CARSTATUS.AVAILABLE);
     }
 
+    @Transactional(readOnly = true)
+    public Long countByCarStatus(CARSTATUS carstatus) {
+        log.debug("Request to get all Cars");
+        return carRepository.countByStatus(carstatus);
+    }
+
 
     /**
      * Get one car by id.

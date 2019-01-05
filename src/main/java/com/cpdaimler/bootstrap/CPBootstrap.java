@@ -2,13 +2,12 @@ package com.cpdaimler.bootstrap;
 
 import com.cpdaimler.domain.*;
 import com.cpdaimler.domain.enumeration.CARSTATUS;
-import com.cpdaimler.domain.enumeration.LICENCE;
 import com.cpdaimler.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 public class CPBootstrap implements CommandLineRunner {
@@ -45,6 +44,9 @@ public class CPBootstrap implements CommandLineRunner {
         initCars();
 
         initShift();
+
+        System.out.println("Not working: "+safetyDriverRepository.findNumberOfInactiveSafetyDrivers(System.currentTimeMillis()));
+        System.out.println("Working: "+safetyDriverRepository.findNumberOfWorkingSafetyDrivers(System.currentTimeMillis()));
 
     }
 
@@ -141,8 +143,8 @@ public class CPBootstrap implements CommandLineRunner {
 
     private void getRandomLatLon(Shift shift) {
 
-        Double random = Math.random() * 0.1;
-        Double sign = Math.random();
+        Double random = ThreadLocalRandom.current().nextDouble() * 0.1;
+        Double sign = ThreadLocalRandom.current().nextDouble();
 
         if(sign > 0.5) {
             random = random * -1;

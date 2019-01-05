@@ -59,6 +59,11 @@ public class ShiftResource {
             throw new BadRequestAlertException("A new shift cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Shift result = shiftService.save(shift);
+
+        if(result==null) {
+            throw new BadRequestAlertException("The car is already used in this time period ", "yihhhaaaaaaaa", "carused");
+        }
+
         return ResponseEntity.created(new URI("/api/shifts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -81,6 +86,11 @@ public class ShiftResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Shift result = shiftService.save(shift);
+
+        if(result==null) {
+            throw new BadRequestAlertException("The car is already used in this time period ", "yihhhaaaaaaaa", "carused");
+        }
+
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, shift.getId().toString()))
             .body(result);

@@ -10,6 +10,8 @@ import { Principal } from 'app/core';
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { CarService } from './car.service';
 
+import { Chart } from 'chart.js';
+
 @Component({
     selector: 'jhi-car',
     templateUrl: './car.component.html'
@@ -30,6 +32,14 @@ export class CarComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: any;
+
+    chart = [];
+
+    numberDrivingEmpty: Number;
+    numberDrivingFull: Number;
+    numberMaintenance: Number;
+    numberAvailable: Number;
+    numberInactive: Number;
 
     constructor(
         private carService: CarService,
@@ -135,6 +145,65 @@ export class CarComponent implements OnInit, OnDestroy {
             this.currentAccount = account;
         });
         this.registerChangeInCars();
+
+        // we should rewrite this code section
+        // how about promise hell :D
+        this.carService.countAvailable().subscribe(
+            (res1: HttpResponse<Number>) => {
+                this.numberAvailable = res1.body;
+                this.carService.countDrivingEmpty().subscribe(
+                    (res2: HttpResponse<Number>) => {
+                        this.numberDrivingEmpty = res2.body;
+                        this.carService.countMaintenance().subscribe(
+                            (res3: HttpResponse<Number>) => {
+                                this.numberMaintenance = res3.body;
+                                this.carService.countDrivingFull().subscribe(
+                                    (res4: HttpResponse<Number>) => {
+                                        this.numberDrivingFull = res4.body;
+                                        this.carService.countInactive().subscribe(
+                                            (innerRes: HttpResponse<Number>) => {
+                                                this.numberInactive = innerRes.body;
+                                                this.chart = new Chart('canvas', {
+                                                    type: 'pie',
+                                                    data: {
+                                                        datasets: [
+                                                            {
+                                                                data: [
+                                                                    this.numberAvailable,
+                                                                    this.numberInactive,
+                                                                    this.numberDrivingFull,
+                                                                    this.numberDrivingEmpty,
+                                                                    this.numberMaintenance
+                                                                ],
+                                                                backgroundColor: ['#3e95cd', '#8e5ea2', '#43a234', '#1936a2', '#a20a15']
+                                                            }
+                                                        ],
+                                                        // These labels appear in the legend and in the tooltips when hovering different arcs
+                                                        labels: [
+                                                            'available',
+                                                            'inactive',
+                                                            'driving with passenger',
+                                                            'driving without passenger',
+                                                            'maintenance'
+                                                        ]
+                                                    },
+                                                    options: {}
+                                                });
+                                            },
+                                            (innerRes: HttpErrorResponse) => this.onError(innerRes.message)
+                                        );
+                                    },
+                                    (res4: HttpErrorResponse) => this.onError(res4.message)
+                                );
+                            },
+                            (res3: HttpErrorResponse) => this.onError(res3.message)
+                        );
+                    },
+                    (res2: HttpErrorResponse) => this.onError(res2.message)
+                );
+            },
+            (res1: HttpErrorResponse) => this.onError(res1.message)
+        );
     }
 
     ngOnDestroy() {

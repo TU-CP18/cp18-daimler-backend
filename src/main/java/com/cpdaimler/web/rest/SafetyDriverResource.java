@@ -23,9 +23,6 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing SafetyDriver.
@@ -141,6 +138,23 @@ public class SafetyDriverResource {
 
         safetyDriverService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+
+    @GetMapping("/safety-drivers/active/number")
+    @Timed
+    public Long getNumberCurrentActiveDrivers() {
+        log.debug("REST request to delete SafetyDriver : {}");
+
+        return safetyDriverService.getNumberCurrentActiveDrivers();
+    }
+
+    @GetMapping("/safety-drivers/inactive/number")
+    @Timed
+    public Long getNumberCurrentInactiveDrivers() {
+        log.debug("REST request to delete SafetyDriver : {}");
+
+        return safetyDriverService.getNumberCurrentInactiveDrivers();
     }
 
     /**

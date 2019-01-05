@@ -57,7 +57,7 @@ export class ShiftUpdateComponent implements OnInit {
         this.start = { date: null, time: null };
         this.end = { date: null, time: null };
 
-        this.earliestDate = new Date(Date.now());
+        this.earliestDate = new Date(Date.now() - 1000 * 60 * 60 * 24);
 
         if (this.shift !== undefined && this.shift !== null) {
             this.start.date = this.getLocalDateTime(this.shift.start).split('T')[0];
@@ -81,12 +81,21 @@ export class ShiftUpdateComponent implements OnInit {
         if (this.shift.id !== undefined) {
             this.subscribeToSaveResponse(this.shiftService.update(this.shift));
         } else {
+            this.shift.start = new Date(this.combineDateAndTime(this.start)).getTime();
+            this.shift.end = new Date(this.combineDateAndTime(this.end)).getTime();
+
             this.subscribeToSaveResponse(this.shiftService.create(this.shift));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<IShift>>) {
-        result.subscribe((res: HttpResponse<IShift>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<IShift>) => this.onSaveSuccess(),
+            (res: HttpErrorResponse) => {
+                this.onSaveError();
+                this.onError(res.message);
+            }
+        );
     }
 
     private onSaveSuccess() {
@@ -129,7 +138,6 @@ export class ShiftUpdateComponent implements OnInit {
         if (minute < 10) {
             minute = '0' + minute;
         }
-
         return year + '-' + month + '-' + day + 'T' + hour + ':' + minute;
     }
 
