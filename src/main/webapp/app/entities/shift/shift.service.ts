@@ -33,6 +33,12 @@ export class ShiftService {
         return this.http.get<IShift[]>(this.resourceUrl, { params: options, observe: 'response' });
     }
 
+    getAllParallel(id: number, start: number, end: number): Observable<EntityArrayResponseType> {
+        id = -1;
+
+        return this.http.get<IShift[]>(this.resourceUrl + `/parallel/${id}/${start}/${end}`, { observe: 'response' });
+    }
+
     delete(id: number): Observable<HttpResponse<any>> {
         return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }

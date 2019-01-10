@@ -83,6 +83,17 @@ public class ShiftService {
         return shiftRepository.findAll(pageable);
     }
 
+    public List<Shift> getParallelShifts(Long queryId, Long start, Long end) {
+
+        Long id = queryId;
+
+        if (id == null) {
+            id = -1L;
+        }
+
+        return shiftRepository.findAllParallel(id, start, end);
+    }
+
 
     /**
      * Get one shift by id.

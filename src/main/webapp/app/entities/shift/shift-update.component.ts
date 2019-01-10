@@ -81,9 +81,6 @@ export class ShiftUpdateComponent implements OnInit {
         if (this.shift.id !== undefined) {
             this.subscribeToSaveResponse(this.shiftService.update(this.shift));
         } else {
-            this.shift.start = new Date(this.combineDateAndTime(this.start)).getTime();
-            this.shift.end = new Date(this.combineDateAndTime(this.end)).getTime();
-
             this.subscribeToSaveResponse(this.shiftService.create(this.shift));
         }
     }
@@ -162,6 +159,33 @@ export class ShiftUpdateComponent implements OnInit {
 
         if (input_date < new Date(this.start.date)) {
             this.end.date = this.start.date;
+        }
+    }
+
+    checkDriversAndCars() {
+        this.shift.start = new Date(this.combineDateAndTime(this.start)).getTime();
+        this.shift.end = new Date(this.combineDateAndTime(this.end)).getTime();
+
+        if (
+            this.shift.end !== null &&
+            this.shift.end !== undefined &&
+            this.shift.start !== null &&
+            this.shift.start !== undefined &&
+            !isNaN(this.shift.start) &&
+            !isNaN(this.shift.end)
+        ) {
+            this.shiftService.getAllParallel(this.shift.id, this.shift.start, this.shift.end).subscribe(
+                (res: HttpResponse<IShift[]>) => {
+                    res.body.forEach(item => {
+                        this.cars.forEach(car => {
+                            console.log(car.id + ' - ' + item.car.id);
+                            if ((car = item.car)) {
+                            }
+                        });
+                    });
+                },
+                (res: HttpErrorResponse) => this.onError(res.message)
+            );
         }
     }
 }
