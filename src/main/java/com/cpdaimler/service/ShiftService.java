@@ -41,8 +41,8 @@ public class ShiftService {
     public ShiftService(ShiftRepository shiftRepository, ShiftSearchRepository shiftSearchRepository, SafetyDriverRepository safetyDriverRepository, UserToSafetyDriver userToSafetyDriver) {
         this.shiftRepository = shiftRepository;
         this.shiftSearchRepository = shiftSearchRepository;
-        this.safetyDriverRepository=safetyDriverRepository;
-        this.userToSafetyDriver=userToSafetyDriver;
+        this.safetyDriverRepository = safetyDriverRepository;
+        this.userToSafetyDriver = userToSafetyDriver;
     }
 
     /**
@@ -54,9 +54,15 @@ public class ShiftService {
     public Shift save(Shift shift) {
         log.debug("Request to save Shift : {}", shift);
 
-        List<Shift> parallel= shiftRepository.findAllByCarOrSafetyDriverAndStartBetweenOrEndBetweenOrStartLessThanEqualAndEndGreaterThanEqual(shift.getId() ,shift.getCar(), shift.getSafetyDriver() ,shift.getStart(), shift.getEnd());
+        Long id = shift.getId();
 
-        if(! parallel.isEmpty()) {
+        if (id == null) {
+            id = -1L;
+        }
+
+        List<Shift> parallel = shiftRepository.findAllByCarOrSafetyDriverAndStartBetweenOrEndBetweenOrStartLessThanEqualAndEndGreaterThanEqual(id, shift.getCar(), shift.getSafetyDriver(), shift.getStart(), shift.getEnd());
+
+        if (!parallel.isEmpty()) {
             return null;
         }
 
@@ -109,14 +115,15 @@ public class ShiftService {
     /**
      * Search for the shift corresponding to the query.
      *
-     * @param query the query of the search
+     * @param query    the query of the search
      * @param pageable the pagination information
      * @return the list of entities
      */
     @Transactional(readOnly = true)
     public Page<Shift> search(String query, Pageable pageable) {
         log.debug("Request to search for a page of Shifts for query {}", query);
-        return shiftSearchRepository.search(queryStringQuery(query), pageable);    }
+        return shiftSearchRepository.search(queryStringQuery(query), pageable);
+    }
 
 
 }
