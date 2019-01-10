@@ -6,7 +6,8 @@ import { Principal } from 'app/core';
 
 @Component({
     selector: 'jhi-chat',
-    templateUrl: './chat.component.html'
+    templateUrl: './chat.component.html',
+    styleUrls: ['./chat.css']
 })
 export class ChatComponent implements OnInit, OnDestroy {
     error: any;
