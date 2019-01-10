@@ -1,3 +1,5 @@
 [webserver]
 ec2-3-121-219-216.eu-central-1.compute.amazonaws.com ansible_user=ubuntu
 
+[localhost]
+127.0.0.1
