@@ -120,3 +120,64 @@
   #     release_on_disassociation: True
   #     reuse_existing_ip_allowed: True
   #   register: app_eip
+
+  # ---------------- RDS -----------------
+  # - name: rds security group
+  #   ec2_group:
+  #     region: "{{ aws_region }}"
+  #     name: "{{ site_env }}_rds_allow_postgres"
+  #     description: Allow postgres access from public subnets
+  #     vpc_id: "{{ vpc.id }}"
+  #     rules:
+  #       - proto: tcp
+  #         from_port: 5432
+  #         to_port: 5432
+  #         group_id: "{{ ecs_sg.group_id }}"
+  #       - proto: icmp
+  #         group_id: "{{ ecs_sg.group_id }}"
+  #         from_port: -1
+  #         to_port: -1
+  #   register: rds_sg
+
+  # - name: create db subnet group
+  #   rds_subnet_group:
+  #     state: present
+  #     name: "{{ rds_subnet_group_name }}"
+  #     description: "the database subnet group"
+  #     region: "{{ aws_region }}"
+  #     subnets: "{{ db_subnets_result.results | map(attribute='subnet.id') | list }}"
+  #   register: rds_subnet_group_results
+
+  # - name: include db secrets
+  #   include_vars:
+  #     file: secrets.yaml
+
+  # - name: get rds instance facts
+  #   command: aws rds describe-db-instances --no-paginate --region {{ aws_region }}
+  #   register: rds_facts_output
+
+  # - set_fact:
+  #     rds_facts: "{{ rds_facts_output.stdout | from_json }}"
+
+  # - set_fact:
+  #     db_instances: "{{ rds_facts.DBInstances | map(attribute='DBInstanceIdentifier') | list | intersect(database_name) | list }}"
+
+  # - name: create RDS instance
+  #   # TODO: configure snapshot, backup policy, production read-replica, etc.,
+  #   rds:
+  #     region: "{{ aws_region }}"
+  #     command: create
+  #     instance_name: "{{ database_name }}"
+  #     db_engine: "{{ db_engine }}"
+  #     size: "{{ db_size }}"
+  #     instance_type: "{{ db_instance_type }}"
+  #     db_name: "{{ site_name }}"
+  #     username: "{{ database[site_env].username }}"
+  #     password: "{{ database[site_env].password }}"
+  #     subnet: "{{ rds_subnet_group_name }}"
+  #     vpc_security_groups: ["{{ rds_sg.group_id }}"]
+  #     tags:
+  #       Name: "{{ site_env }}-{{ db_engine }}-db"
+  #       Environment: "{{ site_env }}"
+  #     wait: true
+  #   when: db_instances | length == 0
