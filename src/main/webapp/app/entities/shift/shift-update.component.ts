@@ -28,6 +28,10 @@ export class ShiftUpdateComponent implements OnInit {
 
     safetydrivers: ISafetyDriver[];
 
+    originalCars: ICar[];
+
+    originalSafetyDrivers: ISafetyDriver[];
+
     constructor(
         private jhiAlertService: JhiAlertService,
         private shiftService: ShiftService,
@@ -44,12 +48,14 @@ export class ShiftUpdateComponent implements OnInit {
         this.carService.getActiveCars().subscribe(
             (res: HttpResponse<ICar[]>) => {
                 this.cars = res.body;
+                this.originalCars = res.body.map(a => Object.assign({}, a));
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
         this.safetyDriverService.query().subscribe(
             (res: HttpResponse<ISafetyDriver[]>) => {
                 this.safetydrivers = res.body;
+                this.originalSafetyDrivers = res.body.map(a => Object.assign({}, a));
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -174,12 +180,22 @@ export class ShiftUpdateComponent implements OnInit {
             !isNaN(this.shift.start) &&
             !isNaN(this.shift.end)
         ) {
+            this.safetydrivers = this.originalSafetyDrivers.map(a => Object.assign({}, a));
+            this.cars = this.originalCars.map(a => Object.assign({}, a));
+
             this.shiftService.getAllParallel(this.shift.id, this.shift.start, this.shift.end).subscribe(
                 (res: HttpResponse<IShift[]>) => {
                     res.body.forEach(item => {
-                        this.cars.forEach(car => {
-                            console.log(car.id + ' - ' + item.car.id);
+                        this.cars.forEach((car, index) => {
+                            console.log(car);
                             if ((car = item.car)) {
+                                this.cars.splice(index, 1);
+                            }
+                        });
+
+                        this.safetydrivers.forEach((safetyDriver, index) => {
+                            if ((safetyDriver = item.safetyDriver)) {
+                                this.safetydrivers.splice(index, 1);
                             }
                         });
                     });
