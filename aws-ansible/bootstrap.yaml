@@ -1,0 +1,43 @@
+- name: Create AWS Stack for the backend
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars:
+    keypair: id_rsa
+    instance_type: t2.micro
+    db_instance_type: db.t2.micro
+    image: ami-0bdf93799014acdc4
+    region: eu-central-1
+  tasks:
+    - name: Gather facts about VPCs
+      ec2_vpc_net_facts:
+        region: "{{ region }}"
+      register: ec2_vpcs      
+      
+    - name: Launch EC2 Instance
+      ec2:   
+          key_name: "{{ keypair }}"
+          group: allow_ssh_access
+          instance_type: "{{ instance_type }}"
+          image: "{{ image }}"
+          wait: true
+          region: "{{ region }}"
+      register: ec2
+      
+    - name: Create RDS MySQL Instance
+      rds:
+          command: create
+          region: "{{ region }}"
+          instance_name: cpdb
+          db_engine: MySQL
+          size: 10
+          instance_type: "{{ db_instance_type }}"
+          username: 
+          password: 
+      
+    - name: Wait for SSH to come up
+      wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
+      with_items: "{{ ec2.instances }}"
+      
+    - name: Print all ec2 variables
+      debug: var=ec2
