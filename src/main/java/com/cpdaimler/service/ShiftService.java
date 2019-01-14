@@ -59,17 +59,19 @@ public class ShiftService {
         if (id == null) {
             id = -1L;
         }
-
+        System.out.println(shift.getSafetyDriver());
         List<Shift> parallel = shiftRepository.findAllByCarOrSafetyDriverAndStartBetweenOrEndBetweenOrStartLessThanEqualAndEndGreaterThanEqual(id, shift.getCar(), shift.getSafetyDriver(), shift.getStart(), shift.getEnd());
 
         if (!parallel.isEmpty()) {
             return null;
         }
-
+        System.out.println(shift.getSafetyDriver());
         Shift result = shiftRepository.save(shift);
         shiftSearchRepository.save(result);
         return result;
     }
+
+
 
     /**
      * Get all the shifts.
@@ -120,7 +122,7 @@ public class ShiftService {
 
     public Optional<Shift> findNextShift() {
 
-        return shiftRepository.findOneBySafetyDriverAndStartGreaterThanEqualOrderByStartAsc(userToSafetyDriver.getCustomerForUser().get(), System.currentTimeMillis());
+        return shiftRepository.findFirstBySafetyDriverAndStartGreaterThanEqualOrderByStartAsc(userToSafetyDriver.getCustomerForUser().get(), System.currentTimeMillis());
     }
 
     /**
