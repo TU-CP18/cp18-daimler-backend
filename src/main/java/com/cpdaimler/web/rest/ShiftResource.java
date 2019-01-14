@@ -112,6 +112,20 @@ public class ShiftResource {
     }
 
     /**
+     * GET  /shifts : get all the shifts.
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of shifts in body
+     */
+    @GetMapping("/shifts/parallel/{id}/{start}/{end}")
+    @Timed
+    public ResponseEntity<List<Shift>> getAllShifts(@PathVariable Long id, @PathVariable Long start, @PathVariable Long end ) {
+        log.debug("REST request to get parallel Shifts", id, start, end);
+        List<Shift> listShift = shiftService.getParallelShifts(id, start, end);
+
+        return new ResponseEntity<>(listShift, HttpStatus.OK);
+    }
+
+    /**
      * GET  /shifts/:id : get the "id" shift.
      *
      * @param id the id of the shift to retrieve
@@ -160,12 +174,25 @@ public class ShiftResource {
      *
      * @return the ResponseEntity with status 200 (OK) and with body the shift, or with status 404 (Not Found)
      */
-    @GetMapping("/shifts/next")
+    @GetMapping("/shifts/user/next")
     @Timed
     public ResponseEntity<Shift> getNextShiftForUser() {
         log.debug("REST request to get next Shift");
         Optional<Shift> shift = shiftService.findNextShift();
         return ResponseUtil.wrapOrNotFound(shift);
+    }
+
+    /**
+     * GET  /shifts/:id : get the "id" shift.
+     *
+     * @return the ResponseEntity with status 200 (OK) and with body the shift, or with status 404 (Not Found)
+     */
+    @GetMapping("/shifts/user/all")
+    @Timed
+    public ResponseEntity<List<Shift>> getAllShiftsForUser() {
+        log.debug("REST request to get next Shift");
+        List<Shift> shift = shiftService.findAllShiftsForUser();
+        return new ResponseEntity<List<Shift>>(shift, HttpStatus.OK);
     }
 
 
