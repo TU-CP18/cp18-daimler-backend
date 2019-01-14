@@ -125,6 +125,11 @@ public class ShiftService {
         return shiftRepository.findFirstBySafetyDriverAndStartGreaterThanEqualOrderByStartAsc(userToSafetyDriver.getCustomerForUser().get(), System.currentTimeMillis());
     }
 
+    public List<Shift> findAllShiftsForUser() {
+
+        return shiftRepository.findAllBySafetyDriver(userToSafetyDriver.getCustomerForUser().get());
+    }
+
     /**
      * Search for the shift corresponding to the query.
      *
