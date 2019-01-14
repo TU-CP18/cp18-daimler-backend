@@ -16,6 +16,11 @@ export class ScheduleService {
 
     constructor(private http: HttpClient) {}
 
+    getAllFullShifts(req?: any) {
+        const options = createRequestOption(req);
+        return this.http.get<IShift[]>(this.resourceUrl, { params: options, observe: 'response' });
+    }
+
     create(shift: IShift): Observable<EntityResponseType> {
         return this.http.post<IShift>(this.resourceUrl, shift, { observe: 'response' });
     }
@@ -31,12 +36,6 @@ export class ScheduleService {
     query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
         return this.http.get<IShift[]>(this.resourceUrl, { params: options, observe: 'response' });
-    }
-
-    getAllParallel(id: number, start: number, end: number): Observable<EntityArrayResponseType> {
-        id = -1;
-
-        return this.http.get<IShift[]>(this.resourceUrl + `/parallel/${id}/${start}/${end}`, { observe: 'response' });
     }
 
     delete(id: number): Observable<HttpResponse<any>> {
