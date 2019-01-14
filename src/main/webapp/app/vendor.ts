@@ -42,7 +42,8 @@ import {
     faHome,
     faCar,
     faIdCard,
-    faMale
+    faMale,
+    faComments
 } from '@fortawesome/free-solid-svg-icons';
 
 // Adds the SVG icon to the library so you can use it in your page
@@ -83,5 +84,6 @@ library.add(faAsterisk);
 library.add(faCar);
 library.add(faIdCard);
 library.add(faMale);
+library.add(faComments);
 
 // jhipster-needle-add-element-to-vendor - JHipster will add new menu items here
