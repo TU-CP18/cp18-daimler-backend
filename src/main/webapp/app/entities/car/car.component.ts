@@ -243,7 +243,7 @@ export class CarComponent implements OnInit, OnDestroy {
 
                     if (element.length) {
                         console.log(e);
-                        this.cars.filter(car => car.status.toUpperCase() == element[0]._model.label.toUpperCase());
+                        this.cars.filter(car => car.status.toUpperCase() === element[0]._model.label.toUpperCase());
                     }
                 }
             }
