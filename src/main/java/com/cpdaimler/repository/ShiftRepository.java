@@ -19,8 +19,14 @@ import java.util.Optional;
 @Repository
 public interface ShiftRepository extends JpaRepository<Shift, Long> {
 
-    Optional<Shift> findOneBySafetyDriverAndStartGreaterThanEqualOrderByStartAsc(SafetyDriver safetyDriver, Long start);
+    Optional<Shift> findFirstBySafetyDriverAndStartGreaterThanEqualOrderByStartAsc(SafetyDriver safetyDriver, Long start);
 
     @Query("select f from Shift f where ((f.id <> :id) and ((f.car= :car or f.safetyDriver = :safetyDriver) and ((f.start between :start and :end) or (f.end between :start and :end) or (:start between f.start and f.end) or (:end between f.start and f.end))))")
-    List<Shift> findAllByCarOrSafetyDriverAndStartBetweenOrEndBetweenOrStartLessThanEqualAndEndGreaterThanEqual(@Param("id") Long id, @Param("car") Car car,@Param("safetyDriver") SafetyDriver safetyDriver , @Param("start") Long start, @Param("end") Long end );
+    List<Shift> findAllByCarOrSafetyDriverAndStartBetweenOrEndBetweenOrStartLessThanEqualAndEndGreaterThanEqual(@Param("id") Long id, @Param("car") Car car, @Param("safetyDriver") SafetyDriver safetyDriver, @Param("start") Long start, @Param("end") Long end);
+
+    @Query("select f from Shift f where ((f.id <> :id) and  ((f.start between :start and :end) or (f.end between :start and :end) or (:start between f.start and f.end) or (:end between f.start and f.end)))")
+    List<Shift> findAllParallel(@Param("id") Long id, @Param("start") Long start, @Param("end") Long end);
+
+    List<Shift> findAllBySafetyDriver(SafetyDriver safetyDriver);
+
 }

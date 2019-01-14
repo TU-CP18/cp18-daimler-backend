@@ -59,17 +59,19 @@ public class ShiftService {
         if (id == null) {
             id = -1L;
         }
-
+        System.out.println(shift.getSafetyDriver());
         List<Shift> parallel = shiftRepository.findAllByCarOrSafetyDriverAndStartBetweenOrEndBetweenOrStartLessThanEqualAndEndGreaterThanEqual(id, shift.getCar(), shift.getSafetyDriver(), shift.getStart(), shift.getEnd());
 
         if (!parallel.isEmpty()) {
             return null;
         }
-
+        System.out.println(shift.getSafetyDriver());
         Shift result = shiftRepository.save(shift);
         shiftSearchRepository.save(result);
         return result;
     }
+
+
 
     /**
      * Get all the shifts.
@@ -81,6 +83,17 @@ public class ShiftService {
     public Page<Shift> findAll(Pageable pageable) {
         log.debug("Request to get all Shifts");
         return shiftRepository.findAll(pageable);
+    }
+
+    public List<Shift> getParallelShifts(Long queryId, Long start, Long end) {
+
+        Long id = queryId;
+
+        if (id == null) {
+            id = -1L;
+        }
+
+        return shiftRepository.findAllParallel(id, start, end);
     }
 
 
@@ -109,7 +122,12 @@ public class ShiftService {
 
     public Optional<Shift> findNextShift() {
 
-        return shiftRepository.findOneBySafetyDriverAndStartGreaterThanEqualOrderByStartAsc(userToSafetyDriver.getCustomerForUser().get(), System.currentTimeMillis());
+        return shiftRepository.findFirstBySafetyDriverAndStartGreaterThanEqualOrderByStartAsc(userToSafetyDriver.getCustomerForUser().get(), System.currentTimeMillis());
+    }
+
+    public List<Shift> findAllShiftsForUser() {
+
+        return shiftRepository.findAllBySafetyDriver(userToSafetyDriver.getCustomerForUser().get());
     }
 
     /**
