@@ -29,4 +29,6 @@ public interface ShiftRepository extends JpaRepository<Shift, Long> {
 
     List<Shift> findAllBySafetyDriver(SafetyDriver safetyDriver);
 
+    List<Shift> findAllBySafetyDriverNotNullAndCarNotNull();
+
 }
