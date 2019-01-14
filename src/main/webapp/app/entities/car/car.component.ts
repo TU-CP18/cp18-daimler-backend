@@ -32,6 +32,7 @@ export class CarComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: any;
+    originalCarList: ICar[];
 
     chart = [];
 
@@ -73,7 +74,9 @@ export class CarComponent implements OnInit, OnDestroy {
                     sort: this.sort()
                 })
                 .subscribe(
-                    (res: HttpResponse<ICar[]>) => this.paginateCars(res.body, res.headers),
+                    (res: HttpResponse<ICar[]>) => {
+                        this.paginateCars(res.body, res.headers);
+                    },
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
@@ -163,32 +166,7 @@ export class CarComponent implements OnInit, OnDestroy {
                                         this.carService.countInactive().subscribe(
                                             (innerRes: HttpResponse<Number>) => {
                                                 this.numberInactive = innerRes.body;
-                                                this.chart = new Chart('canvas', {
-                                                    type: 'pie',
-                                                    data: {
-                                                        datasets: [
-                                                            {
-                                                                data: [
-                                                                    this.numberAvailable,
-                                                                    this.numberInactive,
-                                                                    this.numberDrivingFull,
-                                                                    this.numberDrivingEmpty,
-                                                                    this.numberMaintenance
-                                                                ],
-                                                                backgroundColor: ['#3e95cd', '#8e5ea2', '#43a234', '#1936a2', '#a20a15']
-                                                            }
-                                                        ],
-                                                        // These labels appear in the legend and in the tooltips when hovering different arcs
-                                                        labels: [
-                                                            'available',
-                                                            'inactive',
-                                                            'driving with passenger',
-                                                            'driving without passenger',
-                                                            'maintenance'
-                                                        ]
-                                                    },
-                                                    options: {}
-                                                });
+                                                this.createChart(this.cars);
                                             },
                                             (innerRes: HttpErrorResponse) => this.onError(innerRes.message)
                                         );
@@ -231,9 +209,44 @@ export class CarComponent implements OnInit, OnDestroy {
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
         this.queryCount = this.totalItems;
         this.cars = data;
+        console.log(this.cars);
     }
 
     private onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
+    }
+
+    private createChart(data) {
+        console.log(this.cars);
+
+        this.chart = new Chart('canvas', {
+            type: 'pie',
+            data: {
+                datasets: [
+                    {
+                        data: [
+                            this.numberAvailable,
+                            this.numberInactive,
+                            this.numberDrivingFull,
+                            this.numberDrivingEmpty,
+                            this.numberMaintenance
+                        ],
+                        backgroundColor: ['#3e95cd', '#8e5ea2', '#43a234', '#1936a2', '#a20a15']
+                    }
+                ],
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: ['available', 'inactive', 'driving with passenger', 'driving without passenger', 'maintenance']
+            },
+            options: {
+                onClick: function oClick(e) {
+                    const element = this.getElementAtEvent(e);
+
+                    if (element.length) {
+                        console.log(e);
+                        this.cars.filter(car => car.status.toUpperCase() == element[0]._model.label.toUpperCase());
+                    }
+                }
+            }
+        });
     }
 }
