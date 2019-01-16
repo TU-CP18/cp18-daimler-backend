@@ -1,0 +1,23 @@
+{
+  "name": "log-collector",
+  "description": "Collect driver and vehicle logs via HTTP endpoint",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "NODE_ENV=production node src/index.js | pino-socket -a ${LOGSTASH_HOST} -p ${LOGSTASH_PORT} -m tcp",
+    "dev": "node src/index.js | pino-pretty"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "helmet": "^3.15.0",
+    "pino": "^5.10.6",
+    "pino-socket": "^1.0.1"
+  },
+  "devDependencies": {
+    "pino-pretty": "^2.5.0"
+  }
+}
