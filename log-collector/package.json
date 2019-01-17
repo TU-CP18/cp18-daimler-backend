@@ -9,6 +9,7 @@
     "dev": "node src/index.js | pino-pretty"
   },
   "dependencies": {
+    "@reactivex/rxjs": "^6.3.3",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
@@ -18,6 +19,7 @@
     "pino-socket": "^1.0.1"
   },
   "devDependencies": {
+    "axios": "^0.18.0",
     "pino-pretty": "^2.5.0"
   }
 }

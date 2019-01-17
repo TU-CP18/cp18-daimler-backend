@@ -22,10 +22,11 @@ app.use(authorizeJwtToken());
 // TODO: JWT token Authentication
 app.post('/api/log', (req, res) => {
     logger.info({ ...req.body });
+    logger.flush();
     return res.status(200).end();
 });
 
 const PORT = process.env.LOG_COLLECTOR_PORT || 8000;
 app.listen(PORT, () => {
-    logger.info({ message: 'Log collector started', port: PORT });
+    logger.debug({ message: 'Log collector started', port: PORT });
 });
