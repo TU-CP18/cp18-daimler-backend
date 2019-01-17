@@ -18,7 +18,7 @@ node {
 		}
 
 		stage('npm install') {
-				sh "./mvnw -Pdev com.github.eirslett:frontend-maven-plugin:npm"
+				sh "sudo ./mvnw -Pdev com.github.eirslett:frontend-maven-plugin:npm"
 		}
 
         stage('backend tests') {
