@@ -30,6 +30,6 @@ node {
         }
 
         stage('packaging') {
-            sh "./mvnw -Pdev verify -DskipTests"
+            sh "sudo ./mvnw -Pdev verify -DskipTests"
         }
 }
