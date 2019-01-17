@@ -1,4 +1,4 @@
-- hosts: ec2-ubuntu
+- hosts: jenkins
   gather_facts: false
   connection: ssh
   become: true
@@ -39,27 +39,8 @@
 	  dest: /home/ubuntu/tomcat
 	  remote_src: yes
       
+  - name: Download Jenkins to tomcat Webapps directory
+    get_url: url=http://mirrors.jenkins.io/war-stable/latest/jenkins.war dest=/home/ubuntu/tomcat/apache-tomcat-8.0.27/webapps
+      
   - name: start apache-tomcat-8.0.27
     shell: /home/ubuntu/tomcat/apache-tomcat-8.0.27/bin/startup.sh
-  - name: Add Nodesource GPG
-    apt_key:
-      url: https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x1655A0AB68576280
-      id: "68576280"
-      state: present
-
-  - name: Add Nodesource deb repo
-    apt_repository:
-      repo: 'deb https://deb.nodesource.com/node_10.x bionic main'
-      state: present
-
-  - name: Add Nodesource deb-src repo
-    apt_repository:
-      repo: 'deb-src https://deb.nodesource.com/node_10.x bionic main'
-      state: present
-
-  - name: Install Node.js
-    apt:
-      pkg:
-        - nodejs
-      state: present
-      update_cache: yes

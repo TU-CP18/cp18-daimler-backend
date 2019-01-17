@@ -1,14 +1,7 @@
 #!/usr/bin/env groovy
-
-pipeline {
-	agent any
-	
-	options {
-		timeout(time: 2, unit: 'MINUTES') 
-	}
-	
+node {
 	stages {
-		stage('checkout') {
+		stage('Poll SCM') {
 			steps {
 				checkout scm
 			}
@@ -23,26 +16,31 @@ pipeline {
 		stage('clean') {
 			steps {
 				sh "chmod +x mvnw"
-				sh "./mvnw clean"
+				sh "./mvnw -Pdev clean"
 			}
 		}
 
 		stage('install tools') {
 			steps {
-				sh "./mvnw com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v8.12.0 -DnpmVersion=6.4.1"
+				sh "./mvnw -Pdev com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v8.12.0 -DnpmVersion=6.4.1"
 			}
 		}
 
 		stage('npm install') {
 			steps {
-				sh "./mvnw com.github.eirslett:frontend-maven-plugin:npm"
+				sh "./mvnw -Pdev com.github.eirslett:frontend-maven-plugin:npm"
 			}
 		}
+        stage('backend tests') {
+            try {
+                sh "./mvnw test"
+            } catch(err) {
+                throw err
+            }
+        }
+        stage('packaging') {
+            sh "./mvnw verify -Pdev -DskipTests"
+        }
 	}
-	
-	post {
-		success {
-			sh "./mvnw"
-		}
-	}
+
 }

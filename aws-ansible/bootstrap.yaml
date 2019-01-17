@@ -4,10 +4,14 @@
   connection: local
   vars:
     keypair: id_rsa
-    instance_type: t2.micro
+    instance_type: t3.large
+    j_instance_type: t3.medium
     db_instance_type: db.t2.micro
     image: ami-0bdf93799014acdc4
     region: eu-central-1
+    vpcdefault_id: vpc-c7c8c8ae
+    db_user: 
+    db_pass: 
   tasks:
     - name: Gather facts about VPCs
       ec2_vpc_net_facts:
@@ -19,7 +23,7 @@
        region: "{{ region }}"
        name: ec2_ssh_cp
        description: SSH from outside
-       vpc_id: vpc-c7c8c8ae
+       vpc_id: "{{ vpcdefault_id }}"
        rules:
         - proto: tcp
           from_port: 22
@@ -32,7 +36,7 @@
        region: "{{ region }}"
        name: ec2_web_cp
        description: Access web server on ports 80 and 8080
-       vpc_id: vpc-c7c8c8ae
+       vpc_id: "{{ vpcdefault_id }}"
        rules:
         - proto: tcp
           from_port: 80
@@ -49,7 +53,7 @@
        region: "{{ region }}"
        name: ec2_rds_cp
        description: Access RDS from EC2
-       vpc_id: vpc-c7c8c8ae
+       vpc_id: "{{ vpcdefault_id }}"
        rules:
         - proto: tcp
           from_port: 3306
@@ -57,15 +61,25 @@
           group_name: "{{ web_security_group.group_name }}"
       register: rds_security_group          
       
-    - name: Launch EC2 Instance
+    - name: Launch Webapp EC2 Instance
       ec2:   
           key_name: "{{ keypair }}"
-          group: ['ec2_ssh_cp', 'ec2_web_cp']
+          group: ['default','ec2_ssh_cp', 'ec2_web_cp']
           instance_type: "{{ instance_type }}"
           image: "{{ image }}"
           wait: true
           region: "{{ region }}"
       register: ec2
+      
+   - name: Launch Jenkins EC2 Instance
+      ec2:   
+          key_name: "{{ keypair }}"
+          group: ['default','ec2_ssh_cp', 'ec2_web_cp']
+          instance_type: "{{ j_instance_type }}"
+          image: "{{ image }}"
+          wait: true
+          region: "{{ region }}"
+      register: j_ec2    
       
     - name: Create RDS MySQL Instance
       rds:
@@ -76,12 +90,15 @@
           size: 10
           instance_type: "{{ db_instance_type }}"
           vpc_security_groups: "{{ rds_security_group.group_id }}"
-          username: root
-          password: CloudPrototyping2019
+          username: "{{ db_user }}"
+          password: "{{ db_pass }}"
       
     - name: Wait for SSH to come up
       wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
       with_items: "{{ ec2.instances }}"
       
-    - name: Print all ec2 variables
+    - name: Print all webapp variables
       debug: var=ec2
+      
+    - name: Print all webapp variables
+      debug: var=j_ec2
