@@ -1,6 +1,5 @@
 #!/usr/bin/env groovy
 node {
-	stages {
 		stage('Poll SCM') {
 			steps {
 				checkout scm
@@ -41,6 +40,4 @@ node {
         stage('packaging') {
             sh "./mvnw verify -Pdev -DskipTests"
         }
-	}
-
 }
