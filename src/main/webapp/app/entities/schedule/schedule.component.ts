@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { JhiAlertService, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+import { SchedulerEvent } from '@progress/kendo-angular-scheduler';
+import { sampleData, displayDate } from './events-utc';
 
 import { Principal } from 'app/core';
 import { ScheduleService } from './schedule.service';
@@ -29,6 +31,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: any;
+
+    public selectedDate: Date = displayDate;
+    public startTime = '07:00';
+    public endTime = '19:00';
+    public events: SchedulerEvent[] = sampleData;
 
     chart = [];
 

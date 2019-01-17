@@ -1,3 +1,9 @@
 <h2 id="page-heading">
     <span jhiTranslate="cpdaimlerApp.schedule.home.title">Schedule</span>
 </h2>
+
+<kendo-scheduler [kendoSchedulerBinding]="events" [selectedDate]="selectedDate" style="height: 400px;">
+    <kendo-scheduler-timeline-view [startTime]="startTime" [endTime]="endTime"></kendo-scheduler-timeline-view>
+
+    <kendo-scheduler-timeline-week-view [startTime]="startTime" [endTime]="endTime"></kendo-scheduler-timeline-week-view>
+</kendo-scheduler>
