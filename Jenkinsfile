@@ -23,13 +23,13 @@ node {
 
         stage('backend tests') {
             try {
-                sh "./mvnw test"
+                sh "./mvnw -Pdev test"
             } catch(err) {
                 throw err
             }
         }
 
         stage('packaging') {
-            sh "./mvnw verify -Pdev -DskipTests"
+            sh "./mvnw -Pdev verify -DskipTests"
         }
 }
