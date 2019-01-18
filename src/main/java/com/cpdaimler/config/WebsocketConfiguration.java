@@ -44,11 +44,11 @@ public class WebsocketConfiguration implements WebSocketMessageBrokerConfigurer 
             .withSockJS()
             .setInterceptors(httpSessionHandshakeInterceptor());
 
-        registry.addEndpoint("/chat")
-            .setHandshakeHandler(defaultHandshakeHandler())
-            .setAllowedOrigins(allowedOrigins)
-            .withSockJS()
-            .setInterceptors(httpSessionHandshakeInterceptor());
+        registry.addEndpoint("/websocket/chat")
+//            .setHandshakeHandler(defaultHandshakeHandler())
+            .setAllowedOrigins("*")
+            .withSockJS();
+//            .setInterceptors(httpSessionHandshakeInterceptor());
     }
 
     @Bean
