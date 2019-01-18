@@ -36,7 +36,7 @@ node {
 
         stage('Deploy WAR') {
             sshagent(['c04df32d-d471-4533-8350-1a46b7e9a4ea']) {
-                sh 'sudo ~/.jenkins/workspace/Cp-webapp/target/*.war 172.31.45.118:/home/ubuntu/tomcat/apache-tomcat-8.0.27/webapps/'
+                sh 'sudo cp ~/.jenkins/workspace/Cp-webapp/target/*.war 172.31.45.118:/home/ubuntu/tomcat/apache-tomcat-8.0.27/webapps/'
             }
         }
 }
