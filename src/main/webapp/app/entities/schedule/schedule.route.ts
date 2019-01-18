@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
 import { JhiResolvePagingParams } from 'ng-jhipster';
 import { UserRouteAccessService } from 'app/core';
-import { ScheduleComponent } from 'app/entities/schedule/schedule.component';
+import { CPScheduleComponent } from 'app/entities/schedule/schedule.component';
 
 export const scheduleRoute: Routes = [
     {
         path: 'schedule',
-        component: ScheduleComponent,
+        component: CPScheduleComponent,
         data: {
             authorities: ['ROLE_FLEETMANAGER', 'ROLE_ADMIN'],
             pageTitle: 'Schedule'

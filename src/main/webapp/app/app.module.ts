@@ -21,10 +21,13 @@ import * as moment from 'moment';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
 
+import { EJAngular2Module } from 'ej-angular2';
+
 @NgModule({
     imports: [
         BrowserModule,
         CpdaimlerAppRoutingModule,
+        EJAngular2Module.forRoot(),
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-' }),
         CpdaimlerSharedModule,
         CpdaimlerCoreModule,

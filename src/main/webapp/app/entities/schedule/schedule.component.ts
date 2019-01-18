@@ -1,166 +1,118 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { JhiAlertService, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
-import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs';
-import { SchedulerEvent } from '@progress/kendo-angular-scheduler';
-import { sampleData, displayDate } from './events-utc';
-
-import { Principal } from 'app/core';
-import { ScheduleService } from './schedule.service';
-import { IShift } from 'app/shared/model/shift.model';
+import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { extend, isNullOrUndefined, Browser } from '@syncfusion/ej2-base';
+import {
+    ScheduleComponent,
+    ActionEventArgs,
+    PopupOpenEventArgs,
+    EventRenderedArgs,
+    RenderCellEventArgs,
+    DragAndDropService,
+    TimelineViewsService,
+    GroupModel,
+    EventSettingsModel,
+    ResizeService,
+    TimeScaleModel,
+    WorkHoursModel,
+    View
+} from '@syncfusion/ej2-angular-schedule';
+import { roomData } from './datasource';
 
 @Component({
     selector: 'jhi-schedule',
     templateUrl: './schedule.component.html',
-    styleUrls: ['./schedule.css']
+    styleUrls: ['./schedule.css'],
+    encapsulation: ViewEncapsulation.None
 })
-export class ScheduleComponent implements OnInit, OnDestroy {
-    currentAccount: any;
-    shifts: IShift[];
-    error: any;
-    success: any;
-    eventSubscriber: Subscription;
-    currentSearch: string;
-    routeData: any;
-    links: any;
-    totalItems: any;
-    queryCount: any;
-    itemsPerPage: any;
-    page: any;
-    predicate: any;
-    previousPage: any;
-    reverse: any;
-
-    public selectedDate: Date = displayDate;
-    public startTime = '07:00';
-    public endTime = '19:00';
-    public events: SchedulerEvent[] = sampleData;
-
-    chart = [];
-
-    constructor(
-        private scheduleService: ScheduleService,
-        private parseLinks: JhiParseLinks,
-        private jhiAlertService: JhiAlertService,
-        private principal: Principal,
-        private activatedRoute: ActivatedRoute,
-        private router: Router,
-        private eventManager: JhiEventManager
-    ) {}
-
-    loadAll() {
-        if (this.currentSearch) {
-            this.scheduleService
-                .search({
-                    page: this.page - 1,
-                    query: this.currentSearch,
-                    size: this.itemsPerPage,
-                    sort: this.sort()
-                })
-                .subscribe(
-                    (res: HttpResponse<IShift[]>) => this.paginateShifts(res.body, res.headers),
-                    (res: HttpErrorResponse) => this.onError(res.message)
-                );
-            return;
+export class CPScheduleComponent implements OnInit, OnDestroy {
+    public selectedDate: Date = new Date(2018, 7, 1);
+    public timeScale: TimeScaleModel = { interval: 60, slotCount: 1 };
+    public workHours: WorkHoursModel = { start: '08:00', end: '18:00' };
+    public currentView: View = 'TimelineWeek';
+    public group: GroupModel = {
+        enableCompactView: false,
+        resources: ['MeetingRoom']
+    };
+    public resourceDataSource: Object[] = [
+        { text: 'Jammy', id: 1, color: '#ea7a57', capacity: 20, type: 'Conference' },
+        { text: 'Tweety', id: 2, color: '#7fa900', capacity: 7, type: 'Cabin' },
+        { text: 'Nestle', id: 3, color: '#5978ee', capacity: 5, type: 'Cabin' },
+        { text: 'Phoenix', id: 4, color: '#fec200', capacity: 15, type: 'Conference' },
+        { text: 'Mission', id: 5, color: '#df5286', capacity: 25, type: 'Conference' },
+        { text: 'Hangout', id: 6, color: '#00bdae', capacity: 10, type: 'Cabin' },
+        { text: 'Rick Roll', id: 7, color: '#865fcf', capacity: 20, type: 'Conference' },
+        { text: 'Rainbow', id: 8, color: '#1aaa55', capacity: 8, type: 'Cabin' },
+        { text: 'Swarm', id: 9, color: '#df5286', capacity: 30, type: 'Conference' },
+        { text: 'Photogenic', id: 10, color: '#710193', capacity: 25, type: 'Conference' }
+    ];
+    public allowMultiple: Boolean = true;
+    public eventSettings: EventSettingsModel = {
+        dataSource: <Object[]>extend([], roomData, null, true),
+        fields: {
+            id: 'Id',
+            subject: { title: 'Summary', name: 'Subject' },
+            location: { title: 'Location', name: 'Location' },
+            description: { title: 'Comments', name: 'Description' },
+            startTime: { title: 'From', name: 'StartTime' },
+            endTime: { title: 'To', name: 'EndTime' }
         }
-        this.scheduleService
-            .query({
-                page: this.page - 1,
-                size: this.itemsPerPage,
-                sort: this.sort()
-            })
-            .subscribe(
-                (res: HttpResponse<IShift[]>) => this.paginateShifts(res.body, res.headers),
-                (res: HttpErrorResponse) => this.onError(res.message)
-            );
+    };
+
+    @ViewChild('scheduleObj') public scheduleObj: ScheduleComponent;
+
+    isReadOnly(endDate: Date): boolean {
+        return endDate < new Date(2018, 6, 31, 0, 0);
     }
 
-    loadPage(page: number) {
-        if (page !== this.previousPage) {
-            this.previousPage = page;
-            this.transition();
-        }
-    }
-
-    transition() {
-        this.router.navigate(['/shift'], {
-            queryParams: {
-                page: this.page,
-                size: this.itemsPerPage,
-                search: this.currentSearch,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
+    onPopupOpen(args: PopupOpenEventArgs): void {
+        const data: { [key: string]: Object } = <{ [key: string]: Object }>args.data;
+        if (args.type === 'QuickInfo' || args.type === 'Editor' || args.type === 'RecurrenceAlert' || args.type === 'DeleteAlert') {
+            const target: HTMLElement =
+                args.type === 'RecurrenceAlert' || args.type === 'DeleteAlert' ? (args.data as any).element[0] : args.target;
+            if (!isNullOrUndefined(target) && target.classList.contains('e-work-cells')) {
+                if (
+                    target.classList.contains('e-read-only-cells') ||
+                    !this.scheduleObj.isSlotAvailable(data.startTime as Date, data.endTime as Date, data.groupIndex as number)
+                ) {
+                    args.cancel = true;
+                }
+            } else if (!isNullOrUndefined(target) && target.classList.contains('e-appointment') && this.isReadOnly(data.EndTime as Date)) {
+                args.cancel = true;
             }
-        });
-        this.loadAll();
-    }
-
-    clear() {
-        this.page = 0;
-        this.currentSearch = '';
-        this.router.navigate([
-            '/shift',
-            {
-                page: this.page,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        ]);
-        this.loadAll();
-    }
-
-    search(query) {
-        if (!query) {
-            return this.clear();
         }
-        this.page = 0;
-        this.currentSearch = query;
-        this.router.navigate([
-            '/shift',
-            {
-                search: this.currentSearch,
-                page: this.page,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
+    }
+
+    onActionBegin(args: ActionEventArgs): void {
+        if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
+            const data: { [key: string]: Object } = args.data as { [key: string]: Object };
+            const groupIndex: number = this.scheduleObj.eventBase.getGroupIndexFromEvent(data);
+            if (!this.scheduleObj.isSlotAvailable(data.StartTime as Date, data.EndTime as Date, groupIndex as number)) {
+                args.cancel = true;
             }
-        ]);
-        this.loadAll();
-    }
-
-    ngOnInit() {
-        this.loadAll();
-        this.principal.identity().then(account => {
-            this.currentAccount = account;
-        });
-        this.registerChangeInShifts();
-    }
-
-    ngOnDestroy() {
-        this.eventManager.destroy(this.eventSubscriber);
-    }
-
-    trackId(index: number, item: IShift) {
-        return item.id;
-    }
-
-    registerChangeInShifts() {
-        this.eventSubscriber = this.eventManager.subscribe('shiftListModification', response => this.loadAll());
-    }
-
-    sort() {
-        const result = [this.predicate + ',' + (this.reverse ? 'asc' : 'desc')];
-        if (this.predicate !== 'id') {
-            result.push('id');
         }
-        return result;
     }
 
-    private paginateShifts(data: IShift[], headers: HttpHeaders) {
-        this.links = this.parseLinks.parse(headers.get('link'));
-        this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
-        this.queryCount = this.totalItems;
-        this.shifts = data;
+    onRenderCell(args: RenderCellEventArgs): void {
+        if (args.element.classList.contains('e-work-cells')) {
+            if (args.date < new Date(2018, 6, 31, 0, 0)) {
+                args.element.setAttribute('aria-readonly', 'true');
+                args.element.classList.add('e-read-only-cells');
+            }
+        }
+        if (args.elementType === 'emptyCells' && args.element.classList.contains('e-resource-left-td')) {
+            const target: HTMLElement = args.element.querySelector('.e-resource-text') as HTMLElement;
+            target.innerHTML = '<div class="name">Rooms</div><div class="type">Type</div><div class="capacity">Capacity</div>';
+        }
     }
 
-    private onError(errorMessage: string) {
-        this.jhiAlertService.error(errorMessage, null, null);
+    onEventRendered(args: EventRenderedArgs): void {
+        const data: { [key: string]: Object } = args.data;
+        if (this.isReadOnly(data.EndTime as Date)) {
+            args.element.setAttribute('aria-readonly', 'true');
+            args.element.classList.add('e-read-only');
+        }
     }
+
+    ngOnInit() {}
+
+    ngOnDestroy() {}
 }
