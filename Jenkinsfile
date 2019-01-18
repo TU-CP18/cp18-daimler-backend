@@ -26,11 +26,11 @@ node {
                 sh "./mvnw -Pdev test"
             } catch(err) {
                 throw err
-            } 
+            }
             }
 
         stage('Build WAR') {
-            sh "sudo ./mvnw -Pdev verify -DskipTests"
+            sh "sudo ./mvnw -Pdev package -DskipTests"
             archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
         }
 
