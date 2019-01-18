@@ -35,11 +35,10 @@ node {
         }
 
         stage('Deploy WAR') {
-                    sshagent(credentials : ['c04df32d-d471-4533-8350-1a46b7e9a4ea']) {
-                        sh 'ssh -o StrictHostKeyChecking=no ubuntu@ec2-18-185-174-51.eu-central-1.compute.amazonaws.com uptime'
-                        sh 'ssh -v ubuntu@ec2-18-185-174-51.eu-central-1.compute.amazonaws.com'
-                        sh 'scp ~/.jenkins/workspace/Cp-webapp/target/*.war ubuntu@ec2-18-185-174-51.eu-central-1.compute.amazonaws.com:/home/ubuntu/tomcat/apache-tomcat-8.0.27/webapps/'
-                    }
-
+            sshagent(credentials : ['c04df32d-d471-4533-8350-1a46b7e9a4ea']) {
+                sh 'ssh -o StrictHostKeyChecking=no ubuntu@ec2-18-185-174-51.eu-central-1.compute.amazonaws.com uptime'
+                sh 'ssh -v ubuntu@ec2-18-185-174-51.eu-central-1.compute.amazonaws.com'
+                sh 'sudo scp ~/.jenkins/workspace/Cp-webapp/target/*.war ubuntu@ec2-18-185-174-51.eu-central-1.compute.amazonaws.com:/home/ubuntu/tomcat/apache-tomcat-8.0.27/webapps/'
+            }
         }
 }
