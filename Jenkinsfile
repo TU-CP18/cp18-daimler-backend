@@ -26,9 +26,7 @@ node {
                 sh "./mvnw -Pdev test"
             } catch(err) {
                 throw err
-            } finally {
-                junit '**/target/test-results/jest/TESTS-*.xml'
-            }
+            } 
             }
 
         stage('Build WAR') {
