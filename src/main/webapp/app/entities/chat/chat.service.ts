@@ -21,10 +21,8 @@ export class ChatService {
     alreadyConnectedOnce = false;
     private subscription: Subscription;
 
-    constructor(
-        private http: HttpClient,
-        private router: Router // private $window: Window,
-    ) // private csrfService: CSRFService
+    constructor(private http: HttpClient, private router: Router) // private $window: Window,
+    // private csrfService: CSRFService
     {
         this.connection = this.createConnection();
         this.listener = this.createListener();
@@ -36,14 +34,14 @@ export class ChatService {
         }
         // building absolute path so that websocket doesnt fail when deploying with a context path
         // const loc = this.$window.location;
-        let url = 'http://localhost:8080/websocket/chat/';
+        const url = 'http://localhost:8080/websocket/chat/';
         // const authToken = this.authServerProvider.getToken();
         // if (authToken) {
         //     url += '?access_token=' + authToken;
         // }
         const socket = new SockJS(url);
         this.stompClient = Stomp.over(socket);
-        let headers = {};
+        const headers = {};
         this.stompClient.connect(headers, () => {
             this.connectedPromise('success');
             this.connectedPromise = null;

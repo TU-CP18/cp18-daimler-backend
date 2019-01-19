@@ -16,6 +16,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     chart = [];
     messages: Array<Object> = [];
     message = '';
+    identity = 'backenduser';
 
     constructor(
         private parseLinks: JhiParseLinks,
@@ -48,6 +49,14 @@ export class ChatComponent implements OnInit, OnDestroy {
         console.log('COMP SEND MESSAGE:', message);
         this.chatService.sendMessage(message);
         this.message = '';
+        console.log(this.messages);
+    }
+
+    onKeydown(event, message) {
+        if (event.key === 'Enter') {
+            console.log(event);
+            this.sendMessage(message);
+        }
     }
 
     ngOnDestroy() {}

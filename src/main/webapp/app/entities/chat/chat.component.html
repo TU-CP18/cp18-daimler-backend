@@ -3,42 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <title>Chat</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--<link href="node_modules/@angular/material/prebuilt-themes/indigo-pink.css" rel="stylesheet">-->
 </head>
 <body>
 
-<div class="row">
-    <div class="col-md-3">
-        <span class="hipster img-fluid img-rounded"></span>
-    </div>
-    <div class="col-md-9">
-        <h2>Messages:</h2>
-        <div class="chat-messages">
-            <div class="row" *ngFor="let message of messages">
-                <div class="col-sm-2">
-                    <strong>{{message.sender}}</strong>
-                </div>
-                <div class="col-sm-8">
-                    {{message.content}}
-                </div>
-                <div class="col-sm-2">
-                    <div>
-                        {{message.createdAt | date:'short'}}
-                    </div>
-                </div>
-            </div>
+<!--<div class="row">-->
+    <!--<div class="col-md-3">-->
+        <!--<span class="hipster img-fluid img-rounded"></span>-->
+    <!--</div>-->
+    <!--<div class="col-md-9">-->
+        <!--<h2>Messages:</h2>-->
+        <!--<div class="chat-messages">-->
+            <!--<div class="row" *ngFor="let message of messages">-->
+                <!--<div class="col-sm-2">-->
+                    <!--<strong>{{message.sender}}</strong>-->
+                <!--</div>-->
+                <!--<div class="col-sm-8">-->
+                    <!--{{message.content}}-->
+                <!--</div>-->
+                <!--<div class="col-sm-2">-->
+                    <!--<div>-->
+                        <!--{{message.createdAt | date:'short'}}-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<form name="chatForm" (ngSubmit)="sendMessage(message)" #chatForm="ngForm">-->
+            <!--<div class="row chat-input">-->
+                <!--<div class="input-group">-->
+                    <!--<input type="text" class="form-control" name="message" [(ngModel)]="message" autocomplete="off" placeholder="Type a message...">-->
+                    <!--<span class="input-group-btn">-->
+                    <!--<button class="btn btn-secondary btn-success" type="submit">Send</button>-->
+                  <!--</span>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</form>-->
+    <!--</div>-->
+<!--</div>-->
+
+<mat-sidenav-container class="container">
+<!--<div>-->
+    <section>
+        <div class="mat-typography conversation-header">
+            <h2>
+                <mat-icon>forum</mat-icon>
+                Chat
+            </h2>
+            <!--<p>-->
+                <!--<mat-icon>account_circle</mat-icon>-->
+                <!--Members-->
+            <!--</p>-->
         </div>
-        <form name="chatForm" (ngSubmit)="sendMessage(message)" #chatForm="ngForm">
-            <div class="row chat-input">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="message" [(ngModel)]="message" autocomplete="off" placeholder="Type a message...">
-                    <span class="input-group-btn">
-                    <button class="btn btn-secondary btn-success" type="submit">Send</button>
-                  </span>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+        <mat-divider></mat-divider>
+        <mat-list dense class="conversation-history mat-typography">
+            <mat-list-item *ngFor="let message of messages; index as i" [dir]="message.sender === identity ? 'rtl' : 'ltr'">
+                <img *ngIf="message.type == 'CHAT'" matListAvatar matTooltip="{{message.sender}}" src="https://randomuser.me/api/portraits/thumb/lego/{{i}}.jpg"
+                />
+                <p *ngIf="message.type == 'CHAT'" [dir]="'ltr'">{{message.content}}</p>
+                <!--<p *ngIf="event.type == 'member:joined'" class="text-center">-->
+                    <!--<b>{{selectedConversation.members[event.from].user.name}}</b> has joined the conversation</p>-->
+            </mat-list-item>
+        </mat-list>
+
+        <mat-divider class="devider--input"></mat-divider>
+        <div class="conversation-input">
+
+            <mat-form-field class="full-width">
+                <!--<input matInput placeholder="Start chatting..." name="message" [(ngModel)]="message" (keydown)="onKeydown($event, message)">-->
+                <input matInput name="message" [(ngModel)]="message" (keydown)="onKeydown($event, message)">
+                <mat-icon matSuffix (click)="sendMessage(message)">send</mat-icon>
+            </mat-form-field>
+
+
+            <!--<form name="chatForm" (ngSubmit)="sendMessage(message)" #chatForm="ngForm">-->
+                <!--<div class="">-->
+                    <!--<mat-form-field class="full-width">-->
+                        <!--<input matInput type="text" name="message" [(ngModel)]="message" autocomplete="off" placeholder="Type a message...">-->
+                    <!--</mat-form-field>-->
+                    <!--<span class="input-group-btn">-->
+                    <!--<button type="submit"><mat-icon>send</mat-icon></button>-->
+                  <!--</span>-->
+                <!--</div>-->
+            <!--</form>-->
+        </div>
+    </section>
+<!--</div>-->
+</mat-sidenav-container>
 
 
 </body>
