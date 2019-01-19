@@ -15,7 +15,7 @@ import {
     WorkHoursModel,
     View
 } from '@syncfusion/ej2-angular-schedule';
-import { roomData } from './datasource';
+import { shiftData } from './datasource';
 
 @Component({
     selector: 'jhi-schedule',
@@ -26,32 +26,35 @@ import { roomData } from './datasource';
 export class CPScheduleComponent {
     public selectedDate: Date = new Date(2018, 7, 1);
     public timeScale: TimeScaleModel = { interval: 60, slotCount: 1 };
-    public workHours: WorkHoursModel = { start: '08:00', end: '18:00' };
+    public workHours: WorkHoursModel = { start: '08:00', end: '20:00' };
     public currentView: View = 'TimelineWeek';
     public group: GroupModel = {
         enableCompactView: false,
-        resources: ['MeetingRoom']
+        resources: ['Driver']
     };
     public resourceDataSource: Object[] = [
-        { text: 'Jammy', id: 1, color: '#ea7a57', capacity: 20, type: 'Conference' },
-        { text: 'Tweety', id: 2, color: '#7fa900', capacity: 7, type: 'Cabin' },
-        { text: 'Nestle', id: 3, color: '#5978ee', capacity: 5, type: 'Cabin' },
-        { text: 'Phoenix', id: 4, color: '#fec200', capacity: 15, type: 'Conference' },
-        { text: 'Mission', id: 5, color: '#df5286', capacity: 25, type: 'Conference' },
-        { text: 'Hangout', id: 6, color: '#00bdae', capacity: 10, type: 'Cabin' },
-        { text: 'Rick Roll', id: 7, color: '#865fcf', capacity: 20, type: 'Conference' },
-        { text: 'Rainbow', id: 8, color: '#1aaa55', capacity: 8, type: 'Cabin' },
-        { text: 'Swarm', id: 9, color: '#df5286', capacity: 30, type: 'Conference' },
-        { text: 'Photogenic', id: 10, color: '#710193', capacity: 25, type: 'Conference' }
+        { lastName: 'Kent', firstName: 'Clark', driverId: 1, color: '#ea7a57' },
+        { lastName: 'Wayne', firstName: 'Bruce', driverId: 2, color: '#7fa900' },
+        { lastName: 'Stark', firstName: 'Tony', driverId: 3, color: '#5978ee' },
+        { lastName: 'Parker', firstName: 'Peter', driverId: 4, color: '#fec200' },
+        { lastName: 'Romanov', firstName: 'Natasha', driverId: 5, color: '#df5286' },
+        { lastName: 'Banner', firstName: 'Bruce', driverId: 6, color: '#00bdae' },
+        { lastName: 'Xavier', firstName: 'Charles', driverId: 7, color: '#865fcf' },
+        { lastName: 'Queen', firstName: 'Oliver', driverId: 8, color: '#1aaa55' },
+        { lastName: 'Rogers', firstName: 'Steve', driverId: 9, color: '#df5286' },
+        { lastName: 'Strange', firstName: 'Stephen', driverId: 10, color: '#710193' }
     ];
-    public allowMultiple: Boolean = true;
+
+    // only allow one driver per shift
+    public allowMultiple: Boolean = false;
+
     public eventSettings: EventSettingsModel = {
-        dataSource: <Object[]>extend([], roomData, null, true),
+        dataSource: <Object[]>extend([], shiftData, null, true),
         fields: {
             id: 'Id',
-            subject: { title: 'Summary', name: 'Subject' },
+            subject: { title: 'Vehicle', name: 'VehicleId' },
             location: { title: 'Location', name: 'Location' },
-            description: { title: 'Comments', name: 'Description' },
+            description: { title: 'Description', name: 'Description' },
             startTime: { title: 'From', name: 'StartTime' },
             endTime: { title: 'To', name: 'EndTime' }
         }
@@ -100,7 +103,7 @@ export class CPScheduleComponent {
         }
         if (args.elementType === 'emptyCells' && args.element.classList.contains('e-resource-left-td')) {
             let target: HTMLElement = args.element.querySelector('.e-resource-text') as HTMLElement;
-            target.innerHTML = '<div class="name">Rooms</div><div class="type">Type</div><div class="capacity">Capacity</div>';
+            target.innerHTML = '<div class="lastName">Last Name</div><div class="firstName">First Name</div><div class="driverId">ID</div>';
         }
     }
 
