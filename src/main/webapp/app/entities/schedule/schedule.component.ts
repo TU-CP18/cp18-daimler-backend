@@ -20,7 +20,7 @@ import { roomData } from './datasource';
 @Component({
     selector: 'jhi-schedule',
     templateUrl: './schedule.component.html',
-    styleUrls: ['./schedule.css'],
+    styleUrls: ['./schedule.css', 'material.css'],
     encapsulation: ViewEncapsulation.None
 })
 export class CPScheduleComponent {

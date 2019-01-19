@@ -8,6 +8,12 @@ import { HttpModule, JsonpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 
+import { ButtonModule } from '@syncfusion/ej2-angular-buttons';
+import { ListViewModule } from '@syncfusion/ej2-angular-lists';
+import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
+import { TreeViewModule, TabModule } from '@syncfusion/ej2-angular-navigations';
+import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor';
+
 import { ScheduleAllModule, RecurrenceEditorAllModule } from '@syncfusion/ej2-angular-schedule';
 import { NumericTextBoxAllModule } from '@syncfusion/ej2-angular-inputs';
 import { DatePickerAllModule, TimePickerAllModule, DateTimePickerAllModule } from '@syncfusion/ej2-angular-calendars';
@@ -38,7 +44,13 @@ const ENTITY_STATES = [...scheduleRoute];
         MultiSelectAllModule,
         HttpModule,
         JsonpModule,
-        BrowserModule
+        BrowserModule,
+        ButtonModule,
+        ListViewModule,
+        DropDownListModule,
+        TreeViewModule,
+        TabModule,
+        RichTextEditorAllModule
     ],
     declarations: [CPScheduleComponent],
     entryComponents: [CPScheduleComponent],
