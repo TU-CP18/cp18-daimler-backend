@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { extend, isNullOrUndefined, Browser } from '@syncfusion/ej2-base';
 import {
     ScheduleComponent,
@@ -23,7 +23,7 @@ import { roomData } from './datasource';
     styleUrls: ['./schedule.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class CPScheduleComponent implements OnInit, OnDestroy {
+export class CPScheduleComponent {
     public selectedDate: Date = new Date(2018, 7, 1);
     public timeScale: TimeScaleModel = { interval: 60, slotCount: 1 };
     public workHours: WorkHoursModel = { start: '08:00', end: '18:00' };
@@ -64,9 +64,9 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
     }
 
     onPopupOpen(args: PopupOpenEventArgs): void {
-        const data: { [key: string]: Object } = <{ [key: string]: Object }>args.data;
+        let data: { [key: string]: Object } = <{ [key: string]: Object }>args.data;
         if (args.type === 'QuickInfo' || args.type === 'Editor' || args.type === 'RecurrenceAlert' || args.type === 'DeleteAlert') {
-            const target: HTMLElement =
+            let target: HTMLElement =
                 args.type === 'RecurrenceAlert' || args.type === 'DeleteAlert' ? (args.data as any).element[0] : args.target;
             if (!isNullOrUndefined(target) && target.classList.contains('e-work-cells')) {
                 if (
@@ -83,8 +83,8 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
 
     onActionBegin(args: ActionEventArgs): void {
         if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
-            const data: { [key: string]: Object } = args.data as { [key: string]: Object };
-            const groupIndex: number = this.scheduleObj.eventBase.getGroupIndexFromEvent(data);
+            let data: { [key: string]: Object } = args.data as { [key: string]: Object };
+            let groupIndex: number = this.scheduleObj.eventBase.getGroupIndexFromEvent(data);
             if (!this.scheduleObj.isSlotAvailable(data.StartTime as Date, data.EndTime as Date, groupIndex as number)) {
                 args.cancel = true;
             }
@@ -99,20 +99,16 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
             }
         }
         if (args.elementType === 'emptyCells' && args.element.classList.contains('e-resource-left-td')) {
-            const target: HTMLElement = args.element.querySelector('.e-resource-text') as HTMLElement;
+            let target: HTMLElement = args.element.querySelector('.e-resource-text') as HTMLElement;
             target.innerHTML = '<div class="name">Rooms</div><div class="type">Type</div><div class="capacity">Capacity</div>';
         }
     }
 
     onEventRendered(args: EventRenderedArgs): void {
-        const data: { [key: string]: Object } = args.data;
+        let data: { [key: string]: Object } = args.data;
         if (this.isReadOnly(data.EndTime as Date)) {
             args.element.setAttribute('aria-readonly', 'true');
             args.element.classList.add('e-read-only');
         }
     }
-
-    ngOnInit() {}
-
-    ngOnDestroy() {}
 }

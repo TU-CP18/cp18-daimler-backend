@@ -1,3 +1,6 @@
+.red {
+    background-color: #ff0000;
+}
 .timeline-resource.e-schedule .e-timeline-view .e-resource-left-td {
     vertical-align: bottom;
 }

@@ -1,10 +1,12 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { HttpModule, JsonpModule } from '@angular/http';
-
 import { CpdaimlerSharedModule } from 'app/shared';
 import { CPScheduleComponent, scheduleRoute } from './';
+
+import { HttpModule, JsonpModule } from '@angular/http';
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 
 import { ScheduleAllModule, RecurrenceEditorAllModule } from '@syncfusion/ej2-angular-schedule';
 import { NumericTextBoxAllModule } from '@syncfusion/ej2-angular-inputs';
@@ -18,8 +20,10 @@ const ENTITY_STATES = [...scheduleRoute];
 
 @NgModule({
     imports: [
+        CommonModule,
         CpdaimlerSharedModule,
         RouterModule.forChild(ENTITY_STATES),
+        HttpModule,
         ScheduleAllModule,
         RecurrenceEditorAllModule,
         NumericTextBoxAllModule,
@@ -33,7 +37,8 @@ const ENTITY_STATES = [...scheduleRoute];
         MaskedTextBoxModule,
         MultiSelectAllModule,
         HttpModule,
-        JsonpModule
+        JsonpModule,
+        BrowserModule
     ],
     declarations: [CPScheduleComponent],
     entryComponents: [CPScheduleComponent],
