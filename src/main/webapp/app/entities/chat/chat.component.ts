@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JhiAlertService, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
-
 import { Principal } from 'app/core';
+import { ChatService } from './';
 
 @Component({
     selector: 'jhi-chat',
@@ -14,6 +14,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     success: any;
 
     chart = [];
+    messages: Array<Object> = [];
+    message = '';
 
     constructor(
         private parseLinks: JhiParseLinks,
@@ -21,10 +23,32 @@ export class ChatComponent implements OnInit, OnDestroy {
         private principal: Principal,
         private activatedRoute: ActivatedRoute,
         private router: Router,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private chatService: ChatService
     ) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.chatService.connect();
+
+        this.chatService.receive().subscribe(message => {
+            this.messages.push(message);
+        });
+
+        // this.principal.identity().then((account) => {
+        //     this.account = account;
+        // });
+        // this.registerAuthenticationSuccess();
+        // this.registerLogoutSuccess();
+    }
+
+    sendMessage(message) {
+        if (message.length === 0) {
+            return;
+        }
+        console.log('COMP SEND MESSAGE:', message);
+        this.chatService.sendMessage(message);
+        this.message = '';
+    }
 
     ngOnDestroy() {}
 
