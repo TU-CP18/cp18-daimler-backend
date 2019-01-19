@@ -11,17 +11,18 @@
         <span class="hipster img-fluid img-rounded"></span>
     </div>
     <div class="col-md-9">
+        <h2>Messages:</h2>
         <div class="chat-messages">
             <div class="row" *ngFor="let message of messages">
                 <div class="col-sm-2">
-                    <strong>{{message.userLogin}}</strong>
+                    <strong>{{message.sender}}</strong>
                 </div>
                 <div class="col-sm-8">
-                    {{message.message}}
+                    {{message.content}}
                 </div>
                 <div class="col-sm-2">
                     <div>
-                        {{message.time | date:'short'}}
+                        {{message.createdAt | date:'short'}}
                     </div>
                 </div>
             </div>

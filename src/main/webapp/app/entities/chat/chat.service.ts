@@ -21,8 +21,10 @@ export class ChatService {
     alreadyConnectedOnce = false;
     private subscription: Subscription;
 
-    constructor(private http: HttpClient, private router: Router) // private $window: Window,
-    // private csrfService: CSRFService
+    constructor(
+        private http: HttpClient,
+        private router: Router // private $window: Window,
+    ) // private csrfService: CSRFService
     {
         this.connection = this.createConnection();
         this.listener = this.createListener();
@@ -96,7 +98,7 @@ export class ChatService {
 
     subscribe() {
         this.connection.then(() => {
-            this.subscriber = this.stompClient.subscribe('/chat/public', data => {
+            this.subscriber = this.stompClient.subscribe('/topic/public', data => {
                 this.listenerObserver.next(JSON.parse(data.body));
             });
         });
