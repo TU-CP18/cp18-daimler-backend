@@ -10,7 +10,7 @@
     image: ami-0bdf93799014acdc4
     region: eu-central-1
     vpcdefault_id: vpc-c7c8c8ae
-    db_user: 
+    db_user: root
     db_pass: 
   tasks:
     - name: Gather facts about VPCs
@@ -69,6 +69,11 @@
           image: "{{ image }}"
           wait: true
           region: "{{ region }}"
+          volumes:
+            - device_name: /dev/sda1
+              volume_type: gp2
+              volume_size: 20
+              delete_on_termination: true
       register: ec2
       
    - name: Launch Jenkins EC2 Instance
@@ -79,6 +84,11 @@
           image: "{{ image }}"
           wait: true
           region: "{{ region }}"
+          volumes:
+            - device_name: /dev/sda1
+              volume_type: gp2
+              volume_size: 20
+              delete_on_termination: true
       register: j_ec2    
       
     - name: Create RDS MySQL Instance
