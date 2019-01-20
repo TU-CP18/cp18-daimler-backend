@@ -49,7 +49,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         enableCompactView: false,
         resources: ['Driver']
     };
-    /*
+
     public drivers: Object[] = [
         { lastName: 'Kent', firstName: 'Clark', driverId: 1, color: '#ea7a57' },
         { lastName: 'Wayne', firstName: 'Bruce', driverId: 2, color: '#7fa900' },
@@ -62,7 +62,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         { lastName: 'Rogers', firstName: 'Steve', driverId: 9, color: '#df5286' },
         { lastName: 'Strange', firstName: 'Stephen', driverId: 10, color: '#710193' }
     ];
-*/
+
     // only allow one driver per shift
     public allowMultiple: Boolean = false;
 
@@ -86,7 +86,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
 
     currentAccount: any;
     shifts: IScheduleShift[];
-    drivers: IScheduleDriver[];
+    // drivers: IScheduleDriver[];
     eventSubscriber: Subscription;
 
     constructor(
@@ -129,24 +129,15 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
     private parseShifts(data: ISafetyDriver[]) {
         console.log('myyyyyyyyy');
         console.log(data);
-        this.drivers = data.map(
-            x =>
-                new ScheduleDriver(
-                    x.id,
-                    x.user.lastName,
-                    x.user.firstName,
-                    x.user.firstName + ' ' + x.user.lastName,
-                    this.colours[x.id % 8]
-                )
-        );
+        // this.drivers = data.map(x => new ScheduleDriver(x.id, x.user.lastName, x.user.firstName, x.user.firstName + ' ' + x.user.lastName, this.colours[x.id % 8]));
         console.log(this.drivers);
     }
 
     private parseDrivers(data: IShift[]) {
         console.log('myyyyyyyyy');
         console.log(data);
-        this.shifts = data.map(x => new ScheduleShift(x.id, x.car.id, x.car.model, new Date(x.start), new Date(x.end), x.safetyDriver.id));
-        this.scheduleObj.refresh();
+        // this.shifts = data.map(x => new ScheduleShift(x.id, x.car.id, x.car.model, new Date(x.start), new Date(x.end), x.safetyDriver.id));
+        // this.scheduleObj.refresh();
     }
 
     private onError(errorMessage: string) {
