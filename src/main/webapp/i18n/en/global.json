@@ -13,6 +13,7 @@
                 "carLicence": "Car Licence",
                 "carIssue": "Car Issue",
                 "chat": "Chat",
+                "schedule": "Schedule",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

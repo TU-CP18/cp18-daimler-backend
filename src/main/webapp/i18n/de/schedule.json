@@ -1,0 +1,28 @@
+
+{
+    "cpdaimlerApp": {
+        "schedule" : {
+            "home": {
+                "title": "Dienstplan",
+                "createLabel": "Shift erstellen",
+                "createOrEditLabel": "Shift erstellen oder bearbeiten",
+                "search": "Suche nach Shift"
+            },
+            "created": "Shift erstellt mit ID {{ param }}",
+            "updated": "Shift aktualisiert mit ID {{ param }}",
+            "deleted": "Shift gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Shift {{ id }} wirklich dauerhaft gelöscht werden?"
+            },
+            "detail": {
+                "title": "Shift"
+            },
+            "start": "Start",
+            "end": "End",
+            "longStart": "Long Start",
+            "latStart": "Lat Start",
+            "car": "Car",
+            "safetyDriver": "Safety Driver"
+        }
+    }
+}
