@@ -17,7 +17,7 @@ const fakeRoute3 = readFakeRoute('route3.csv')
 
 const carSimulator = (carLicense, coordinates) => {
     const coordinates$ = from(coordinates);
-    return interval(5000).pipe(
+    return interval(2500).pipe(
         op.zip(coordinates$),
         op.map(([_, coordinate]) => ({ ...coordinate, carLicense, timestamp: new Date().toISOString() }))
     );
