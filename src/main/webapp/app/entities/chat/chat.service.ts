@@ -19,16 +19,19 @@ export class ChatService {
     listener: Observable<any>;
     listenerObserver: Observer<any>;
     alreadyConnectedOnce = false;
+    topic = null;
     private subscription: Subscription;
 
-    constructor(private http: HttpClient, private router: Router) // private $window: Window,
-    // private csrfService: CSRFService
+    constructor(
+        private http: HttpClient,
+        private router: Router // private $window: Window,
+    ) // private csrfService: CSRFService
     {
         this.connection = this.createConnection();
         this.listener = this.createListener();
     }
 
-    connect() {
+    connect(safetyDriverId) {
         if (this.connectedPromise === null) {
             this.connection = this.createConnection();
         }
@@ -39,13 +42,15 @@ export class ChatService {
         // if (authToken) {
         //     url += '?access_token=' + authToken;
         // }
+        this.topic = '/topic/public/' + safetyDriverId;
         const socket = new SockJS(url);
         this.stompClient = Stomp.over(socket);
         const headers = {};
         this.stompClient.connect(headers, () => {
             this.connectedPromise('success');
             this.connectedPromise = null;
-            this.subscribe();
+            this.unsubscribe();
+            this.subscribe(safetyDriverId);
             if (!this.alreadyConnectedOnce) {
                 this.alreadyConnectedOnce = true;
             }
@@ -68,8 +73,8 @@ export class ChatService {
         return this.listener;
     }
 
-    sendMessage(message) {
-        console.log('Service sendMessage:');
+    sendMessage(message: string) {
+        // console.log('Service sendMessage:');
         if (this.stompClient !== null && this.stompClient.connected) {
             // this.stompClient.send(
             //     '/topic/public', // destination
@@ -88,15 +93,16 @@ export class ChatService {
                 createdAt: new Date(),
                 type: 'CHAT'
             };
-            this.stompClient.send('/topic/public', JSON.stringify(chatMessage), {});
+            this.stompClient.send(this.topic, JSON.stringify(chatMessage), {});
         } else {
             console.log('STOMP ERROR');
         }
     }
 
-    subscribe() {
+    subscribe(safetyDriverId: string) {
+        // console.log('topic: ' + this.topic);
         this.connection.then(() => {
-            this.subscriber = this.stompClient.subscribe('/topic/public', data => {
+            this.subscriber = this.stompClient.subscribe(this.topic, data => {
                 this.listenerObserver.next(JSON.parse(data.body));
             });
         });

@@ -24,6 +24,8 @@ body {
     align-items: center;
     justify-content: center;
     height: 100%;
+    padding: 20px;
+    margin-left: 39px;
 }
 
 .conversation-header h2,
@@ -35,6 +37,24 @@ body {
 .text-center {
     text-align: center;
     width: 100%;
+}
+
+.user-list {
+    max-width: 210px;
+}
+
+.user-list .mat-card {
+    padding: 0;
+}
+
+.mat-tab-label-container {
+    max-width: 50px;
+}
+
+.selected-conversation {
+    margin-left: 49px;
+    position: relative;
+    height: 500px;
 }
 
 .conversation-history.mat-list {
