@@ -9,10 +9,12 @@ import com.cpdaimler.service.CarService;
 import com.cpdaimler.web.rest.errors.BadRequestAlertException;
 import com.cpdaimler.web.rest.util.HeaderUtil;
 import com.cpdaimler.web.rest.util.PaginationUtil;
+import com.cpdaimler.service.dto.CarStatisticsDTO;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,9 +26,6 @@ import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing Car.
@@ -132,6 +131,48 @@ public class CarResource {
         return ResponseUtil.wrapOrNotFound(car);
     }
 
+    @GetMapping("/cars/statistics")
+    @Timed
+    public CarStatisticsDTO getStatisticsForCars() {
+        log.debug("REST request to get Car : {}");
+        Page<Car> cars = carService.findAll(new PageRequest(0, Integer.MAX_VALUE));
+
+        CarStatisticsDTO carStatisticsDTO = new CarStatisticsDTO();
+
+        int available = 0;
+        int driving_Full = 0;
+        int maintenance = 0;
+        int driving_empty = 0;
+        int inactive = 0;
+
+        for (Car car : cars.getContent()) {
+            switch (car.getStatus()) {
+                case AVAILABLE:
+                    available++;
+                    break;
+                case DRIVING_FULL:
+                    driving_Full++;
+                    break;
+                case DRIVING_EMPTY:
+                    driving_empty++;
+                    break;
+                case INACTIVE:
+                    inactive++;
+                    break;
+                case MAINTENANCE:
+                    maintenance++;
+                    break;
+            }
+        }
+        carStatisticsDTO.addEntry(CARSTATUS.AVAILABLE, available);
+        carStatisticsDTO.addEntry(CARSTATUS.DRIVING_FULL, driving_Full);
+        carStatisticsDTO.addEntry(CARSTATUS.DRIVING_EMPTY, driving_empty);
+        carStatisticsDTO.addEntry(CARSTATUS.INACTIVE, inactive);
+        carStatisticsDTO.addEntry(CARSTATUS.MAINTENANCE, maintenance);
+
+        return carStatisticsDTO;
+    }
+
     @GetMapping("/cars/status/available/number")
     @Timed
     public Long getNumberByStatusAvailable() {
@@ -139,6 +180,7 @@ public class CarResource {
         Long count = carService.countByCarStatus(CARSTATUS.AVAILABLE);
         return count;
     }
+
     @GetMapping("/cars/status/drivingFull/number")
     @Timed
     public Long getNumberByStatusDrivingFull() {
@@ -146,6 +188,7 @@ public class CarResource {
         Long count = carService.countByCarStatus(CARSTATUS.DRIVING_FULL);
         return count;
     }
+
     @GetMapping("/cars/status/maintenance/number")
     @Timed
     public Long getNumberByStatusMaintenance() {
@@ -153,6 +196,7 @@ public class CarResource {
         Long count = carService.countByCarStatus(CARSTATUS.MAINTENANCE);
         return count;
     }
+
     @GetMapping("/cars/status/drivingEmpty/number")
     @Timed
     public Long getNumberByStatusDrivingEmpty() {
@@ -160,6 +204,7 @@ public class CarResource {
         Long count = carService.countByCarStatus(CARSTATUS.DRIVING_EMPTY);
         return count;
     }
+
     @GetMapping("/cars/status/inactive/number")
     @Timed
     public Long getNumberByStatus() {
