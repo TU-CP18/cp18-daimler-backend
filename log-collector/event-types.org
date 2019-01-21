@@ -9,6 +9,7 @@ according to the source of event, VEHICLE, USER, and SYSTEM.
    
 |---------------+------------------+-------------------------------------------------------------------------------------------------------------|
 | Field         | Type             |                                                                                                             |
+|---------------+------------------+-------------------------------------------------------------------------------------------------------------|
 | *source*      | String           | Indicate the source of the event, ~VEHICLE~, ~USER~, ~SYSTEM~, etc.                                         |
 | *timestamp*   | String (ISO8601) | Every log event has to be assigned a timestamp at the source in ISO-8601 string format.                     |
 | *type*        | String           | Specific type of the event, relative to the source. E.g. ~NAVIGATE~, ~IDLE~, ~RIDE_START~                   |
@@ -16,7 +17,6 @@ according to the source of event, VEHICLE, USER, and SYSTEM.
 |               |                  | as the unique id of the smartphone or the uuid of the vehicle on-board computer, etc.,                      |
 | *location*    | GeoPoint         | The lat-long coordinate of the device, if available.                                                        |
 | *description* | String           | Optional textual data associated with the event.                                                            |
-|---------------+------------------+-------------------------------------------------------------------------------------------------------------|
 
 ~GeoPoint~ type corresponds to ~[Lat, Long]~ tuple.
 
@@ -28,8 +28,8 @@ VEHICLE events are generated from the vehicle's on-board computer on reaching ce
 
 |-----------+--------+-----------------------------------|
 | Field     | Type   |                                   |
-| *license* | String | The license plate of the vehicle. |
 |-----------+--------+-----------------------------------|
+| *license* | String | The license plate of the vehicle. |
 
 ** Unit events 
 
