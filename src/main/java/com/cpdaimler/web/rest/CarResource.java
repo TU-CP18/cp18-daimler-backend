@@ -135,7 +135,7 @@ public class CarResource {
     @Timed
     public CarStatisticsDTO getStatisticsForCars() {
         log.debug("REST request to get Car : {}");
-        Page<Car> cars = carService.findAll(new PageRequest(0, Integer.MAX_VALUE));
+        Page<Car> cars = carService.findAll(PageRequest.of(0, Integer.MAX_VALUE));
 
         CarStatisticsDTO carStatisticsDTO = new CarStatisticsDTO();
 
@@ -171,46 +171,6 @@ public class CarResource {
         carStatisticsDTO.addEntry(CARSTATUS.MAINTENANCE, maintenance);
 
         return carStatisticsDTO;
-    }
-
-    @GetMapping("/cars/status/available/number")
-    @Timed
-    public Long getNumberByStatusAvailable() {
-        log.debug("REST request to get Car : {}");
-        Long count = carService.countByCarStatus(CARSTATUS.AVAILABLE);
-        return count;
-    }
-
-    @GetMapping("/cars/status/drivingFull/number")
-    @Timed
-    public Long getNumberByStatusDrivingFull() {
-        log.debug("REST request to get Car : {}");
-        Long count = carService.countByCarStatus(CARSTATUS.DRIVING_FULL);
-        return count;
-    }
-
-    @GetMapping("/cars/status/maintenance/number")
-    @Timed
-    public Long getNumberByStatusMaintenance() {
-        log.debug("REST request to get Car : {}");
-        Long count = carService.countByCarStatus(CARSTATUS.MAINTENANCE);
-        return count;
-    }
-
-    @GetMapping("/cars/status/drivingEmpty/number")
-    @Timed
-    public Long getNumberByStatusDrivingEmpty() {
-        log.debug("REST request to get Car : {}");
-        Long count = carService.countByCarStatus(CARSTATUS.DRIVING_EMPTY);
-        return count;
-    }
-
-    @GetMapping("/cars/status/inactive/number")
-    @Timed
-    public Long getNumberByStatus() {
-        log.debug("REST request to get Car : {}");
-        Long count = carService.countByCarStatus(CARSTATUS.INACTIVE);
-        return count;
     }
 
     /**
