@@ -233,4 +233,26 @@ public class CarResource {
         List<CarIssue> carIssues = carIssueService.findAllByCar(carId);
         return new ResponseEntity<List<CarIssue>>(carIssues, HttpStatus.OK);
     }
+
+    /**
+     * PUT  /cars : Updates an existing car.
+     *
+     * @param carIssue the car to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated car,
+     * or with status 400 (Bad Request) if the car is not valid,
+     * or with status 500 (Internal Server Error) if the car couldn't be updated
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @PutMapping("/cars/issues")
+    @Timed
+    public ResponseEntity<CarIssue> updateCarIssue(@RequestBody CarIssue carIssue) throws URISyntaxException {
+        log.debug("REST request to update CarIssue : {}", carIssue);
+        if (carIssue.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        CarIssue result = carIssueService.save(carIssue);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, carIssue.getId().toString()))
+            .body(result);
+    }
 }
