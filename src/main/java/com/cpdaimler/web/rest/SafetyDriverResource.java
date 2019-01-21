@@ -4,6 +4,8 @@ import com.codahale.metrics.annotation.Timed;
 import com.cpdaimler.domain.SafetyDriver;
 import com.cpdaimler.service.MailService;
 import com.cpdaimler.service.SafetyDriverService;
+import com.cpdaimler.service.dto.SDriverEntry;
+import com.cpdaimler.service.dto.SDriverStatisticsDTO;
 import com.cpdaimler.web.rest.errors.BadRequestAlertException;
 import com.cpdaimler.web.rest.util.HeaderUtil;
 import com.cpdaimler.web.rest.util.PaginationUtil;
@@ -41,7 +43,7 @@ public class SafetyDriverResource {
 
     public SafetyDriverResource(SafetyDriverService safetyDriverService, MailService mailService) {
         this.safetyDriverService = safetyDriverService;
-        this.mailService=mailService;
+        this.mailService = mailService;
     }
 
     /**
@@ -64,7 +66,6 @@ public class SafetyDriverResource {
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
-
 
 
     /**
@@ -92,7 +93,7 @@ public class SafetyDriverResource {
     /**
      * GET  /safety-drivers : get all the safetyDrivers.
      *
-     * @param pageable the pagination information
+     * @param pageable  the pagination information
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many)
      * @return the ResponseEntity with status 200 (OK) and the list of safetyDrivers in body
      */
@@ -149,19 +150,26 @@ public class SafetyDriverResource {
         return safetyDriverService.getNumberCurrentActiveDrivers();
     }
 
-    @GetMapping("/safety-drivers/inactive/number")
+    @GetMapping("/safety-drivers/statistics")
     @Timed
-    public Long getNumberCurrentInactiveDrivers() {
+    public SDriverStatisticsDTO getNumberCurrentInactiveDrivers() {
         log.debug("REST request to delete SafetyDriver : {}");
 
-        return safetyDriverService.getNumberCurrentInactiveDrivers();
+        Long numberInactiveSD = safetyDriverService.getNumberCurrentInactiveDrivers();
+        Long numberActiveSD = safetyDriverService.getNumberCurrentActiveDrivers();
+
+        SDriverStatisticsDTO sDriverStatisticsDTO = new SDriverStatisticsDTO();
+        sDriverStatisticsDTO.addEntry("active", numberActiveSD);
+        sDriverStatisticsDTO.addEntry("inactive", numberInactiveSD);
+
+        return sDriverStatisticsDTO;
     }
 
     /**
      * SEARCH  /_search/safety-drivers?query=:query : search for the safetyDriver corresponding
      * to the query.
      *
-     * @param query the query of the safetyDriver search
+     * @param query    the query of the safetyDriver search
      * @param pageable the pagination information
      * @return the result of the search
      */
