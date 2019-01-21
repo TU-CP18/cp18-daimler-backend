@@ -1,13 +1,11 @@
 #+TITLE:     Event types for log collection
 #+AUTHOR:    Santhos Baala, Ramalingam Santhanakrishnan
 
-* Rationale  
-
 The log-collector although it accepts any JSON body, specific event types are recognized and
 optimized for later retrieval from the time series. The following type of events are categorized 
 according to the source of event, VEHICLE, USER, and SYSTEM.
 
-** Common fields for all event types
+* Common fields for all event types
    
 |---------------+------------------+-------------------------------------------------------------------------------------------------------------|
 | *source*      | String           | Indicate the source of the event, ~VEHICLE~, ~USER~, ~SYSTEM~, etc.                                         |
@@ -17,21 +15,22 @@ according to the source of event, VEHICLE, USER, and SYSTEM.
 |               |                  | as the unique id of the smartphone or the uuid of the vehicle on-board computer, etc.,                      |
 | *location*    | GeoPoint         | The lat-long coordinate of the device, if available.                                                        |
 | *description* | String           | Optional textual data associated with the event.                                                            |
+|               |                  |                                                                                                             |
 |---------------+------------------+-------------------------------------------------------------------------------------------------------------|
 
 ~GeoPoint~ type corresponds to ~[Lat, Long]~ tuple.
 
-** ~VEHICLE~ events
+* ~VEHICLE~ events
    
 VEHICLE events are generated from the vehicle's on-board computer on reaching certain state/condition and periodically as a heartbeat.
 
-*** Common fields for vehicle events
+** Common fields for vehicle events
 
 |-----------+--------+-----------------------------------|
 | *license* | String | The license plate of the vehicle. |
 |-----------+--------+-----------------------------------|
 
-*** Unit events 
+** Unit events 
 
 - ~UNIT_ON~: When the vehicle is powered on.
 - ~UNIT_OFF~: When the vehicle is powered off.
@@ -47,8 +46,7 @@ VEHICLE events are generated from the vehicle's on-board computer on reaching ce
     | *range*            | Float | The expected range in km.     |
     |--------------------+-------+-------------------------------|
 
-
-*** Navigation events 
+** Navigation events 
 
 - ~NAV_START~: When the vehicle begins to move.
 - ~NAV_STOP~: When the vehicle stops.
@@ -59,24 +57,24 @@ VEHICLE events are generated from the vehicle's on-board computer on reaching ce
 
 - ~NAV_POSITION~: Periodical position update.
 
-*** Autopilot events 
+** Autopilot events 
     
-- ~AP_ASSIGNED_DESTINATION~: The autopilot was summoned to a destination.
-    |----------------+----------+----------------------------|
-    | *destionation* | GeoPoint | The destionation assigned. |
-    |----------------+----------+----------------------------|
+ - ~AP_ASSIGNED_DESTINATION~: The autopilot was summoned to a destination.
+     |----------------+----------+----------------------------|
+     | *destionation* | GeoPoint | The destionation assigned. |
+     |----------------+----------+----------------------------|
 
-- ~AP_REACHED_DESTINATION~: The autopilot detected that it reached the destination.
-    |----------------+----------+-------------------------------------|
-    | *destionation* | GeoPoint | The destination that was dereached. |
-    |----------------+----------+-------------------------------------|
+ - ~AP_REACHED_DESTINATION~: The autopilot detected that it reached the destination.
+     |----------------+----------+-------------------------------------|
+     | *destionation* | GeoPoint | The destination that was dereached. |
+     |----------------+----------+-------------------------------------|
 
-- ~AP_OVERRIDE~: The autopilot was overridden by the driver.
-    |---------------+--------+---------------------------------------------|
-    | *description* | String | Textual information from the driver if any. |
-    |---------------+--------+---------------------------------------------|
+ - ~AP_OVERRIDE~: The autopilot was overridden by the driver.
+     |---------------+--------+---------------------------------------------|
+     | *description* | String | Textual information from the driver if any. |
+     |---------------+--------+---------------------------------------------|
 
-*** Driver interation events
+** Driver interation events
     
 - ~DRIVER_AUTHORIZED~: A driver was authorized to board and control the vehicle.
     |------------+--------+--------------------------|
@@ -94,7 +92,7 @@ VEHICLE events are generated from the vehicle's on-board computer on reaching ce
     |------------+--------+--------------------------|
   
 
-*** Control events
+* Control events
     
 Event type to log adjustments to light, climate, etc.,
 
@@ -109,8 +107,8 @@ Values for other controls could be similar./
 
 ** ~DRIVER~ events
    
-TBD
+ TBD
 
 ** ~SYSTEM~ events
    
-TBD
+ TBD
