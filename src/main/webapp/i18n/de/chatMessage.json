@@ -1,0 +1,26 @@
+
+{
+    "cpdaimlerApp": {
+        "chatMessage" : {
+            "home": {
+                "title": "Chat Messages",
+                "createLabel": "Chat Message erstellen",
+                "createOrEditLabel": "Chat Message erstellen oder bearbeiten",
+                "search": "Suche nach Chat Message"
+            },
+            "created": "Chat Message erstellt mit ID {{ param }}",
+            "updated": "Chat Message aktualisiert mit ID {{ param }}",
+            "deleted": "Chat Message gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Chat Message {{ id }} wirklich dauerhaft gelöscht werden?"
+            },
+            "detail": {
+                "title": "Chat Message"
+            },
+            "text": "Text",
+            "createdAt": "Created At",
+            "sender": "Sender",
+            "recipient": "Recipient"
+        }
+    }
+}

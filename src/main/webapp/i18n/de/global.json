@@ -14,6 +14,7 @@
                 "carIssue": "Car Issue",
                 "chat": "Chat",
                 "schedule": "Fahrtenplan",
+                "chatMessage": "Chat Message",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
