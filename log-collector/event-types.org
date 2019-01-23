@@ -86,9 +86,38 @@ VEHICLE events are generated from the vehicle's on-board computer on reaching ce
 
 
 * ~DRIVER~ events
+ 
+** Common fields for driver events
+
+|------------+--------+-----------------------------------------------------------------------|
+| Field      | Type   |                                                                       |
+|------------+--------+-----------------------------------------------------------------------|
+| *driverId* | String | The identifier for driver.                                            |
+| *shiftId*  | String | The identifier for the shift, in case the driver is currently in one. |
+| *license*  | String | The license of the vehicle.                                           |
+
+** Shift Management
    
-TBD
+- ~SHIFT_INTERCEPTING~: The driver is looking for shift interception point 
+  - *destionation* (GeoPoint) The interception point.
+- ~SHIFT_CONFIRM_ARRIVAL~: The driver confirms the arrival at the vehicle location and starts the inspection.
+- ~SHIFT_FINISH~: End the driver's current shift.
+
+** Vehicle Interaction and Ride
+
+- ~VEHICLE_OPEN~: The driver has opened the vehicle.
+- ~VEHICLE_CLOSE~: The driver has exited the vehicle.
+- ~RIDE_START~: The driver is looking for shift interception point 
+- ~RIDE_FINISH~: The driver has finished the ride either by reaching destination or due to shift end.
+  - *description* (String) Optional, may indicate any specific reason for finishing the ride.
+
+- ~RIDE_AWARENESS_CHECKED~: The driver has been checked for awareness
+  - *method* (String) Optional, method of awareness check.
+
+- ~RIDE_AWARENESS_IGNORED~: The driver ignored the awareness check
+  - *method* (String) Optional, method of awareness check.
 
 * ~SYSTEM~ events
    
-TBD
+The system's critical events are already captured by the system logs, however, 
+any specific use-cases if required for the fleet manager will be captured as an event explicity.
