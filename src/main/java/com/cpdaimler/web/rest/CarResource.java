@@ -57,7 +57,7 @@ public class CarResource {
     @PostMapping("/cars")
     @Timed
     public ResponseEntity<Car> createCar(@RequestBody Car car) throws URISyntaxException {
-        log.debug("REST request to save Car : {}", car);
+        log.debug("REST request to create a Car : {}", car);
         if (car.getId() != null) {
             throw new BadRequestAlertException("A new car cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -79,7 +79,7 @@ public class CarResource {
     @PutMapping("/cars")
     @Timed
     public ResponseEntity<Car> updateCar(@RequestBody Car car) throws URISyntaxException {
-        log.debug("REST request to update Car : {}", car);
+        log.debug("REST request to update a Car : {}", car);
         if (car.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -105,14 +105,14 @@ public class CarResource {
     }
 
     /**
-     * GET  /cars : get all active the cars.
+     * GET  /cars : get all active cars.
      *
      * @return the ResponseEntity with status 200 (OK) and the list of cars in body
      */
     @GetMapping("/cars/active")
     @Timed
     public ResponseEntity<List<Car>> getAllActiveCars() {
-        log.debug("REST request to get a page of Cars");
+        log.debug("REST request to get all active cars");
         List<Car> cars = carService.findAllActive();
         return new ResponseEntity<>(cars, HttpStatus.OK);
     }
@@ -131,10 +131,15 @@ public class CarResource {
         return ResponseUtil.wrapOrNotFound(car);
     }
 
+    /**
+     *
+     * @return a CarStatisticsDTO with the attributes CarStatus and number
+     * used to provide data for charts
+     */
     @GetMapping("/cars/statistics")
     @Timed
     public CarStatisticsDTO getStatisticsForCars() {
-        log.debug("REST request to get Car : {}");
+        log.debug("REST request to get the statistics for all cars");
         Page<Car> cars = carService.findAll(PageRequest.of(0, Integer.MAX_VALUE));
 
         CarStatisticsDTO carStatisticsDTO = new CarStatisticsDTO();
@@ -207,7 +212,7 @@ public class CarResource {
     @PostMapping("/cars/{carId}/issues")
     @Timed
     public ResponseEntity<CarIssue> createCarIssueForCar(@PathVariable Long carId, @RequestBody CarIssue carIssue) throws URISyntaxException {
-        log.debug("REST request to save CarIssue : {}", carIssue);
+        log.debug("REST request to save CarIssue : {} for a given car with the id : {}", carIssue, carId);
         if (carIssue.getId() != null) {
             throw new BadRequestAlertException("A new carIssue cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -240,18 +245,18 @@ public class CarResource {
     }
 
     /**
-     * PUT  /cars : Updates an existing car.
+     * PUT  /cars : Updates an existing CarIssue.
      *
-     * @param carIssue the car to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated car,
+     * @param carIssue the carIssue to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated CarIssue,
      * or with status 400 (Bad Request) if the car is not valid,
-     * or with status 500 (Internal Server Error) if the car couldn't be updated
+     * or with status 500 (Internal Server Error) if the CarIssue couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/cars/issues")
     @Timed
     public ResponseEntity<CarIssue> updateCarIssue(@RequestBody CarIssue carIssue) throws URISyntaxException {
-        log.debug("REST request to update CarIssue : {}", carIssue);
+        log.debug("REST request to update a CarIssue : {}", carIssue);
         if (carIssue.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
