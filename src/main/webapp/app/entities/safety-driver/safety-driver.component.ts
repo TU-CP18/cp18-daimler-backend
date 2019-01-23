@@ -33,8 +33,8 @@ export class SafetyDriverComponent implements OnInit, OnDestroy {
     previousPage: any;
     reverse: any;
 
-    numberActive: Number;
-    numberInactive: Number;
+    numberActive: number;
+    numberInactive: number;
 
     chart = [];
 
@@ -85,6 +85,22 @@ export class SafetyDriverComponent implements OnInit, OnDestroy {
                 (res: HttpResponse<ISafetyDriver[]>) => this.paginateSafetyDrivers(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
+
+        this.safetyDriverService.getSafetyDriverStatistics().subscribe(
+            (res: HttpResponse<any>) => {
+                console.log(res);
+                res.body.entries.forEach(item => {
+                    if (item.type === 'active') {
+                        this.numberActive = item.number;
+                    } else if (item.type === 'inactive') {
+                        this.numberInactive = item.number;
+                    }
+                });
+
+                this.createChart();
+            },
+            (res: HttpErrorResponse) => {}
+        );
     }
 
     loadPage(page: number) {
@@ -142,33 +158,6 @@ export class SafetyDriverComponent implements OnInit, OnDestroy {
             this.currentAccount = account;
         });
         this.registerChangeInSafetyDrivers();
-
-        this.safetyDriverService.getNumberActiveDrivers().subscribe(
-            (res: HttpResponse<Number>) => {
-                this.numberActive = res.body;
-                this.safetyDriverService.getNumberInactiveDrivers().subscribe(
-                    (innerRes: HttpResponse<Number>) => {
-                        this.numberInactive = innerRes.body;
-                        this.chart = new Chart('canvas', {
-                            type: 'pie',
-                            data: {
-                                datasets: [
-                                    {
-                                        data: [this.numberActive, this.numberInactive],
-                                        backgroundColor: ['#3e95cd', '#8e5ea2']
-                                    }
-                                ],
-                                // These labels appear in the legend and in the tooltips when hovering different arcs
-                                labels: ['currently working safety drivers', 'currently not working safety drivers']
-                            },
-                            options: {}
-                        });
-                    },
-                    (innerRes: HttpErrorResponse) => this.onError(innerRes.message)
-                );
-            },
-            (res: HttpErrorResponse) => this.onError(res.message)
-        );
     }
 
     ngOnDestroy() {
@@ -200,5 +189,22 @@ export class SafetyDriverComponent implements OnInit, OnDestroy {
 
     private onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
+    }
+
+    private createChart() {
+        this.chart = new Chart('canvas', {
+            type: 'pie',
+            data: {
+                datasets: [
+                    {
+                        data: [this.numberActive, this.numberInactive],
+                        backgroundColor: ['#3e95cd', '#8e5ea2']
+                    }
+                ],
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: ['currently working safety drivers', 'currently not working safety drivers']
+            },
+            options: {}
+        });
     }
 }
