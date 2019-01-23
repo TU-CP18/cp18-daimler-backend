@@ -21,7 +21,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     messages: Array<Object> = [];
     message = '';
     identity = 'backenduser';
-    selectedUser = null;
+    selectedUser: ISafetyDriver;
 
     constructor(
         private parseLinks: JhiParseLinks,
@@ -65,7 +65,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     selectConversation(selectedUser) {
-        this.chatService.connect(selectedUser.id);
+        this.chatService.connect(selectedUser);
         this.messages = [];
         this.selectedUser = selectedUser;
     }

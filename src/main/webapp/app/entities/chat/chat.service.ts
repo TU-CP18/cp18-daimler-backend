@@ -1,37 +1,44 @@
-import { Injectable } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { ChatMessageService } from './../chat-message/chat-message.service';
 import { HttpClient, HttpResponse } from '@angular/common/http';
+import { IChatMessage } from 'app/shared/model/chat-message.model';
+import { Injectable } from '@angular/core';
 import { ISafetyDriver } from 'app/shared/model/safety-driver.model';
+import { IUser, Principal, UserService } from 'app/core';
 import { Observable, Observer, Subscription } from 'rxjs';
-
-type EntityResponseType = HttpResponse<ISafetyDriver>;
-type EntityArrayResponseType = HttpResponse<ISafetyDriver[]>;
+import { Router, NavigationEnd } from '@angular/router';
 
 import SockJS = require('sockjs-client');
 import Stomp = require('webstomp-client');
+import * as moment from 'Moment';
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
-    stompClient = null;
-    subscriber = null;
-    connection: Promise<any>;
+    alreadyConnectedOnce = false;
     connectedPromise: any;
+    connection: Promise<any>;
     listener: Observable<any>;
     listenerObserver: Observer<any>;
-    alreadyConnectedOnce = false;
+    safetyDriver: ISafetyDriver;
+    backendUser: IUser;
+    appUser: IUser;
+    stompClient = null;
+    subscriber = null;
     topic = null;
     private subscription: Subscription;
+    private messageObjectService: ChatMessageService;
 
     constructor(
         private http: HttpClient,
-        private router: Router // private $window: Window,
-    ) // private csrfService: CSRFService
-    {
+        private router: Router, // private $window: Window,
+        private principal: Principal,
+        private chatMessageService: ChatMessageService,
+        private userService: UserService
+    ) {
         this.connection = this.createConnection();
         this.listener = this.createListener();
     }
 
-    connect(safetyDriverId) {
+    connect(safetyDriver: ISafetyDriver) {
         if (this.connectedPromise === null) {
             this.connection = this.createConnection();
         }
@@ -42,7 +49,8 @@ export class ChatService {
         // if (authToken) {
         //     url += '?access_token=' + authToken;
         // }
-        this.topic = '/topic/public/' + safetyDriverId;
+        this.safetyDriver = safetyDriver;
+        this.topic = '/topic/public/' + safetyDriver.id;
         const socket = new SockJS(url);
         this.stompClient = Stomp.over(socket);
         const headers = {};
@@ -50,11 +58,31 @@ export class ChatService {
             this.connectedPromise('success');
             this.connectedPromise = null;
             this.unsubscribe();
-            this.subscribe(safetyDriverId);
+            this.subscribe();
             if (!this.alreadyConnectedOnce) {
                 this.alreadyConnectedOnce = true;
             }
         });
+        // get user object of current user (FM)
+        this.principal.identity().then(account => {
+            this.userService.find(account.login).subscribe(
+                backendUser => {
+                    this.backendUser = backendUser.body;
+                },
+                () => {
+                    console.log('Error retrieving backend user.');
+                }
+            );
+        });
+        // get user object of safety driver (of current chat)
+        this.userService.find(safetyDriver.login).subscribe(
+            appUser => {
+                this.appUser = appUser.body;
+            },
+            () => {
+                console.log('Error when retrieving safety driver user.');
+            }
+        );
     }
 
     disconnect() {
@@ -74,17 +102,12 @@ export class ChatService {
     }
 
     sendMessage(message: string) {
-        // console.log('Service sendMessage:');
         if (this.stompClient !== null && this.stompClient.connected) {
-            // this.stompClient.send(
-            //     '/topic/public', // destination
-            //     {}, // header
-            //     JSON.stringify({'message': message}), // body
-            // );
-            const chatMessage = {
+            // create message
+            const messageObject = {
                 _id: Date.now(),
                 user: {
-                    _id: 33,
+                    _id: this.backendUser.id,
                     avatar: 'https://placeimg.com/140/140/any'
                 },
                 sender: 'backenduser',
@@ -93,18 +116,55 @@ export class ChatService {
                 createdAt: new Date(),
                 type: 'CHAT'
             };
-            this.stompClient.send(this.topic, JSON.stringify(chatMessage), {});
+            // send message via websocket
+            this.stompClient.send(this.topic, JSON.stringify(messageObject), {});
+            // save to database
+            this.chatMessageService
+                .create(<IChatMessage>{
+                    recipient: this.appUser,
+                    sender: this.backendUser,
+                    text: message,
+                    createdAt: moment()
+                })
+                .subscribe(
+                    () => {
+                        /* console.log('send message success'); */
+                    },
+                    () => {
+                        console.log('Error on saving sent message to database.');
+                    }
+                );
         } else {
             console.log('STOMP ERROR');
         }
     }
 
-    subscribe(safetyDriverId: string) {
-        // console.log('topic: ' + this.topic);
+    onReceivedMessage = data => {
+        const dataObject = JSON.parse(data.body);
+        this.listenerObserver.next(dataObject);
+        if (dataObject.user._id != this.backendUser.id) {
+            // save to database
+            this.chatMessageService
+                .create(<IChatMessage>{
+                    recipient: this.backendUser,
+                    sender: this.appUser,
+                    text: dataObject.content,
+                    createdAt: moment()
+                })
+                .subscribe(
+                    () => {
+                        /* console.log('send message success'); */
+                    },
+                    () => {
+                        console.log('Error on saving received message to database.');
+                    }
+                );
+        }
+    };
+
+    subscribe() {
         this.connection.then(() => {
-            this.subscriber = this.stompClient.subscribe(this.topic, data => {
-                this.listenerObserver.next(JSON.parse(data.body));
-            });
+            this.subscriber = this.stompClient.subscribe(this.topic, this.onReceivedMessage);
         });
     }
 
