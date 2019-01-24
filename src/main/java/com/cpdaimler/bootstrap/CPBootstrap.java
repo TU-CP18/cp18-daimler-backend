@@ -52,92 +52,144 @@ public class CPBootstrap implements CommandLineRunner {
 
     private void initShift() {
 
-        Shift s= new Shift();
+        long t1 = 1550133000000L; // 8:30
+        long t2 = 1550131200000L; // 8:00
+        long t3 = 1550134800000L; // 9:00
+        long t4 = 1550149200000L; // 13:00
+        long t5 = 1550152800000L; // 14:00
+        long t6 = 1550147400000L; // 12:30
+        long t7 = 1550145600000L; // 12:00
+
+        // 8:30, driver 1, car 1
+        Shift s = new Shift();
         s.setCar(carRepository.getOne(1L));
         s.setSafetyDriver(safetyDriverRepository.getOne(1L));
-        s.setStart(System.currentTimeMillis() + 518400000);
-        s.setEnd(System.currentTimeMillis() + 518400000 + 14400000);
+        s.setStart(t1);
+        s.setEnd(t1 + 14400000);
         getRandomLatLon(s);
         shiftRepository.save(s);
 
-        s= new Shift();
-        s.setCar(carRepository.getOne(1L));
-        s.setSafetyDriver(safetyDriverRepository.getOne(1L));
-        s.setStart(System.currentTimeMillis() + 518400000*2);
-        s.setEnd(System.currentTimeMillis() + 518400000*2 + 14400000);
+        // 8:00, driver 2, car 2
+        s = new Shift();
+        s.setCar(carRepository.getOne(2L));
+        s.setSafetyDriver(safetyDriverRepository.getOne(2L));
+        s.setStart(t2);
+        s.setEnd(t2 + 14400000);
         getRandomLatLon(s);
         shiftRepository.save(s);
 
-        s= new Shift();
-        s.setCar(carRepository.getOne(1L));
-        s.setSafetyDriver(safetyDriverRepository.getOne(1L));
-        s.setStart(System.currentTimeMillis() + 518400000*8);
-        s.setEnd(System.currentTimeMillis() + 518400000*8 + 14400000);
+        // 9:00, driver 3, car 3
+        s = new Shift();
+        s.setCar(carRepository.getOne(3L));
+        s.setSafetyDriver(safetyDriverRepository.getOne(3L));
+        s.setStart(t3);
+        s.setEnd(t3 + 14400000);
         getRandomLatLon(s);
         shiftRepository.save(s);
 
+        // 9:00, driver 4, car 4
+        s = new Shift();
+        s.setCar(carRepository.getOne(4L));
+        s.setSafetyDriver(safetyDriverRepository.getOne(4L));
+        s.setStart(t3);
+        s.setEnd(t3 + 14400000);
+        getRandomLatLon(s);
+        shiftRepository.save(s);
+
+        // 8:00, driver 8, car 5
+        s = new Shift();
+        s.setCar(carRepository.getOne(5L));
+        s.setSafetyDriver(safetyDriverRepository.getOne(8L));
+        s.setStart(t3);
+        s.setEnd(t3 + 14400000);
+        getRandomLatLon(s);
+        shiftRepository.save(s);
+
+        // 13:00, driver 2, car 6
+        s = new Shift();
+        s.setCar(carRepository.getOne(6L));
+        s.setSafetyDriver(safetyDriverRepository.getOne(2L));
+        s.setStart(t4);
+        s.setEnd(t4 + 14400000);
+        getRandomLatLon(s);
+        shiftRepository.save(s);
+
+        // 14:00, driver 3, car 7
+        s = new Shift();
+        s.setCar(carRepository.getOne(7L));
+        s.setSafetyDriver(safetyDriverRepository.getOne(3L));
+        s.setStart(t5);
+        s.setEnd(t5 + 14400000);
+        getRandomLatLon(s);
+        shiftRepository.save(s);
+
+        // 14:00, driver 4, car 4
+        s = new Shift();
+        s.setCar(carRepository.getOne(4L));
+        s.setSafetyDriver(safetyDriverRepository.getOne(4L));
+        s.setStart(t5);
+        s.setEnd(t5 + 14400000);
+        getRandomLatLon(s);
+        shiftRepository.save(s);
+
+        // 12:30, driver 5, car 1
+        s = new Shift();
+        s.setCar(carRepository.getOne(1L));
+        s.setSafetyDriver(safetyDriverRepository.getOne(5L));
+        s.setStart(t6);
+        s.setEnd(t6 + 14400000);
+        getRandomLatLon(s);
+        shiftRepository.save(s);
+
+        // 13:00, driver 6, car 3
+        s = new Shift();
+        s.setCar(carRepository.getOne(3L));
+        s.setSafetyDriver(safetyDriverRepository.getOne(6L));
+        s.setStart(t4);
+        s.setEnd(t4 + 14400000);
+        getRandomLatLon(s);
+        shiftRepository.save(s);
+
+        // 12:00, driver 7, car 2
+        s = new Shift();
+        s.setCar(carRepository.getOne(2L));
+        s.setSafetyDriver(safetyDriverRepository.getOne(7L));
+        s.setStart(t7);
+        s.setEnd(t7 + 14400000);
+        getRandomLatLon(s);
+        shiftRepository.save(s);
+
+        // 13:00, driver 8, car 5
+        s = new Shift();
+        s.setCar(carRepository.getOne(5L));
+        s.setSafetyDriver(safetyDriverRepository.getOne(8L));
+        s.setStart(t4);
+        s.setEnd(t4 + 14400000);
+        getRandomLatLon(s);
+        shiftRepository.save(s);
     }
 
     private void initSafetyDriver() {
-
-        User u= userRepository.findOneByLogin("driver").get();
-
-        SafetyDriver safetyDriver = new SafetyDriver();
-        safetyDriver.setLogin("driver");
-        safetyDriver.setUser(u);
-        safetyDriver.getLicences().add(carLicence);
-
-        safetyDriverRepository.save(safetyDriver);
-
-        u= userRepository.findOneByLogin("user").get();
-
-        safetyDriver = new SafetyDriver();
-        safetyDriver.setLogin("user");
-        safetyDriver.setUser(u);
-        safetyDriver.getLicences().add(carLicence);
-
-        safetyDriverRepository.save(safetyDriver);
-
-        u= userRepository.findOneByLogin("admin").get();
-
-        safetyDriver = new SafetyDriver();
-        safetyDriver.setLogin("admin");
-        safetyDriver.setUser(u);
-        safetyDriver.getLicences().add(carLicence);
-
-        safetyDriverRepository.save(safetyDriver);
+        
+        for(int i = 1; i < 10; i++) {
+            User u = userRepository.findOneByLogin("driver" + i).get();
+            SafetyDriver safetyDriver = new SafetyDriver();
+            safetyDriver.setLogin("driver" + i);
+            safetyDriver.setUser(u);
+            safetyDriver.getLicences().add(carLicence);
+            safetyDriverRepository.save(safetyDriver);
+        }
     }
 
     private void initCars() {
 
-        Car c1 = new Car();
-        c1.setLicence(carLicence);
-        c1.setModel("E Klasse");
-        c1.setStatus(CARSTATUS.AVAILABLE);
-
-        carRepository.save(c1);
-
-        c1 = new Car();
-        c1.setLicence(carLicence);
-        c1.setModel("B Klasse");
-        c1.setStatus(CARSTATUS.AVAILABLE);
-
-        carRepository.save(c1);
-
-        c1 = new Car();
-        c1.setLicence(carLicence);
-        c1.setModel("A Klasse");
-        c1.setStatus(CARSTATUS.AVAILABLE);
-
-        carRepository.save(c1);
-
-        c1 = new Car();
-        c1.setLicence(carLicence);
-        c1.setModel("S Klasse");
-        c1.setStatus(CARSTATUS.AVAILABLE);
-
-        carRepository.save(c1);
-
+        for(int i = 0; i < 10; i++) {
+            Car c = new Car();
+            c.setLicence(carLicence);
+            c.setModel("URBANETIC");
+            c.setStatus(CARSTATUS.AVAILABLE);
+            carRepository.save(c);
+        }
     }
 
 
