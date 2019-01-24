@@ -1,85 +1,92 @@
+import { ScheduleShift } from 'app/shared/model/schedule-shift.model';
+
 /**
  * Schedule datasource
  */
-export let shiftData: Object[] = [
+
+export let newShifts: ScheduleShift[] = [
+    new ScheduleShift(1, 1, 'URBANETIC', new Date(2019, 1, 14, 8, 0), new Date(2019, 1, 14, 12, 0), 1, 52, 54)
+];
+
+export let oldShifts: Object[] = [
     {
-        Id: 1,
-        VehicleId: 'Vehicle 1',
-        Description: 'A Klasse',
-        StartTime: new Date(2018, 7, 1, 9, 0),
-        EndTime: new Date(2018, 7, 1, 13, 0),
-        DriverId: 1
+        id: 1,
+        vehicleId: 'Vehicle 1',
+        description: 'A Klasse',
+        startTime: new Date(2018, 7, 1, 9, 0),
+        endTime: new Date(2018, 7, 1, 13, 0),
+        driverId: 1
     },
     {
-        Id: 2,
-        VehicleId: 'Vehicle 2',
-        Description: 'B Klasse',
-        StartTime: new Date(2018, 7, 1, 9, 0),
-        EndTime: new Date(2018, 7, 1, 13, 0),
-        DriverId: 2
+        id: 2,
+        vehicleId: 'Vehicle 2',
+        description: 'B Klasse',
+        startTime: new Date(2018, 7, 1, 9, 0),
+        endTime: new Date(2018, 7, 1, 13, 0),
+        driverId: 2
     },
     {
-        Id: 3,
-        VehicleId: 'Vehicle 3',
-        Description: 'C Klasse',
-        StartTime: new Date(2018, 7, 1, 9, 0),
-        EndTime: new Date(2018, 7, 1, 13, 0),
-        DriverId: 3
+        id: 3,
+        vehicleId: 'Vehicle 3',
+        description: 'C Klasse',
+        startTime: new Date(2018, 7, 1, 9, 0),
+        endTime: new Date(2018, 7, 1, 13, 0),
+        driverId: 3
     },
     {
-        Id: 4,
-        VehicleId: 'Vehicle 1',
-        Description: 'D Klasse',
-        StartTime: new Date(2018, 7, 1, 13, 0),
-        EndTime: new Date(2018, 7, 1, 17, 0),
-        DriverId: 4
+        id: 4,
+        vehicleId: 'Vehicle 1',
+        description: 'D Klasse',
+        startTime: new Date(2018, 7, 1, 13, 0),
+        endTime: new Date(2018, 7, 1, 17, 0),
+        driverId: 4
     },
     {
-        Id: 5,
-        VehicleId: 'Vehicle 5',
-        Description: 'E Klasse',
-        StartTime: new Date(2018, 7, 1, 10, 0),
-        EndTime: new Date(2018, 7, 1, 14, 0),
-        DriverId: 5
+        id: 5,
+        vehicleId: 'Vehicle 5',
+        description: 'E Klasse',
+        startTime: new Date(2018, 7, 1, 10, 0),
+        endTime: new Date(2018, 7, 1, 14, 0),
+        driverId: 5
     },
     {
-        Id: 6,
-        VehicleId: 'Vehicle 2',
-        Description: 'B Klasse',
-        StartTime: new Date(2018, 7, 1, 13, 0),
-        EndTime: new Date(2018, 7, 1, 17, 0),
-        DriverId: 6
+        id: 6,
+        vehicleId: 'Vehicle 2',
+        description: 'B Klasse',
+        startTime: new Date(2018, 7, 1, 13, 0),
+        endTime: new Date(2018, 7, 1, 17, 0),
+        driverId: 6
     },
     {
-        Id: 7,
-        VehicleId: 'Vehicle 5',
-        Description: 'E Klasse',
-        StartTime: new Date(2018, 7, 1, 14, 0),
-        EndTime: new Date(2018, 7, 1, 18, 0),
-        DriverId: 1
+        id: 7,
+        vehicleId: 'Vehicle 5',
+        description: 'E Klasse',
+        startTime: new Date(2018, 7, 1, 14, 0),
+        endTime: new Date(2018, 7, 1, 18, 0),
+        driverId: 1
     },
     {
-        Id: 8,
-        VehicleId: 'Vehicle 3',
-        Description: 'C Klasse',
-        StartTime: new Date(2018, 7, 1, 13, 0),
-        EndTime: new Date(2018, 7, 1, 17, 0),
-        DriverId: 7
+        id: 8,
+        vehicleId: 'Vehicle 3',
+        description: 'C Klasse',
+        startTime: new Date(2018, 7, 1, 13, 0),
+        endTime: new Date(2018, 7, 1, 17, 0),
+        driverId: 7
     },
     {
-        Id: 9,
-        VehicleId: 'Vehicle 4',
-        Description: 'D Klasse',
-        StartTime: new Date(2018, 7, 1, 11, 0),
-        EndTime: new Date(2018, 7, 1, 15, 0),
-        DriverId: 8
+        id: 9,
+        vehicleId: 'Vehicle 4',
+        description: 'D Klasse',
+        startTime: new Date(2018, 7, 1, 11, 0),
+        endTime: new Date(2018, 7, 1, 15, 0),
+        driverId: 8
     },
     {
-        Id: 10,
-        VehicleId: 'Vehicle 6',
-        Description: 'A Klasse',
-        StartTime: new Date(2018, 7, 1, 9, 0),
-        EndTime: new Date(2018, 7, 1, 13, 0),
-        DriverId: 9
+        id: 10,
+        vehicleId: 'Vehicle 6',
+        description: 'A Klasse',
+        startTime: new Date(2018, 7, 1, 9, 0),
+        endTime: new Date(2018, 7, 1, 13, 0),
+        driverId: 9
     }
 ];

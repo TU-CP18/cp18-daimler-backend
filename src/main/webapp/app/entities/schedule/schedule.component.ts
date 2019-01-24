@@ -15,7 +15,7 @@ import {
     WorkHoursModel,
     View
 } from '@syncfusion/ej2-angular-schedule';
-import { shiftData } from './datasource';
+import { newShifts } from './datasource';
 
 import { ScheduleService } from './schedule.service';
 import { SafetyDriverService } from './../safety-driver/safety-driver.service';
@@ -28,9 +28,9 @@ import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 import { IShift } from 'app/shared/model/shift.model';
 import { ScheduleShift, IScheduleShift } from 'app/shared/model/schedule-shift.model';
 import { ScheduleDriver, IScheduleDriver } from 'app/shared/model/schedule-driver.model';
-import { ISafetyDriver } from 'app/shared/model/safety-driver.model';
+import { ISafetyDriver, SafetyDriver } from 'app/shared/model/safety-driver.model';
 
-import { Principal } from 'app/core';
+import { Principal, User } from 'app/core';
 import { EventSettings } from '@syncfusion/ej2-schedule/src/schedule/models/event-settings';
 
 @Component({
@@ -41,7 +41,7 @@ import { EventSettings } from '@syncfusion/ej2-schedule/src/schedule/models/even
 })
 export class CPScheduleComponent implements OnInit, OnDestroy {
     // BEGIN SYNCFUSION FIELDS
-    public selectedDate: Date = new Date(2018, 7, 1);
+    public selectedDate: Date = new Date(2019, 1, 14);
     public timeScale: TimeScaleModel = { interval: 60, slotCount: 1 };
     public workHours: WorkHoursModel = { start: '08:00', end: '20:00' };
     public currentView: View = 'TimelineWeek';
@@ -49,35 +49,27 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         enableCompactView: false,
         resources: ['Driver']
     };
-    /*
-    public drivers: Object[] = [
-        { lastName: 'Kent', firstName: 'Clark', driverId: 1, color: '#ea7a57' },
-        { lastName: 'Wayne', firstName: 'Bruce', driverId: 2, color: '#7fa900' },
-        { lastName: 'Stark', firstName: 'Tony', driverId: 3, color: '#5978ee' },
-        { lastName: 'Parker', firstName: 'Peter', driverId: 4, color: '#fec200' },
-        { lastName: 'Romanov', firstName: 'Natasha', driverId: 5, color: '#df5286' },
-        { lastName: 'Banner', firstName: 'Bruce', driverId: 6, color: '#00bdae' },
-        { lastName: 'Xavier', firstName: 'Charles', driverId: 7, color: '#865fcf' },
-        { lastName: 'Queen', firstName: 'Oliver', driverId: 8, color: '#1aaa55' },
-        { lastName: 'Rogers', firstName: 'Steve', driverId: 9, color: '#df5286' },
-        { lastName: 'Strange', firstName: 'Stephen', driverId: 10, color: '#710193' }
-    ];
-*/
+
+    // array of drivers, populated by querying the API
+    public drivers: ScheduleDriver[] = [];
+
+    // array of shifts, populated by querying the API
+    shifts: ScheduleShift[] = [new ScheduleShift(1, 1, 'URBANETIC', new Date(2019, 1, 14, 8, 0), new Date(2019, 1, 14, 12, 0), 1, 52, 54)];
+
     // only allow one driver per shift
     public allowMultiple: Boolean = false;
 
+    // array of colours used to display shifts
     private colours: string[] = ['#ea7a57', '#7fa900', '#5978ee', '#fec200', '#df5286', '#00bdae', '#865fcf', '#1aaa55'];
-    safetyDrivers: ISafetyDriver[];
 
     public eventSettings: EventSettingsModel = {
-        dataSource: <Object[]>extend([], shiftData, null, true),
+        dataSource: <Object[]>extend([], newShifts, null, true),
         fields: {
-            id: 'Id',
-            subject: { title: 'Vehicle', name: 'VehicleId' },
-            location: { title: 'Location', name: 'Location' },
-            description: { title: 'Description', name: 'Description' },
-            startTime: { title: 'From', name: 'StartTime' },
-            endTime: { title: 'To', name: 'EndTime' }
+            id: 'id',
+            subject: { title: 'Vehicle', name: 'vehicleId' },
+            description: { title: 'Vehicle Model', name: 'vehicleModel' },
+            startTime: { title: 'Start', name: 'startTime' },
+            endTime: { title: 'End', name: 'endTime' }
         }
     };
 
@@ -85,8 +77,6 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
     // END SYNCFUSION FIELDS
 
     currentAccount: any;
-    shifts: IScheduleShift[];
-    drivers: IScheduleDriver[];
     eventSubscriber: Subscription;
 
     constructor(
@@ -126,9 +116,25 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         this.eventSubscriber = this.eventManager.subscribe('shiftListModification', response => this.loadAll());
     }
 
-    private parseShifts(data: ISafetyDriver[]) {
-        console.log('myyyyyyyyy');
-        console.log(data);
+    private parseShifts(data: IShift[]) {
+        this.shifts = data.map(
+            x =>
+                new ScheduleShift(
+                    x.id,
+                    x.car.id,
+                    x.car.model,
+                    new Date(x.start),
+                    new Date(x.end),
+                    x.safetyDriver.id,
+                    x.longStart,
+                    x.latStart
+                )
+        );
+        console.log(this.shifts);
+        this.refreshSchedule();
+    }
+
+    private parseDrivers(data: ISafetyDriver[]) {
         this.drivers = data.map(
             x =>
                 new ScheduleDriver(
@@ -142,11 +148,9 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         console.log(this.drivers);
     }
 
-    private parseDrivers(data: IShift[]) {
-        console.log('myyyyyyyyy');
-        console.log(data);
-        this.shifts = data.map(x => new ScheduleShift(x.id, x.car.id, x.car.model, new Date(x.start), new Date(x.end), x.safetyDriver.id));
-        this.scheduleObj.refresh();
+    refreshSchedule() {
+        this.scheduleObj.refreshEvents();
+        // this.scheduleObj.refresh();
     }
 
     private onError(errorMessage: string) {
@@ -155,7 +159,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
 
     // Syncfusion: shifts in the past are read-only
     isReadOnly(endDate: Date): boolean {
-        return endDate < new Date(2018, 6, 31, 0, 0);
+        return endDate < new Date(Date.now());
     }
 
     // Syncfusion: specify options for popups that open when a shift is selected
@@ -198,7 +202,8 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         }
         if (args.elementType === 'emptyCells' && args.element.classList.contains('e-resource-left-td')) {
             const target: HTMLElement = args.element.querySelector('.e-resource-text') as HTMLElement;
-            target.innerHTML = '<div class="lastName">Last Name</div><div class="firstName">First Name</div><div class="driverId">ID</div>';
+            target.innerHTML =
+                '<div class="lastName">Last Name</div><div class="firstName">First Name</div><div class="driverId">Driver ID</div>';
         }
     }
 
