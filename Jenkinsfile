@@ -10,27 +10,27 @@ node {
 
 		stage('Clean') {
 				sh "chmod +x mvnw"
-				sh "./mvnw -Pprod clean"
+				sh "./mvnw -Pdev clean"
 		}
 
 		stage('Install tools') {
-				sh "./mvnw -Pprod com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v8.12.0 -DnpmVersion=6.4.1"
+				sh "./mvnw -Pdev com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v8.12.0 -DnpmVersion=6.4.1"
 		}
 
 		stage('Npm install') {
-				sh "sudo ./mvnw -Pprod com.github.eirslett:frontend-maven-plugin:npm"
+				sh "sudo ./mvnw -Pdev com.github.eirslett:frontend-maven-plugin:npm"
 		}
 
         stage('Backend tests') {
             try {
-                sh "./mvnw -Pprod test"
+                sh "./mvnw -Pdev test"
             } catch(err) {
                 throw err
             }
             }
 
         stage('Build WAR') {
-            sh "sudo ./mvnw -Pprod package -DskipTests"
+            sh "sudo ./mvnw -Pdev package -DskipTests"
             archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
         }
 
