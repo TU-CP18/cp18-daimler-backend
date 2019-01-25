@@ -7,7 +7,6 @@ function authorize(jwtSecret, jwtAlgorithm) {
         const token = (req.get('authorization') || req.get('x-authorization') || '').replace(/^Bearer\s*/, '');
         if (!token) { return res.status(401).end(); }
 
-        // TODO: Forbit roles other than Fleet Manager
         try {
             const payload = jwtSimple.decode(token, jwtSecret, false, jwtAlgorithm);
             if (!payload.sub) { return res.status(401).end(); }

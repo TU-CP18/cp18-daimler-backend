@@ -32,7 +32,6 @@ app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json());
 
-// TODO: JWT token Authentication
 app.post('/api/log', (req, res) => {
     logger.info({ ...req.body });
     logger.flush();
