@@ -33,16 +33,27 @@ The following command:
 ```
 $ ansible-playbook bootstrap.yaml
 ```
-Will provision an AWS stack consisting of the following:
-- An AWS EC2 instance in the default VPC
+Will provision the basic infrastructure AWS stack consisting of the following:
+- Two AWS EC2 instances in the default VPC, one for the webapp, one for Jenkins
 - Three security groups (ssh access, web access and 3306 tcp from ec2 to rds instance)
-- An Elastic Load Balancer
-- An Auto Scaling Group
+- RDS Mysql Instance
+
+At this point the hosts file can be populated with the public dns name of the instances.
+
+The following commands:
+```
+$ ansible-playbook site.yaml
+$ ansible-playbook jenkins.yaml
+```
+Will do the following tasks:
+- Install prerequisites for the EC2 instance to host the webapp
+- Install prerequisites for Jenkins
+- Install Jenkins
 
 TODO:
 
-- [ ] Bootstrap AWS environment in Default VPC and create corresponding security groups.
-- [x] Add EC2 instance(with python minimal) and RDS steps to bootstrap playbook
-- [x] Add Tomcat, Java and Node installation steps to site.yaml
-- [ ] Add an Elastic Load Balancer
-- [ ] Add Auto-Scaling group
+- [x] Bootstrap AWS environment in Default VPC and create corresponding security groups.
+- [x] Add two EC2 instances, one for the webapp and one for Jenkins to bootstrap playbook
+- [x] Add RDS instance.
+- [x] Add Tomcat, Java and Node installation steps to site.yaml(web-app)
+- [x] Add prerequisites for Jenkins in jenkis.yml and install Jenkins on ec2 instance
