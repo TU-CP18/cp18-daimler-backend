@@ -63,28 +63,6 @@ public class CarLicenceResource {
     }
 
     /**
-     * PUT  /car-licences : Updates an existing carLicence.
-     *
-     * @param carLicence the carLicence to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated carLicence,
-     * or with status 400 (Bad Request) if the carLicence is not valid,
-     * or with status 500 (Internal Server Error) if the carLicence couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PutMapping("/car-licences")
-    @Timed
-    public ResponseEntity<CarLicence> updateCarLicence(@RequestBody CarLicence carLicence) throws URISyntaxException {
-        log.debug("REST request to update CarLicence : {}", carLicence);
-        if (carLicence.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        CarLicence result = carLicenceService.save(carLicence);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, carLicence.getId().toString()))
-            .body(result);
-    }
-
-    /**
      * GET  /car-licences : get all the carLicences.
      *
      * @param pageable the pagination information

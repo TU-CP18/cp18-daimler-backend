@@ -1,0 +1,79 @@
+- hosts: webserver
+  gather_facts: False
+  become: true
+  tasks:
+  # Typical pre-requisites
+  - name: Dev tools
+    apt:
+      state: latest
+      update_cache: yes
+      cache_valid_time: 3600
+      name:
+        - build-essential
+
+  - name: install python 2
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+  # Install Docker
+  - name: ensure repository key is installed
+    apt_key:
+      id: "58118E89F3A912897C070ADBF76221572C52609D"
+      keyserver: "hkp://p80.pool.sks-keyservers.net:80"
+      state: present
+
+  - name: ensure docker registry is available
+    apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-xenial main' state=present
+
+  - name: ensure docker and dependencies are installed
+    apt: name=docker-engine update_cache=yes
+
+  - service: name=docker state=restarted
+
+  # Install Java 8
+  - name: Update package list
+    apt: update_cache=yes cache_valid_time=3600
+
+  - name: Install add-apt-repostory
+    apt: name=software-properties-common state=latest
+
+  - name: Add Oracle Java Repository
+    apt_repository: repo='ppa:webupd8team/java'
+
+  - name: Accept Java 8 License
+    debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
+
+  - name: Install Oracle Java 8
+    apt:
+      state: latest
+      update_cache: yes
+      cache_valid_time: 3600
+      name:
+        - oracle-java8-installer
+        - ca-certificates
+        - oracle-java8-set-default
+
+  # Install NodeJS 10
+  - name: Add Nodesource GPG
+    apt_key:
+      url: https://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x1655A0AB68576280
+      id: "68576280"
+      state: present
+
+  # Refer: https://github.com/nodesource/distributions#installation-instructions
+  - name: Add Nodesource deb repo
+    apt_repository:
+      # TODO: Remove hardcoded bionic and use ansible global vars instead
+      repo: 'deb https://deb.nodesource.com/node_10.x bionic main'
+      state: present
+
+  - name: Add Nodesource deb-src repo
+    apt_repository:
+      repo: 'deb-src https://deb.nodesource.com/node_10.x bionic main'
+      state: present
+
+  - name: Install Node.js
+    apt:
+      pkg:
+        - nodejs
+      state: present
+      update_cache: yes

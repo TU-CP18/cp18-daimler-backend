@@ -19,7 +19,8 @@ entity CarIssue {
     description String,
     part String,
     posX Double,
-    posY Double
+    posY Double,
+    status CARISSUESTATUS
 
 }
 
@@ -39,6 +40,10 @@ enum LICENCE {
 
 enum CARSTATUS {
 	DRIVING_EMPTY, DRIVING_FULL, MAINTENANCE, AVAILABLE, INACTIVE
+}
+
+enum CARISSUESTATUS {
+	OPEN, CLOSED
 }
 
 relationship OneToOne {

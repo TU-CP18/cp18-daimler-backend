@@ -91,6 +91,27 @@ export class CarComponent implements OnInit, OnDestroy {
                 (res: HttpResponse<ICar[]>) => this.paginateCars(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
+
+        this.carService.getCarStatistics().subscribe(
+            (res: HttpResponse<any>) => {
+                res.body.entries.forEach(item => {
+                    if (item.carstatus === 'AVAILABLE') {
+                        this.numberAvailable = item.number;
+                    } else if (item.carstatus === 'DRIVING_FULL') {
+                        this.numberDrivingFull = item.number;
+                    } else if (item.carstatus === 'DRIVING_EMPTY') {
+                        this.numberDrivingEmpty = item.number;
+                    } else if (item.carstatus === 'MAINTENANCE') {
+                        this.numberMaintenance = item.number;
+                    } else if (item.carstatus === 'INACTIVE') {
+                        this.numberInactive = item.number;
+                    }
+                });
+
+                this.createChart(null);
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     loadPage(page: number) {
@@ -148,40 +169,6 @@ export class CarComponent implements OnInit, OnDestroy {
             this.currentAccount = account;
         });
         this.registerChangeInCars();
-
-        // we should rewrite this code section
-        // how about promise hell :D
-        this.carService.countAvailable().subscribe(
-            (res1: HttpResponse<Number>) => {
-                this.numberAvailable = res1.body;
-                this.carService.countDrivingEmpty().subscribe(
-                    (res2: HttpResponse<Number>) => {
-                        this.numberDrivingEmpty = res2.body;
-                        this.carService.countMaintenance().subscribe(
-                            (res3: HttpResponse<Number>) => {
-                                this.numberMaintenance = res3.body;
-                                this.carService.countDrivingFull().subscribe(
-                                    (res4: HttpResponse<Number>) => {
-                                        this.numberDrivingFull = res4.body;
-                                        this.carService.countInactive().subscribe(
-                                            (innerRes: HttpResponse<Number>) => {
-                                                this.numberInactive = innerRes.body;
-                                                this.createChart(this.cars);
-                                            },
-                                            (innerRes: HttpErrorResponse) => this.onError(innerRes.message)
-                                        );
-                                    },
-                                    (res4: HttpErrorResponse) => this.onError(res4.message)
-                                );
-                            },
-                            (res3: HttpErrorResponse) => this.onError(res3.message)
-                        );
-                    },
-                    (res2: HttpErrorResponse) => this.onError(res2.message)
-                );
-            },
-            (res1: HttpErrorResponse) => this.onError(res1.message)
-        );
     }
 
     ngOnDestroy() {
@@ -209,7 +196,6 @@ export class CarComponent implements OnInit, OnDestroy {
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
         this.queryCount = this.totalItems;
         this.cars = data;
-        console.log(this.cars);
     }
 
     private onError(errorMessage: string) {
@@ -217,8 +203,6 @@ export class CarComponent implements OnInit, OnDestroy {
     }
 
     private createChart(data) {
-        console.log(this.cars);
-
         this.chart = new Chart('canvas', {
             type: 'pie',
             data: {
@@ -242,7 +226,6 @@ export class CarComponent implements OnInit, OnDestroy {
                     const element = this.getElementAtEvent(e);
 
                     if (element.length) {
-                        console.log(e);
                         this.cars.filter(car => car.status.toUpperCase() === element[0]._model.label.toUpperCase());
                     }
                 }

@@ -8,6 +8,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.cpdaimler.domain.enumeration.CARISSUESTATUS;
+
 /**
  * A CarIssue.
  */
@@ -33,6 +35,10 @@ public class CarIssue implements Serializable {
 
     @Column(name = "pos_y")
     private Double posY;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private CARISSUESTATUS status;
 
     @ManyToOne
     @JsonIgnoreProperties("issues")
@@ -99,6 +105,19 @@ public class CarIssue implements Serializable {
         this.posY = posY;
     }
 
+    public CARISSUESTATUS getStatus() {
+        return status;
+    }
+
+    public CarIssue status(CARISSUESTATUS status) {
+        this.status = status;
+        return this;
+    }
+
+    public void setStatus(CARISSUESTATUS status) {
+        this.status = status;
+    }
+
     public Car getCar() {
         return car;
     }
@@ -141,6 +160,7 @@ public class CarIssue implements Serializable {
             ", part='" + getPart() + "'" +
             ", posX=" + getPosX() +
             ", posY=" + getPosY() +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }
