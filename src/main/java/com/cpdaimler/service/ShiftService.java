@@ -110,6 +110,17 @@ public class ShiftService {
     }
 
     /**
+     * Get one shift by id.
+     *
+     * @return the entity
+     */
+    @Transactional(readOnly = true)
+    public List<Shift> findAllFull() {
+        log.debug("Request to get Shift : {}");
+        return shiftRepository.findAllBySafetyDriverNotNullAndCarNotNull();
+    }
+
+    /**
      * Delete the shift by id.
      *
      * @param id the id of the entity

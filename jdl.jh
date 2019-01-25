@@ -24,6 +24,12 @@ entity CarIssue {
 
 }
 
+entity ChatMessage {
+    text String,
+    createdAt ZonedDateTime
+
+}
+
 entity CarLicence {
 	carLicence LICENCE
 }
@@ -47,7 +53,9 @@ relationship OneToOne {
 relationship ManyToOne {
 	Shift{car} to Car
 	Shift{safetyDriver} to SafetyDriver
-    Car{licence} to CarLicence,
+    Car{licence} to CarLicence
+    ChatMessage{sender} to User
+    ChatMessage{recipient} to User
 }
 
 relationship OneToMany {

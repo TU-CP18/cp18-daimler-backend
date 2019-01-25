@@ -44,6 +44,7 @@ export class JhiTrackerService {
             url += '?access_token=' + authToken;
         }
         const socket = new SockJS(url);
+        console.log('URL :' + url);
         this.stompClient = Stomp.over(socket);
         const headers = {};
         this.stompClient.connect(headers, () => {

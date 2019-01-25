@@ -112,10 +112,24 @@ public class ShiftResource {
     }
 
     /**
-     * GET  /shifts : get all the shifts.
+     * GET  /shifts : get all full shifts.
      *
      * @return the ResponseEntity with status 200 (OK) and the list of shifts in body
      */
+    @GetMapping("/shifts/full")
+    @Timed
+    public ResponseEntity<List<Shift>> getAllFullShifts() {
+        log.debug("REST request to get all full Shifts");
+        List<Shift> shifts = shiftService.findAllFull();
+
+        return new ResponseEntity<>(shifts, HttpStatus.OK);
+    }
+
+        /**
+         * GET  /shifts : get all the shifts.
+         *
+         * @return the ResponseEntity with status 200 (OK) and the list of shifts in body
+         */
     @GetMapping("/shifts/parallel/{id}/{start}/{end}")
     @Timed
     public ResponseEntity<List<Shift>> getAllShifts(@PathVariable Long id, @PathVariable Long start, @PathVariable Long end ) {
