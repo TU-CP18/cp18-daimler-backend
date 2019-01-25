@@ -10,6 +10,10 @@ function authorize(jwtSecret, jwtAlgorithm) {
         // TODO: Forbit roles other than Fleet Manager
         try {
             const payload = jwtSimple.decode(token, jwtSecret, false, jwtAlgorithm);
+            if (!payload.sub) { return res.status(401).end(); }
+            if (!(['fleetmanager', 'admin'].includes(payload.sub))) { return res.status(403).end(); }
+            if (payload.exp < +new Date()) { return res.status(401); }
+
             next();
         } catch (e) {
             return res.status(401).end();
