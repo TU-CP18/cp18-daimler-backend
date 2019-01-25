@@ -8,12 +8,6 @@ Low overhead nodejs microservice to collect driver and vehicle logs, shipped to 
 
 ## Environment variables
 
-Env is configured with `dotenv` package and it expects a `.env` file to be created on the package root, with the following contents:
-
-```
-NODE_ENV=development
-LOG_LEVEL=debug
-LOG_COLLECTOR_PORT=8000
-```
+Env is configured with `dotenv` package and it expects a `.env` file to be created on the package root, an example has been provided in the file `env-example` 
 
 The production default env values are specified in `Dockerfile` and can be overriden during `docker run`.

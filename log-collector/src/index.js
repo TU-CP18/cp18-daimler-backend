@@ -6,19 +6,31 @@ const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const axios = require('axios').default;
 
+const authorize = require('./authorize');
 const app = express();
+
+const ELASTICSEARCH_HOST = process.env.ELASTICSEARCH_HOST || 'localhost';
+const ELASTICSEARCH_PORT = parseInt(process.env.ELASTICSEARCH_PORT || '9200', 10);
+const ELASTICSEARCH_INDEX = process.env.ELASTICSEARCH_INDEX || 'cpdaimler-events';
+const esAxiosClient = axios.create({
+    baseURL: `http://${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}/${ELASTICSEARCH_INDEX}/`
+});
+
+const JWT_SECRET = process.env.JWT_SECRET || '';
+const JWT_ALGORITHM = process.env.JWT_ALGORITHM || '';
+
+// Check configuration
+function configCheck() {
+    if (!JWT_SECRET || !JWT_ALGORITHM) {
+        logger.fatal({ message: 'JWT_SECRET and JWT_ALGORITHM required' });
+        process.exit(-1);
+    }
+}
 
 // Refer: Express in production best practices
 app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json());
-
-const authorizeJwtToken = () => (req, res, next) => {
-    logger.debug('TODO: JWT Token Validation');
-    next();
-}
-
-app.use(authorizeJwtToken());
 
 // TODO: JWT token Authentication
 app.post('/api/log', (req, res) => {
@@ -27,40 +39,58 @@ app.post('/api/log', (req, res) => {
     return res.status(200).end();
 });
 
-// TODO: Filter by geo-box
-app.get('/api/car-status', async (req, res) => {
-    const response = await axios.get('http://localhost:9200/cpdaimler-events/_search', {
-        data: {
-            "aggs": {
-                "car": {
-                    "terms": {
-                    "field": "carLicense.keyword",
-                    "size": 100
-                    },
-                    "aggs": {
-                    "group_docs": {
-                        "top_hits": {
-                        "size": 1,
-                        "sort": [
-                            {
-                            "timestamp": {
-                                "order": "desc"
-                            }
-                            }
-                        ]
-                        }
-                    }
-                    }
-                }
-            }
-        },
+app.get('/api/vehicle-log/:license', authorize(), async (req, res, next) => {
+    if (!req.params.license || !req.params.license.trim()) {
+        return res.status(400).end('Vehicle license not specified');
+    }
+
+    const formatLog = ({ _source }) => ({
+        source: 'VEHICLE',
+        type: 'NAV_POSITION',
+        description: _source.description || '',
+        timestamp: _source.timestamp,
+        location: [ _source.lat, _source.long ],
+        license: _source.license,
     });
 
-    const formattedData = response.data.aggregations.car.buckets.map(b => b.group_docs.hits.hits[0]._source);
-    res.status(200).json(formattedData);
+    try {
+        const response = await esAxiosClient.get('/_search', {
+            data: {
+                size: 250,
+                sort: { timestamp: { order: 'desc' }},
+                query: { match: { license: req.params.license }}
+            },
+        });
+
+        res.status(200).json(response.data.hits.hits.map(h => formatLog(h)));
+    } catch (e) {
+        next(e);
+    }
 });
 
 const PORT = process.env.LOG_COLLECTOR_PORT || 8000;
+configCheck();
 app.listen(PORT, () => {
     logger.debug({ message: 'Log collector started', port: PORT });
 });
+
+// Send mappings to elasticsearch
+esAxiosClient.put('/_mapping/doc', {
+    properties: {
+        hostname: { type: 'text' },
+        timestamp: { type: 'date' },
+        source: { type: 'keyword' },
+        type: { type: 'keyword' },
+        location: { type: 'geo_point' },
+        description: { type: 'text' },
+        destination: { type: 'geo_point' },
+        license: { type: 'keyword' },
+        driverId: { type: 'keyword' },
+        shiftId: { type: 'keyword' },
+    },
+}).then(() => {
+    logger.debug({ message: 'Added mappings to elasticsearch'});
+}).catch((e) => {
+    logger.fatal({ message: 'Failed to put mappings onto elasticsearch', error: e.response || e });
+    process.exit(-1);
+})
