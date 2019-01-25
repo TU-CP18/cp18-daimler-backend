@@ -1,4 +1,6 @@
 # cpdaimler
+[![Build Status](http://ec2-3-122-117-50.eu-central-1.compute.amazonaws.com:8080/jenkins/buildStatus/icon?job=CP-Backend)](http://ec2-3-122-117-50.eu-central-1.compute.amazonaws.com:8080/jenkins/job/CP-Backend/)
+
 Name | PW  
 admin, admin  
 user, user  
@@ -189,7 +191,3 @@ To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`)
 [Protractor]: https://angular.github.io/protractor/
 [Leaflet]: http://leafletjs.com/
 [DefinitelyTyped]: http://definitelytyped.org/
-
-## Latest Build Info
-
-[![Build Status](http://ec2-3-122-117-50.eu-central-1.compute.amazonaws.com:8080/jenkins/buildStatus/icon?job=CP-Backend)](http://ec2-3-122-117-50.eu-central-1.compute.amazonaws.com:8080/jenkins/job/CP-Backend/)
