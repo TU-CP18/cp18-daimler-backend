@@ -1,0 +1,123 @@
+#+TITLE:     Event types for log collection
+#+AUTHOR:    Santhos Baala, Ramalingam Santhanakrishnan
+
+The log-collector although it accepts any JSON body, specific event types are recognized and
+optimized for later retrieval from the time series. The following type of events are categorized 
+according to the source of event, VEHICLE, USER, and SYSTEM.
+
+* Common fields for all event types
+   
+|---------------+------------------+-------------------------------------------------------------------------------------------------------------|
+| Field         | Type             |                                                                                                             |
+|---------------+------------------+-------------------------------------------------------------------------------------------------------------|
+| *source*      | String           | Indicate the source of the event, ~VEHICLE~, ~USER~, ~SYSTEM~, etc.                                         |
+| *timestamp*   | String (ISO8601) | Every log event has to be assigned a timestamp at the source in ISO-8601 string format.                     |
+| *type*        | String           | Specific type of the event, relative to the source. E.g. ~NAVIGATE~, ~IDLE~, ~RIDE_START~                   |
+| *hostname*    | String           | The hostname of the device from which the event is generated for traceability. This maybe an indicator such |
+|               |                  | as the unique id of the smartphone or the uuid of the vehicle on-board computer, etc.,                      |
+| *location*    | GeoPoint         | The lat-long coordinate of the device, if available.                                                        |
+| *description* | String           | Optional textual data associated with the event.                                                            |
+
+~GeoPoint~ type corresponds to ~[Lat, Long]~ tuple.
+
+* ~VEHICLE~ events
+   
+VEHICLE events are generated from the vehicle's on-board computer on reaching certain state/condition and periodically as a heartbeat.
+
+** Common fields for vehicle events
+
+|-----------+--------+-----------------------------------|
+| Field     | Type   |                                   |
+|-----------+--------+-----------------------------------|
+| *license* | String | The license plate of the vehicle. |
+
+** Unit events 
+
+- ~UNIT_ON~: When the vehicle is powered on.
+- ~UNIT_OFF~: When the vehicle is powered off.
+- ~UNIT_DISABLED~: The vehicle was disabled.
+  - *description* (String) Textual information if any.
+- ~UNIT_RANGE~: Periodically and after powered on, to indicate the range and battery capacity of the vehicle.
+  - *batteryTotal*     (Float) The total battery in kWh.    
+  - *batteryAvailable* (Float) The available battery in kWh. 
+  - *range*            (Float) The expected range in km.     
+
+** Navigation events 
+
+- ~NAV_START~: When the vehicle begins to move.
+- ~NAV_STOP~: When the vehicle stops.
+- ~NAV_ESTOP~: When an emergency stop is triggered.
+  - *description* (String) Should contain reason for emergency stop.
+- ~NAV_POSITION~: Periodical position update.
+
+** Autopilot events 
+    
+- ~AP_ASSIGNED_DESTINATION~: The autopilot was summoned to a destination.
+  - *destionation* (GeoPoint) The destionation assigned.
+- ~AP_REACHED_DESTINATION~: The autopilot detected that it reached the destination.
+  - *destionation* (GeoPoint) The destination that was dereached.
+- ~AP_OVERRIDE~: The autopilot was overridden by the driver.
+  - *description* (String) Textual information from the driver if any.
+
+** Driver interation events
+
+*** Common fields for driver interaction events
+
+|------------+--------+--------------------------|
+| Field      | Type   |                          |
+|------------+--------+--------------------------|
+| *driverId* | String | The driver's identifier. |
+    
+
+- ~DRIVER_AUTHORIZED~: A driver was authorized to board and control the vehicle.
+- ~DRIVER_BOARDED~: The authorized driver boarded the vehicle.
+- ~DRIVER_DEBOARDED~: The authorized driver de-boarded the vehicle.
+
+** Control events
+    
+ Event type to log adjustments to light, climate, etc.,
+
+ - ~CONTROL_SET~: A control's value was adjusted.
+   - *control* (String)          The adjusted knob, e.g., headlight, climate, sunroof, etc.
+   - *value*   (UnsignedInteger) The value representing state if any or 0.
+    
+ /Note: value for sunroof could be percentage: 0, 50 and 100, indicating closed, 50% and 100% open respectively. 
+ Values for other controls could be similar./
+
+
+* ~DRIVER~ events
+ 
+** Common fields for driver events
+
+|------------+--------+-----------------------------------------------------------------------|
+| Field      | Type   |                                                                       |
+|------------+--------+-----------------------------------------------------------------------|
+| *driverId* | String | The identifier for driver.                                            |
+| *shiftId*  | String | The identifier for the shift, in case the driver is currently in one. |
+| *license*  | String | The license of the vehicle.                                           |
+
+** Shift Management
+   
+- ~SHIFT_INTERCEPTING~: The driver is looking for shift interception point 
+  - *destionation* (GeoPoint) The interception point.
+- ~SHIFT_CONFIRM_ARRIVAL~: The driver confirms the arrival at the vehicle location and starts the inspection.
+- ~SHIFT_FINISH~: End the driver's current shift.
+
+** Vehicle Interaction and Ride
+
+- ~VEHICLE_OPEN~: The driver has opened the vehicle.
+- ~VEHICLE_CLOSE~: The driver has exited the vehicle.
+- ~RIDE_START~: The driver is looking for shift interception point 
+- ~RIDE_FINISH~: The driver has finished the ride either by reaching destination or due to shift end.
+  - *description* (String) Optional, may indicate any specific reason for finishing the ride.
+
+- ~RIDE_AWARENESS_CHECKED~: The driver has been checked for awareness
+  - *method* (String) Optional, method of awareness check.
+
+- ~RIDE_AWARENESS_IGNORED~: The driver ignored the awareness check
+  - *method* (String) Optional, method of awareness check.
+
+* ~SYSTEM~ events
+   
+The system's critical events are already captured by the system logs, however, 
+any specific use-cases if required for the fleet manager will be captured as an event explicity.
