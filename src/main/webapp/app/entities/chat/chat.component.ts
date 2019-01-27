@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JhiAlertService, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
-import { Principal } from 'app/core';
+import { IUser, Principal, UserService } from 'app/core';
 import { ChatService } from './';
 import { ISafetyDriver } from 'app/shared/model/safety-driver.model';
 import { SafetyDriverService } from '../safety-driver/safety-driver.service';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { IChatMessage } from 'app/shared/model/chat-message.model';
+import { ChatMessageService } from 'app/entities/chat-message';
 
 @Component({
     selector: 'jhi-chat',
@@ -18,12 +20,14 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     // chart = [];
     safetyDrivers: ISafetyDriver[];
-    messages: Array<Object> = [];
+    messages: Array<IChatMessage> = [];
     message = '';
-    identity = 'backenduser';
-    selectedUser: ISafetyDriver;
+    identity;
+    IUser;
+    selectedUser: IUser;
 
     constructor(
+        private chatMessageService: ChatMessageService,
         private parseLinks: JhiParseLinks,
         private jhiAlertService: JhiAlertService,
         private principal: Principal,
@@ -31,7 +35,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         private router: Router,
         private eventManager: JhiEventManager,
         private chatService: ChatService,
-        private safetyDriverService: SafetyDriverService
+        private safetyDriverService: SafetyDriverService,
+        private userService: UserService
     ) {}
 
     ngOnInit() {
@@ -49,7 +54,18 @@ export class ChatComponent implements OnInit, OnDestroy {
                 (res: HttpResponse<ISafetyDriver[]>) => this.loadSafetyDrivers(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
-
+        // get user object of current user (FM)
+        this.principal.identity().then(account => {
+            this.userService.find(account.login).subscribe(
+                backendUser => {
+                    this.identity = backendUser.body;
+                    console.log(this.identity);
+                },
+                () => {
+                    console.log('Error retrieving backend user.');
+                }
+            );
+        });
         // this.principal.identity().then((account) => {
         //     this.account = account;
         // });
@@ -60,29 +76,38 @@ export class ChatComponent implements OnInit, OnDestroy {
     private loadSafetyDrivers(data: ISafetyDriver[], headers: HttpHeaders) {
         // this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
         this.safetyDrivers = data;
-        // console.log('storeSafetyDrivers:');
-        // console.log(this.safetyDrivers);
     }
 
     selectConversation(selectedUser) {
         this.chatService.connect(selectedUser);
         this.messages = [];
         this.selectedUser = selectedUser;
+        this.chatMessageService
+            .search({
+                query: 'recipient.id:' + selectedUser.id + ' OR sender.id:' + selectedUser.id,
+                sort: ['id,asc'],
+                page: '1'
+            })
+            .subscribe(this.loadChatHistory, (res: HttpErrorResponse) => this.onError(res.message));
+        return;
     }
+
+    loadChatHistory = response => {
+        for (const msg in response.body) {
+            this.messages.push(response.body[msg]);
+        }
+    };
 
     sendMessage(message) {
         if (message.length === 0) {
             return;
         }
-        // console.log('COMP SEND MESSAGE:', message);
         this.chatService.sendMessage(message);
         this.message = '';
-        // console.log(this.messages);
     }
 
     onKeydown(event, message) {
         if (event.key === 'Enter') {
-            // console.log(event);
             this.sendMessage(message);
         }
     }
