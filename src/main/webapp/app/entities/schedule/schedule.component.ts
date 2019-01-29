@@ -15,7 +15,11 @@ import {
     WorkHoursModel,
     View
 } from '@syncfusion/ej2-angular-schedule';
-import { newShifts } from './datasource';
+
+import { DataManager, Query } from '@syncfusion/ej2-data';
+import { Button } from '@syncfusion/ej2-buttons';
+
+import { newShifts, oldShifts } from './datasource';
 
 import { ScheduleService } from './schedule.service';
 import { SafetyDriverService } from './../safety-driver/safety-driver.service';
@@ -32,6 +36,8 @@ import { ISafetyDriver, SafetyDriver } from 'app/shared/model/safety-driver.mode
 
 import { Principal, User } from 'app/core';
 import { EventSettings } from '@syncfusion/ej2-schedule/src/schedule/models/event-settings';
+import { delay } from 'rxjs/operators';
+import { waitForMap } from '@angular/router/src/utils/collection';
 
 @Component({
     selector: 'jhi-schedule',
@@ -54,7 +60,14 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
     public drivers: ScheduleDriver[] = [];
 
     // array of shifts, populated by querying the API
-    shifts: ScheduleShift[] = [new ScheduleShift(1, 1, 'URBANETIC', new Date(2019, 1, 14, 8, 0), new Date(2019, 1, 14, 12, 0), 1, 52, 54)];
+    shifts: ScheduleShift[] = [
+        //        new ScheduleShift(1, 1, 'URBANETIC', new Date(2019, 1, 14, 8, 0), new Date(2019, 1, 14, 12, 0), 1, 52, 54),
+        //        new ScheduleShift(2, 2, 'URBANETIC', new Date(2019, 1, 14, 8, 30), new Date(2019, 1, 14, 12, 30), 2, 52, 54),
+        //        new ScheduleShift(3, 3, 'URBANETIC', new Date(2019, 1, 14, 8, 0), new Date(2019, 1, 14, 12, 0), 3, 52, 54),
+        //        new ScheduleShift(4, 4, 'URBANETIC', new Date(2019, 1, 14, 13, 0), new Date(2019, 1, 14, 17, 0), 1, 52, 54)
+    ];
+
+    dataManager: DataManager = new DataManager(this.shifts);
 
     // only allow one driver per shift
     public allowMultiple: Boolean = false;
@@ -63,7 +76,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
     private colours: string[] = ['#ea7a57', '#7fa900', '#5978ee', '#fec200', '#df5286', '#00bdae', '#865fcf', '#1aaa55'];
 
     public eventSettings: EventSettingsModel = {
-        dataSource: <Object[]>extend([], newShifts, null, true),
+        dataSource: this.dataManager,
         fields: {
             id: 'id',
             subject: { title: 'Vehicle', name: 'vehicleId' },
@@ -148,9 +161,26 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         console.log(this.drivers);
     }
 
+    private delay(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async wait() {
+        await this.delay(2000);
+    }
+
     refreshSchedule() {
-        this.scheduleObj.refreshEvents();
+        // this.scheduleObj.refreshEvents();
         // this.scheduleObj.refresh();
+
+        //       const add: Button = new Button();
+        //       add.appendTo('#page-heading');
+        //       add.element.onclick = (): void => {
+        //           this.scheduleObj.addEvent(this.shifts);
+        //       };
+
+        this.wait();
+        this.scheduleObj.addEvent(this.shifts);
     }
 
     private onError(errorMessage: string) {

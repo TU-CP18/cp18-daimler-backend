@@ -11,82 +11,84 @@ export let newShifts: ScheduleShift[] = [
 export let oldShifts: Object[] = [
     {
         id: 1,
-        vehicleId: 'Vehicle 1',
-        description: 'A Klasse',
-        startTime: new Date(2018, 7, 1, 9, 0),
-        endTime: new Date(2018, 7, 1, 13, 0),
-        driverId: 1
+        vehicleId: 1,
+        vehicleModel: 'URBANETIC',
+        startTime: new Date(2019, 1, 14, 9, 0),
+        endTime: new Date(2019, 1, 14, 13, 0),
+        driverId: 1,
+        longStart: 54,
+        latStart: 51
     },
     {
         id: 2,
-        vehicleId: 'Vehicle 2',
-        description: 'B Klasse',
-        startTime: new Date(2018, 7, 1, 9, 0),
-        endTime: new Date(2018, 7, 1, 13, 0),
+        vehicleId: 2,
+        vehicleModel: 'URBANETIC',
+        startTime: new Date(2019, 1, 14, 9, 0),
+        endTime: new Date(2019, 1, 14, 13, 0),
         driverId: 2
     },
     {
         id: 3,
-        vehicleId: 'Vehicle 3',
-        description: 'C Klasse',
-        startTime: new Date(2018, 7, 1, 9, 0),
-        endTime: new Date(2018, 7, 1, 13, 0),
+        vehicleId: 3,
+        vehicleModel: 'URBANETIC',
+        startTime: new Date(2019, 1, 14, 9, 0),
+        endTime: new Date(2019, 1, 14, 13, 0),
         driverId: 3
     },
     {
         id: 4,
-        vehicleId: 'Vehicle 1',
-        description: 'D Klasse',
-        startTime: new Date(2018, 7, 1, 13, 0),
-        endTime: new Date(2018, 7, 1, 17, 0),
+        vehicleId: 1,
+        vehicleModel: 'URBANETIC',
+        startTime: new Date(2019, 1, 14, 13, 0),
+        endTime: new Date(2019, 1, 14, 17, 0),
         driverId: 4
     },
     {
         id: 5,
-        vehicleId: 'Vehicle 5',
-        description: 'E Klasse',
-        startTime: new Date(2018, 7, 1, 10, 0),
-        endTime: new Date(2018, 7, 1, 14, 0),
+        vehicleId: 5,
+        vehicleModel: 'URBANETIC',
+        startTime: new Date(2019, 1, 14, 10, 0),
+        endTime: new Date(2019, 1, 14, 14, 0),
         driverId: 5
     },
     {
         id: 6,
-        vehicleId: 'Vehicle 2',
-        description: 'B Klasse',
-        startTime: new Date(2018, 7, 1, 13, 0),
-        endTime: new Date(2018, 7, 1, 17, 0),
+        vehicleId: 2,
+        vehicleModel: 'URBANETIC',
+        startTime: new Date(2019, 1, 14, 13, 0),
+        endTime: new Date(2019, 1, 14, 17, 0),
         driverId: 6
     },
     {
         id: 7,
-        vehicleId: 'Vehicle 5',
-        description: 'E Klasse',
-        startTime: new Date(2018, 7, 1, 14, 0),
-        endTime: new Date(2018, 7, 1, 18, 0),
+        vehicleId: 5,
+        vehicleModel: 'URBANETIC',
+        startTime: new Date(2019, 1, 14, 14, 0),
+        endTime: new Date(2019, 1, 14, 18, 0),
         driverId: 1
     },
     {
         id: 8,
-        vehicleId: 'Vehicle 3',
-        description: 'C Klasse',
-        startTime: new Date(2018, 7, 1, 13, 0),
-        endTime: new Date(2018, 7, 1, 17, 0),
+        vehicleId: 3,
+        vehicleModel: 'URBANETIC',
+        startTime: new Date(2019, 1, 14, 13, 0),
+        endTime: new Date(2019, 1, 14, 17, 0),
         driverId: 7
     },
     {
         id: 9,
-        vehicleId: 'Vehicle 4',
-        description: 'D Klasse',
-        startTime: new Date(2018, 7, 1, 11, 0),
-        endTime: new Date(2018, 7, 1, 15, 0),
+        vehicleId: 4,
+        vehicleModel: 'URBANETIC',
+        startTime: new Date(2019, 1, 14, 11, 0),
+        endTime: new Date(2019, 1, 14, 15, 0),
         driverId: 8
     },
     {
         id: 10,
-        vehicleId: 'Vehicle 6',
-        description: 'A Klasse',
-        startTime: new Date(2018, 7, 1, 9, 0),
-        endTime: new Date(2018, 7, 1, 13, 0),
+        vehicleId: 6,
+        vehicleModel: 'URBANETIC',
+        startTime: new Date(2019, 1, 14, 9, 0),
+        endTime: new Date(2019, 1, 14, 13, 0),
         driverId: 9
     }
 ];
