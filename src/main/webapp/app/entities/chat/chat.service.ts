@@ -7,8 +7,8 @@ import { IUser, Principal, UserService } from 'app/core';
 import { Observable, Observer, Subscription } from 'rxjs';
 import { Router, NavigationEnd } from '@angular/router';
 
-import SockJS = require('sockjs-client');
-import Stomp = require('webstomp-client');
+import * as SockJS from 'sockjs-client';
+import * as Stomp from 'webstomp-client';
 import * as moment from 'moment';
 
 @Injectable({ providedIn: 'root' })
