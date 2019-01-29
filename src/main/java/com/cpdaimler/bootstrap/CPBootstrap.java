@@ -96,15 +96,6 @@ public class CPBootstrap implements CommandLineRunner {
         getRandomLatLon(s);
         shiftRepository.save(s);
 
-        // 8:00, driver 8, car 5
-        s = new Shift();
-        s.setCar(carRepository.getOne(5L));
-        s.setSafetyDriver(safetyDriverRepository.getOne(8L));
-        s.setStart(t3);
-        s.setEnd(t3 + 14400000);
-        getRandomLatLon(s);
-        shiftRepository.save(s);
-
         // 13:00, driver 2, car 6
         s = new Shift();
         s.setCar(carRepository.getOne(6L));
@@ -158,20 +149,11 @@ public class CPBootstrap implements CommandLineRunner {
         s.setEnd(t7 + 14400000);
         getRandomLatLon(s);
         shiftRepository.save(s);
-
-        // 13:00, driver 8, car 5
-        s = new Shift();
-        s.setCar(carRepository.getOne(5L));
-        s.setSafetyDriver(safetyDriverRepository.getOne(8L));
-        s.setStart(t4);
-        s.setEnd(t4 + 14400000);
-        getRandomLatLon(s);
-        shiftRepository.save(s);
     }
 
     private void initSafetyDriver() {
         
-        for(int i = 1; i < 10; i++) {
+        for(int i = 1; i < 8; i++) {
             User u = userRepository.findOneByLogin("driver" + i).get();
             SafetyDriver safetyDriver = new SafetyDriver();
             safetyDriver.setLogin("driver" + i);
@@ -183,7 +165,7 @@ public class CPBootstrap implements CommandLineRunner {
 
     private void initCars() {
 
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 8; i++) {
             Car c = new Car();
             c.setLicence(carLicence);
             c.setModel("URBANETIC");
