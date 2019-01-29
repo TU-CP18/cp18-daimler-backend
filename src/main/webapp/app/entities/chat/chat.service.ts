@@ -9,7 +9,7 @@ import { Router, NavigationEnd } from '@angular/router';
 
 import SockJS = require('sockjs-client');
 import Stomp = require('webstomp-client');
-import * as moment from 'Moment';
+import * as moment from 'moment';
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
