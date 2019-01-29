@@ -142,7 +142,7 @@ export class ChatService {
     onReceivedMessage = data => {
         const dataObject = JSON.parse(data.body);
         this.listenerObserver.next(dataObject);
-        if (dataObject.user._id != this.backendUser.id) {
+        if (dataObject.user._id !== this.backendUser.id) {
             // save to database
             this.chatMessageService
                 .create(<IChatMessage>{
