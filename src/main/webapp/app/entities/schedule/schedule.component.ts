@@ -46,11 +46,19 @@ import { waitForMap } from '@angular/router/src/utils/collection';
     encapsulation: ViewEncapsulation.None
 })
 export class CPScheduleComponent implements OnInit, OnDestroy {
-    // BEGIN SYNCFUSION FIELDS
+    // default date displayed by the schedule (set to 14.02.2019 for demo)
     public selectedDate: Date = new Date(2019, 1, 14);
+
+    // time scale of the schedule view
     public timeScale: TimeScaleModel = { interval: 60, slotCount: 1 };
+
+    // working hours are displayed in a lighter shade than non-working hours
     public workHours: WorkHoursModel = { start: '08:00', end: '20:00' };
+
+    // set default view of the schedule to weekly timeline
     public currentView: View = 'TimelineWeek';
+
+    // group model used by the schedule
     public group: GroupModel = {
         enableCompactView: false,
         resources: ['Driver']
@@ -59,14 +67,10 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
     // array of drivers, populated by querying the API
     public drivers: ScheduleDriver[] = [];
 
-    // array of shifts, populated by querying the API
-    shifts: ScheduleShift[] = [
-        //        new ScheduleShift(1, 1, 'URBANETIC', new Date(2019, 1, 14, 8, 0), new Date(2019, 1, 14, 12, 0), 1, 52, 54),
-        //        new ScheduleShift(2, 2, 'URBANETIC', new Date(2019, 1, 14, 8, 30), new Date(2019, 1, 14, 12, 30), 2, 52, 54),
-        //        new ScheduleShift(3, 3, 'URBANETIC', new Date(2019, 1, 14, 8, 0), new Date(2019, 1, 14, 12, 0), 3, 52, 54),
-        //        new ScheduleShift(4, 4, 'URBANETIC', new Date(2019, 1, 14, 13, 0), new Date(2019, 1, 14, 17, 0), 1, 52, 54)
-    ];
+    // array of shifts, populated with data retrieved from the DB
+    shifts: ScheduleShift[] = [];
 
+    // DataManager object used to connect the schedule to the array of shifts retrieved from the DB
     dataManager: DataManager = new DataManager(this.shifts);
 
     // only allow one driver per shift
@@ -75,8 +79,11 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
     // array of colours used to display shifts
     private colours: string[] = ['#ea7a57', '#7fa900', '#5978ee', '#fec200', '#df5286', '#00bdae', '#865fcf', '#1aaa55'];
 
+    // define event settings model of the schedule
     public eventSettings: EventSettingsModel = {
+        // set dataManager as data source to connect schedule to array of shifts
         dataSource: this.dataManager,
+        // map schedule model fields to corresponding ScheduleShift fields
         fields: {
             id: 'id',
             subject: { title: 'Vehicle', name: 'vehicleId' },
@@ -86,8 +93,8 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         }
     };
 
+    // connect local schedule object to ScheduleComponent
     @ViewChild('scheduleObj') public scheduleObj: ScheduleComponent;
-    // END SYNCFUSION FIELDS
 
     currentAccount: any;
     eventSubscriber: Subscription;
@@ -100,6 +107,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         private eventManager: JhiEventManager
     ) {}
 
+    // load all safety drivers and shifts into the schedule
     loadAll() {
         this.safetyDriverService
             .query({})
@@ -129,6 +137,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         this.eventSubscriber = this.eventManager.subscribe('shiftListModification', response => this.loadAll());
     }
 
+    // maps IShift[] object retrieved from the DB to a ScheduleShift[] object compatible with the schedule
     private parseShifts(data: IShift[]) {
         this.shifts = data.map(
             x =>
@@ -147,6 +156,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         this.refreshSchedule();
     }
 
+    // maps ISafetyDriver[] object retrieved from the DB to a ScheduleDriver[] object compatible with the schedule
     private parseDrivers(data: ISafetyDriver[]) {
         this.drivers = data.map(
             x =>
@@ -161,25 +171,20 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         console.log(this.drivers);
     }
 
-    private delay(ms: number) {
+    // used by wait(), returns after a given number of ms
+    private reloadDelay(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async wait() {
-        await this.delay(2000);
+    // same effect as Thread.sleep(ms)
+    async wait(ms: number) {
+        await this.reloadDelay(ms);
     }
 
+    // adds loaded shifts to the schedule after a delay of two seconds
+    // to prevent them from being added while the schedule is not fully initialized
     refreshSchedule() {
-        // this.scheduleObj.refreshEvents();
-        // this.scheduleObj.refresh();
-
-        //       const add: Button = new Button();
-        //       add.appendTo('#page-heading');
-        //       add.element.onclick = (): void => {
-        //           this.scheduleObj.addEvent(this.shifts);
-        //       };
-
-        this.wait();
+        this.wait(2000);
         this.scheduleObj.addEvent(this.shifts);
     }
 
