@@ -1,4 +1,11 @@
+// general imports
 import { Component, Inject, ViewChild, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
+
+// SyncFusion imports for schedule
 import { extend, isNullOrUndefined, Browser } from '@syncfusion/ej2-base';
 import {
     ScheduleComponent,
@@ -15,29 +22,18 @@ import {
     WorkHoursModel,
     View
 } from '@syncfusion/ej2-angular-schedule';
-
 import { DataManager, Query } from '@syncfusion/ej2-data';
-import { Button } from '@syncfusion/ej2-buttons';
-
-import { newShifts, oldShifts } from './datasource';
-
-import { ScheduleService } from './schedule.service';
-import { SafetyDriverService } from './../safety-driver/safety-driver.service';
-
-import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
-
-import { IShift } from 'app/shared/model/shift.model';
-import { ScheduleShift, IScheduleShift } from 'app/shared/model/schedule-shift.model';
-import { ScheduleDriver, IScheduleDriver } from 'app/shared/model/schedule-driver.model';
-import { ISafetyDriver, SafetyDriver } from 'app/shared/model/safety-driver.model';
-
-import { Principal, User } from 'app/core';
 import { EventSettings } from '@syncfusion/ej2-schedule/src/schedule/models/event-settings';
-import { delay } from 'rxjs/operators';
-import { waitForMap } from '@angular/router/src/utils/collection';
+
+// component-specific imports
+import { SafetyDriverService } from './../safety-driver/safety-driver.service';
+import { ScheduleService } from './schedule.service';
+import { ScheduleShift } from 'app/shared/model/schedule-shift.model';
+import { ScheduleDriver } from 'app/shared/model/schedule-driver.model';
+import { ISafetyDriver } from 'app/shared/model/safety-driver.model';
+import { IShift } from 'app/shared/model/shift.model';
+
+import { Principal } from 'app/core';
 
 @Component({
     selector: 'jhi-schedule',
