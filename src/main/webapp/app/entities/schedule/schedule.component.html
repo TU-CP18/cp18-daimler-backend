@@ -1,0 +1,28 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="cpdaimlerApp.schedule.home.title">Shifts</span>
+    </h2>
+    <div class="control-section">
+        <div class="col-lg-12 content-wrapper">
+            <ejs-schedule #scheduleObj width="100%" cssClass="timeline-resource" height="650px" [timeScale]="timeScale" [currentView]="currentView"
+                [workHours]="workHours" [selectedDate]="selectedDate" [group]="group" [eventSettings]="eventSettings" (eventRendered)="onEventRendered($event)"
+                (actionBegin)="onActionBegin($event)" (renderCell)="onRenderCell($event)" (popupOpen)="onPopupOpen($event)">
+                <e-resources>
+                    <e-resource field="DriverId" title="Safety Driver" [dataSource]="drivers" [allowMultiple]="allowMultiple" name="Driver"
+                        textField="lastName" idField="driverId" colorField="color">
+                    </e-resource>
+                </e-resources>
+                <e-views>
+                    <e-view option="TimelineDay"></e-view>
+                </e-views>
+                <ng-template #resourceHeaderTemplate let-data>
+                    <div class="template-wrap">
+                        <div class="lastName">{{data.resourceData.lastName}}</div>
+                        <div class="firstName">{{data.resourceData.firstName}}</div>
+                        <div class="driverId">{{data.resourceData.driverId}}</div>
+                    </div>
+                </ng-template>
+            </ejs-schedule>
+        </div>
+    </div>
+</div>

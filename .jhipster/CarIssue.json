@@ -16,6 +16,11 @@
         {
             "fieldName": "posY",
             "fieldType": "Double"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "CARISSUESTATUS",
+            "fieldValues": "OPEN,CLOSED"
         }
     ],
     "relationships": [
