@@ -221,6 +221,9 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
                 args.cancel = true;
             }
         }
+        if (args.requestType === 'eventDelete') {
+            console.log('myyyy deleted');
+        }
     }
 
     // Syncfusion: define how cells should be rendered

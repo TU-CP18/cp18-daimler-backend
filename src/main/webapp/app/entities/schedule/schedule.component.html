@@ -1,6 +1,12 @@
 <div>
     <h2 id="page-heading">
         <span jhiTranslate="cpdaimlerApp.schedule.home.title">Shifts</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-shift" [routerLink]="['/shift/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span class="hidden-sm-down"  jhiTranslate="cpdaimlerApp.shift.home.createLabel">
+            Create new Shift
+            </span>
+        </button>
     </h2>
     <div class="control-section">
         <div class="col-lg-12 content-wrapper">
