@@ -10,20 +10,20 @@ node {
 
 		stage('Clean') {
 				sh "chmod +x mvnw"
-				sh "./mvnw -Pprod clean"
+				sh "./mvnw clean"
 		}
 
 		stage('Install tools') {
-				sh "./mvnw -Pprod com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v8.12.0 -DnpmVersion=6.4.1"
+				sh "./mvnw -com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v8.12.0 -DnpmVersion=6.4.1"
 		}
 
 		stage('Npm install') {
-				sh "./mvnw -Pprod com.github.eirslett:frontend-maven-plugin:npm"
+				sh "./mvnw com.github.eirslett:frontend-maven-plugin:npm"
 		}
 
         stage('Backend tests') {
             try {
-                sh "./mvnw -Pprod test"
+                sh "./mvnw test"
             } catch(err) {
                 throw err
             }
