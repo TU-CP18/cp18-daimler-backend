@@ -18,7 +18,7 @@ node {
 		}
 
 		stage('Npm install') {
-				sh "sudo ./mvnw -Pprod com.github.eirslett:frontend-maven-plugin:npm"
+				sh "./mvnw -Pprod com.github.eirslett:frontend-maven-plugin:npm"
 		}
 
         stage('Backend tests') {
@@ -30,7 +30,7 @@ node {
             }
 
         stage('Build WAR') {
-            sh "sudo ./mvnw -Pprod package -DskipTests"
+            sh "./mvnw -Pprod package -DskipTests"
             archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
         }
 
@@ -41,4 +41,8 @@ node {
                 sh 'scp /root/.jenkins/workspace/CP-Backend/target/*.war ubuntu@ec2-18-194-46-57.eu-central-1.compute.amazonaws.com:/home/ubuntu/tomcat/apache-tomcat-8.0.27/webapps/'
             }
         }
+		
+		stage ('Delete Workspace') {
+			   cleanWs()
+		}
 }

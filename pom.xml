@@ -593,7 +593,7 @@
                     <changeLogFile>src/main/resources/config/liquibase/master.xml</changeLogFile>
                     <diffChangeLogFile>src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://cloudproto.c3dsvhhmmg0d.eu-central-1.rds.amazonaws.com:3306/cpdaimler</url>
+                    <url>jdbc:mysql://cloudprototyping.c3dsvhhmmg0d.eu-central-1.rds.amazonaws.com:3306/cpdaimler</url>
                     <defaultSchemaName>cpdaimler</defaultSchemaName>
                     <username>root</username>
                     <password>CloudPrototyping2019</password>
