@@ -18,7 +18,7 @@
     "pigeon-overlay": "^0.2.3",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
-    "react-measure": "^2.2.2"
+    "react-measure": "^2.2.3"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.2.3",

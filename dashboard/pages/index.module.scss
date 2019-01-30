@@ -1,0 +1,34 @@
+@import '../node_modules/antd/dist/antd.css';
+
+html, body {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.layout {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex: 1;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+
+  .mapContainer {
+    display: flex;
+    flex: 1;
+  }
+
+  .sidebarContainer {
+    display: flex;
+    flex-shrink: 0;
+    width: 350px;
+  }
+}
