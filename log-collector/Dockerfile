@@ -1,5 +1,8 @@
-FROM node:10.15.0-alpine as builder
+FROM node:10.15.0-alpine
 
+RUN mkdir -p /usr/src/app
+
+WORKDIR /usr/src/app
 COPY . .
 
 RUN yarn install --production=true
