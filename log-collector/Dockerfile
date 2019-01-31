@@ -5,7 +5,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY . .
 
-RUN npm install --production=true
+RUN yarn install
 
 ENV NODE_ENV production
 ENV LOG_LEVEL=debug
