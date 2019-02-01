@@ -38,7 +38,19 @@ app.post('/api/log', (req, res) => {
     return res.status(200).end();
 });
 
-app.get('/api/vehicle-log/:license', authorize(JWT_SECRET, JWT_ALGORITHM), async (req, res, next) => {
+app.get('/api/car-status', async (req, res, next) => {
+    try {
+        const response = await esAxiosClient.get('/_search', {
+            // TODO: Implement this
+        });
+
+        res.status(200).json();
+    } catch (e) {
+        next(e);
+    }
+});
+
+app.get('/api/vehicle-log/:license', /* authorize(JWT_SECRET, JWT_ALGORITHM), */ async (req, res, next) => {
     if (!req.params.license || !req.params.license.trim()) {
         return res.status(400).end('Vehicle license not specified');
     }

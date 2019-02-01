@@ -16,12 +16,16 @@ export default class Index extends React.Component {
   };
 
   componentDidMount() {
-    // this.poller = setInterval(async () => {
-    //   try {
-    //     const carStatus = await axios.get('http://localhost:8000/api/car-status');
-    //     this.setState({ cars: carStatus.data });
-    //   } catch (e) { }
-    // }, 2500);
+    if (typeof window === 'undefined') {
+      const HOSTNAME = window.location.hostname === 'localhost' ? 'localhost:8000' : 'log-collector.isecp.de'
+
+      this.poller = setInterval(async () => {
+        try {
+          const carStatus = await axios.get(`http://${HOSTNAME}/api/car-status`);
+          this.setState({ cars: carStatus.data });
+        } catch (e) { }
+      }, 2500);
+    }
   }
 
   componentWillUnmount() {
