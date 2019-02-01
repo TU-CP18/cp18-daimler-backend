@@ -1,6 +1,6 @@
 #!/bin/bash
 
-domains=(kibana.isecp.de log-collector.isecp.de dashboard.isecp.de webapp.isecp.de)
+domains=(kibana.isecp.de log-collector.isecp.de dashboard.isecp.de)
 rsa_key_size=4096
 data_path="./certbot"
 email="rssanthosbaala@gmail.com" # Adding a valid address is strongly recommended
