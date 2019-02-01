@@ -20,5 +20,7 @@ ENV JWT_ALGORITHM=HS512
 
 EXPOSE 80
 
+RUN npm install -g pino-socket
+
 CMD yarn start
 

@@ -25,7 +25,7 @@ const carSimulator = (license, coordinates) => {
             timestamp: new Date().toISOString(),
             source: 'VEHICLE',
             type: 'NAV_POSITION',
-            location: [coordinate[0], coordinate[1]],
+            location: [coordinate.lat, coordinate.long],
             license,
         }))
     );
