@@ -1,4 +1,4 @@
-require('dotenv').config();
+equire('dotenv').config();
 const logger = require('pino')({ level: process.env.LOG_LEVEL || 'info' });
 const express = require('express');
 const cors = require('cors');
