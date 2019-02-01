@@ -4,7 +4,7 @@ const axios = require('axios').default;
 const { from, interval, merge }  = require('rxjs');
 const op = require('rxjs/operators');
 
-const HOST = process.env.HOST || 'localhost:8000';
+const HOST = process.env.HOST || 'localhost:8080';
 
 function readFakeRoute(gpsCsvFile) {
     const lines = fs.readFileSync(path.join(__dirname, 'fake-routes', gpsCsvFile)).toString();

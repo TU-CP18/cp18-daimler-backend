@@ -12,5 +12,4 @@ RUN tar -xvf logstash-6.5.4.tar.gz
 EXPOSE 5000
 EXPOSE 9600
 
-ENTRYPOINT [ "/usr/src/app/logstash-6.5.4/bin/logstash", "-e 'input { tcp { port => 5000 codec => json } } output { elasticsearch { hosts => [\"elasticsearch:9200\"] index => \"cpdaimler-events\" } }'" ]
-
+CMD /usr/src/app/logstash-6.5.4/bin/logstash -e 'input { tcp { port => 5000 codec => json } } output { elasticsearch { hosts => ["elasticsearch:9200"] index => "cpdaimler-events" } }'
