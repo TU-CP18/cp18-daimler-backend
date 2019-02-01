@@ -189,59 +189,6 @@ public class CarLicenceResourceIntTest {
 
     @Test
     @Transactional
-    public void updateCarLicence() throws Exception {
-        // Initialize the database
-        carLicenceService.save(carLicence);
-        // As the test used the service layer, reset the Elasticsearch mock repository
-        reset(mockCarLicenceSearchRepository);
-
-        int databaseSizeBeforeUpdate = carLicenceRepository.findAll().size();
-
-        // Update the carLicence
-        CarLicence updatedCarLicence = carLicenceRepository.findById(carLicence.getId()).get();
-        // Disconnect from session so that the updates on updatedCarLicence are not directly saved in db
-        em.detach(updatedCarLicence);
-        updatedCarLicence
-            .carLicence(UPDATED_CAR_LICENCE);
-
-        restCarLicenceMockMvc.perform(put("/api/car-licences")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedCarLicence)))
-            .andExpect(status().isOk());
-
-        // Validate the CarLicence in the database
-        List<CarLicence> carLicenceList = carLicenceRepository.findAll();
-        assertThat(carLicenceList).hasSize(databaseSizeBeforeUpdate);
-        CarLicence testCarLicence = carLicenceList.get(carLicenceList.size() - 1);
-        assertThat(testCarLicence.getCarLicence()).isEqualTo(UPDATED_CAR_LICENCE);
-
-        // Validate the CarLicence in Elasticsearch
-        verify(mockCarLicenceSearchRepository, times(1)).save(testCarLicence);
-    }
-
-    @Test
-    @Transactional
-    public void updateNonExistingCarLicence() throws Exception {
-        int databaseSizeBeforeUpdate = carLicenceRepository.findAll().size();
-
-        // Create the CarLicence
-
-        // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restCarLicenceMockMvc.perform(put("/api/car-licences")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(carLicence)))
-            .andExpect(status().isBadRequest());
-
-        // Validate the CarLicence in the database
-        List<CarLicence> carLicenceList = carLicenceRepository.findAll();
-        assertThat(carLicenceList).hasSize(databaseSizeBeforeUpdate);
-
-        // Validate the CarLicence in Elasticsearch
-        verify(mockCarLicenceSearchRepository, times(0)).save(carLicence);
-    }
-
-    @Test
-    @Transactional
     public void deleteCarLicence() throws Exception {
         // Initialize the database
         carLicenceService.save(carLicence);

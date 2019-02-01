@@ -1,0 +1,51 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-car-issue-heading" jhiTranslate="cpdaimlerApp.carIssue.home.createOrEditLabel">Create or edit a Car Issue</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!carIssue.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="carIssue.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.carIssue.description" for="field_description">Description</label>
+                    <input type="text" class="form-control" name="description" id="field_description"
+                        [(ngModel)]="carIssue.description" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.carIssue.part" for="field_part">Part</label>
+                    <input type="text" class="form-control" name="part" id="field_part"
+                        [(ngModel)]="carIssue.part" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.carIssue.posX" for="field_posX">Pos X</label>
+                    <input type="number" class="form-control" name="posX" id="field_posX"
+                        [(ngModel)]="carIssue.posX" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.carIssue.posY" for="field_posY">Pos Y</label>
+                    <input type="number" class="form-control" name="posY" id="field_posY"
+                        [(ngModel)]="carIssue.posY" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.carIssue.car" for="field_car">Car</label>
+                    <select class="form-control" id="field_car" name="car" [(ngModel)]="carIssue.car" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="carOption.id === carIssue.car?.id ? carIssue.car : carOption" *ngFor="let carOption of cars; trackBy: trackCarById">{{carOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

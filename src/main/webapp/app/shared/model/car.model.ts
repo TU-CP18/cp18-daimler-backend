@@ -1,3 +1,4 @@
+import { ICarIssue } from 'app/shared/model//car-issue.model';
 import { ICarLicence } from 'app/shared/model//car-licence.model';
 
 export const enum CARSTATUS {
@@ -12,9 +13,16 @@ export interface ICar {
     id?: number;
     model?: string;
     status?: CARSTATUS;
+    issues?: ICarIssue[];
     licence?: ICarLicence;
 }
 
 export class Car implements ICar {
-    constructor(public id?: number, public model?: string, public status?: CARSTATUS, public licence?: ICarLicence) {}
+    constructor(
+        public id?: number,
+        public model?: string,
+        public status?: CARSTATUS,
+        public issues?: ICarIssue[],
+        public licence?: ICarLicence
+    ) {}
 }

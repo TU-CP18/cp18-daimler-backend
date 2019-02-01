@@ -17,4 +17,6 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     List<Car> findAllByStatus (CARSTATUS carstatus);
 
+    Long countByStatus(CARSTATUS carstatus);
+
 }

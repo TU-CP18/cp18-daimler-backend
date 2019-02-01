@@ -2,13 +2,12 @@ package com.cpdaimler.bootstrap;
 
 import com.cpdaimler.domain.*;
 import com.cpdaimler.domain.enumeration.CARSTATUS;
-import com.cpdaimler.domain.enumeration.LICENCE;
 import com.cpdaimler.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 public class CPBootstrap implements CommandLineRunner {
@@ -40,17 +39,18 @@ public class CPBootstrap implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        initSafetyDriver();
 
-        initCars();
+        if (safetyDriverRepository.findAll().isEmpty()) {
 
-        initShift();
-
+            initSafetyDriver();
+            initCars();
+            initShift();
+        }
     }
 
     private void initShift() {
 
-        Shift s= new Shift();
+        Shift s = new Shift();
         s.setCar(carRepository.getOne(1L));
         s.setSafetyDriver(safetyDriverRepository.getOne(1L));
         s.setStart(System.currentTimeMillis() + 518400000);
@@ -58,19 +58,19 @@ public class CPBootstrap implements CommandLineRunner {
         getRandomLatLon(s);
         shiftRepository.save(s);
 
-        s= new Shift();
+        s = new Shift();
         s.setCar(carRepository.getOne(1L));
         s.setSafetyDriver(safetyDriverRepository.getOne(1L));
-        s.setStart(System.currentTimeMillis() + 518400000*2);
-        s.setEnd(System.currentTimeMillis() + 518400000*2 + 14400000);
+        s.setStart(System.currentTimeMillis() + 518400000 * 2);
+        s.setEnd(System.currentTimeMillis() + 518400000 * 2 + 14400000);
         getRandomLatLon(s);
         shiftRepository.save(s);
 
-        s= new Shift();
+        s = new Shift();
         s.setCar(carRepository.getOne(1L));
         s.setSafetyDriver(safetyDriverRepository.getOne(1L));
-        s.setStart(System.currentTimeMillis() + 518400000*8);
-        s.setEnd(System.currentTimeMillis() + 518400000*8 + 14400000);
+        s.setStart(System.currentTimeMillis() + 518400000 * 8);
+        s.setEnd(System.currentTimeMillis() + 518400000 * 8 + 14400000);
         getRandomLatLon(s);
         shiftRepository.save(s);
 
@@ -78,7 +78,7 @@ public class CPBootstrap implements CommandLineRunner {
 
     private void initSafetyDriver() {
 
-        User u= userRepository.findOneByLogin("driver").get();
+        User u = userRepository.findOneByLogin("driver").get();
 
         SafetyDriver safetyDriver = new SafetyDriver();
         safetyDriver.setLogin("driver");
@@ -87,7 +87,7 @@ public class CPBootstrap implements CommandLineRunner {
 
         safetyDriverRepository.save(safetyDriver);
 
-        u= userRepository.findOneByLogin("user").get();
+        u = userRepository.findOneByLogin("user").get();
 
         safetyDriver = new SafetyDriver();
         safetyDriver.setLogin("user");
@@ -96,7 +96,7 @@ public class CPBootstrap implements CommandLineRunner {
 
         safetyDriverRepository.save(safetyDriver);
 
-        u= userRepository.findOneByLogin("admin").get();
+        u = userRepository.findOneByLogin("admin").get();
 
         safetyDriver = new SafetyDriver();
         safetyDriver.setLogin("admin");
@@ -141,15 +141,15 @@ public class CPBootstrap implements CommandLineRunner {
 
     private void getRandomLatLon(Shift shift) {
 
-        Double random = Math.random() * 0.1;
-        Double sign = Math.random();
+        Double random = ThreadLocalRandom.current().nextDouble() * 0.1;
+        Double sign = ThreadLocalRandom.current().nextDouble();
 
-        if(sign > 0.5) {
+        if (sign > 0.5) {
             random = random * -1;
         }
 
-        Double lat = 52.531677 +random;
-        Double lng= 13.381777 +random;
+        Double lat = 52.531677 + random;
+        Double lng = 13.381777 + random;
 
         shift.setLatStart(lat);
         shift.setLongStart(lng);

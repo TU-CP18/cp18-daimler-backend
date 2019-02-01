@@ -10,6 +10,8 @@ import { Principal } from 'app/core';
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { CarService } from './car.service';
 
+import { Chart } from 'chart.js';
+
 @Component({
     selector: 'jhi-car',
     templateUrl: './car.component.html'
@@ -30,6 +32,15 @@ export class CarComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: any;
+    originalCarList: ICar[];
+
+    chart = [];
+
+    numberDrivingEmpty: Number;
+    numberDrivingFull: Number;
+    numberMaintenance: Number;
+    numberAvailable: Number;
+    numberInactive: Number;
 
     constructor(
         private carService: CarService,
@@ -63,7 +74,9 @@ export class CarComponent implements OnInit, OnDestroy {
                     sort: this.sort()
                 })
                 .subscribe(
-                    (res: HttpResponse<ICar[]>) => this.paginateCars(res.body, res.headers),
+                    (res: HttpResponse<ICar[]>) => {
+                        this.paginateCars(res.body, res.headers);
+                    },
                     (res: HttpErrorResponse) => this.onError(res.message)
                 );
             return;
@@ -78,6 +91,27 @@ export class CarComponent implements OnInit, OnDestroy {
                 (res: HttpResponse<ICar[]>) => this.paginateCars(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
+
+        this.carService.getCarStatistics().subscribe(
+            (res: HttpResponse<any>) => {
+                res.body.entries.forEach(item => {
+                    if (item.carstatus === 'AVAILABLE') {
+                        this.numberAvailable = item.number;
+                    } else if (item.carstatus === 'DRIVING_FULL') {
+                        this.numberDrivingFull = item.number;
+                    } else if (item.carstatus === 'DRIVING_EMPTY') {
+                        this.numberDrivingEmpty = item.number;
+                    } else if (item.carstatus === 'MAINTENANCE') {
+                        this.numberMaintenance = item.number;
+                    } else if (item.carstatus === 'INACTIVE') {
+                        this.numberInactive = item.number;
+                    }
+                });
+
+                this.createChart(null);
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
 
     loadPage(page: number) {
@@ -166,5 +200,36 @@ export class CarComponent implements OnInit, OnDestroy {
 
     private onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
+    }
+
+    private createChart(data) {
+        this.chart = new Chart('canvas', {
+            type: 'pie',
+            data: {
+                datasets: [
+                    {
+                        data: [
+                            this.numberAvailable,
+                            this.numberInactive,
+                            this.numberDrivingFull,
+                            this.numberDrivingEmpty,
+                            this.numberMaintenance
+                        ],
+                        backgroundColor: ['#3e95cd', '#8e5ea2', '#43a234', '#1936a2', '#a20a15']
+                    }
+                ],
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: ['available', 'inactive', 'driving with passenger', 'driving without passenger', 'maintenance']
+            },
+            options: {
+                onClick: function oClick(e) {
+                    const element = this.getElementAtEvent(e);
+
+                    if (element.length) {
+                        this.cars.filter(car => car.status.toUpperCase() === element[0]._model.label.toUpperCase());
+                    }
+                }
+            }
+        });
     }
 }

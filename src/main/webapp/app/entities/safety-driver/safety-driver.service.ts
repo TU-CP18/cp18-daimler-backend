@@ -41,4 +41,8 @@ export class SafetyDriverService {
         const options = createRequestOption(req);
         return this.http.get<ISafetyDriver[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
     }
+
+    getSafetyDriverStatistics(): Observable<HttpResponse<any>> {
+        return this.http.get<any>(`${this.resourceUrl}/statistics`, { observe: 'response' });
+    }
 }

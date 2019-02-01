@@ -48,6 +48,17 @@
                     <span jhiTranslate="global.menu.entities.carLicence">Car Licence</span>
                 </a>
             </li>
+            <li *jhiHasAnyAuthority="'ROLE_FLEETMANAGER'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <a class="nav-link" routerLink="schedule"  >
+                    <fa-icon [icon]="'calendar-alt'" [fixedWidth]="true"></fa-icon>
+                    <span jhiTranslate="global.menu.entities.schedule">Schedule</span>
+                </a>
+            </li>
+            <li *jhiHasAnyAuthority="'ROLE_FLEETMANAGER'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <a class="nav-link" routerLink="chat"  >
+                    <fa-icon [icon]="'comments'" [fixedWidth]="true"></fa-icon>
+                    <span jhiTranslate="global.menu.entities.chat">Chat</span>
+            </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
           <!--  </li> -->
             <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">

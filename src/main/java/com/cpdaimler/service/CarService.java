@@ -71,7 +71,6 @@ public class CarService {
         return carRepository.findAllByStatus(CARSTATUS.AVAILABLE);
     }
 
-
     /**
      * Get one car by id.
      *
@@ -98,12 +97,13 @@ public class CarService {
     /**
      * Search for the car corresponding to the query.
      *
-     * @param query the query of the search
+     * @param query    the query of the search
      * @param pageable the pagination information
      * @return the list of entities
      */
     @Transactional(readOnly = true)
     public Page<Car> search(String query, Pageable pageable) {
         log.debug("Request to search for a page of Cars for query {}", query);
-        return carSearchRepository.search(queryStringQuery(query), pageable);    }
+        return carSearchRepository.search(queryStringQuery(query), pageable);
+    }
 }

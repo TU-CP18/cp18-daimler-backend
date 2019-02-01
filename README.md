@@ -1,4 +1,6 @@
 # cpdaimler
+[![Build Status](http://ec2-3-122-117-50.eu-central-1.compute.amazonaws.com:8080/jenkins/buildStatus/icon?job=SD-Backend)](http://ec2-3-122-117-50.eu-central-1.compute.amazonaws.com:8080/jenkins/job/SD-Backend/)
+
 Name | PW  
 admin, admin  
 user, user  

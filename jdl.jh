@@ -15,6 +15,21 @@ entity Shift {
 
 }
 
+entity CarIssue {
+    description String,
+    part String,
+    posX Double,
+    posY Double,
+    status CARISSUESTATUS
+
+}
+
+entity ChatMessage {
+    text String,
+    createdAt ZonedDateTime
+
+}
+
 entity CarLicence {
 	carLicence LICENCE
 }
@@ -27,6 +42,10 @@ enum CARSTATUS {
 	DRIVING_EMPTY, DRIVING_FULL, MAINTENANCE, AVAILABLE, INACTIVE
 }
 
+enum CARISSUESTATUS {
+	OPEN, CLOSED
+}
+
 relationship OneToOne {
 	SafetyDriver{user} to User
 }
@@ -34,7 +53,14 @@ relationship OneToOne {
 relationship ManyToOne {
 	Shift{car} to Car
 	Shift{safetyDriver} to SafetyDriver
-    Car{licence} to CarLicence,
+    Car{licence} to CarLicence
+    ChatMessage{sender} to User
+    ChatMessage{recipient} to User
+}
+
+relationship OneToMany {
+    Car{issues} to CarIssue
+
 }
 
 relationship ManyToMany {

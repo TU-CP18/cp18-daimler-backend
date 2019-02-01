@@ -11,6 +11,10 @@
                 "safetyDriver": "Safety Driver",
                 "shift": "Shift",
                 "carLicence": "Car Licence",
+                "carIssue": "Car Issue",
+                "chat": "Chat",
+                "schedule": "Schedule",
+                "chatMessage": "Chat Message",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
@@ -134,7 +138,8 @@
         "userexists": "Login name already used!",
         "emailexists": "Email is already in use!",
         "idexists": "A new {{ entityName }} cannot already have an ID",
-        "idnull": "Invalid ID"
+        "idnull": "Invalid ID",
+        "carused": "This car / this safety driver is already used in the chosen time"
     },
     "footer": ""
 }

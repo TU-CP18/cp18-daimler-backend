@@ -25,6 +25,13 @@
         </div>
     </div>
     <br/>
+
+    <div *ngIf="chart" class='chart-container' style=' width:600px; height:300px'>
+        <canvas id='canvas'>{{ chart }}</canvas>
+    </div>
+
+    <br/>
+
     <div class="table-responsive" *ngIf="cars">
         <table class="table table-striped">
             <thead>

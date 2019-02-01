@@ -46,4 +46,8 @@ export class CarService {
         const options = createRequestOption(req);
         return this.http.get<ICar[]>(this.resourceSearchUrl, { params: options, observe: 'response' });
     }
+
+    getCarStatistics(): Observable<HttpResponse<any>> {
+        return this.http.get<Number>(`${this.resourceUrl}/statistics`, { observe: 'response' });
+    }
 }

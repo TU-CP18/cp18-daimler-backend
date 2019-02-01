@@ -10,6 +10,8 @@ import { Principal } from 'app/core';
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { SafetyDriverService } from './safety-driver.service';
 
+import { Chart } from 'chart.js';
+
 @Component({
     selector: 'jhi-safety-driver',
     templateUrl: './safety-driver.component.html'
@@ -30,6 +32,11 @@ export class SafetyDriverComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: any;
+
+    numberActive: number;
+    numberInactive: number;
+
+    chart = [];
 
     constructor(
         private safetyDriverService: SafetyDriverService,
@@ -78,6 +85,22 @@ export class SafetyDriverComponent implements OnInit, OnDestroy {
                 (res: HttpResponse<ISafetyDriver[]>) => this.paginateSafetyDrivers(res.body, res.headers),
                 (res: HttpErrorResponse) => this.onError(res.message)
             );
+
+        this.safetyDriverService.getSafetyDriverStatistics().subscribe(
+            (res: HttpResponse<any>) => {
+                console.log(res);
+                res.body.entries.forEach(item => {
+                    if (item.type === 'active') {
+                        this.numberActive = item.number;
+                    } else if (item.type === 'inactive') {
+                        this.numberInactive = item.number;
+                    }
+                });
+
+                this.createChart();
+            },
+            (res: HttpErrorResponse) => {}
+        );
     }
 
     loadPage(page: number) {
@@ -166,5 +189,22 @@ export class SafetyDriverComponent implements OnInit, OnDestroy {
 
     private onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
+    }
+
+    private createChart() {
+        this.chart = new Chart('canvas', {
+            type: 'pie',
+            data: {
+                datasets: [
+                    {
+                        data: [this.numberActive, this.numberInactive],
+                        backgroundColor: ['#3e95cd', '#8e5ea2']
+                    }
+                ],
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: ['currently working safety drivers', 'currently not working safety drivers']
+            },
+            options: {}
+        });
     }
 }

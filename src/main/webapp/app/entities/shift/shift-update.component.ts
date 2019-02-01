@@ -28,6 +28,10 @@ export class ShiftUpdateComponent implements OnInit {
 
     safetydrivers: ISafetyDriver[];
 
+    originalCars: ICar[];
+
+    originalSafetyDrivers: ISafetyDriver[];
+
     constructor(
         private jhiAlertService: JhiAlertService,
         private shiftService: ShiftService,
@@ -44,12 +48,14 @@ export class ShiftUpdateComponent implements OnInit {
         this.carService.getActiveCars().subscribe(
             (res: HttpResponse<ICar[]>) => {
                 this.cars = res.body;
+                this.originalCars = res.body.map(a => Object.assign({}, a));
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
         this.safetyDriverService.query().subscribe(
             (res: HttpResponse<ISafetyDriver[]>) => {
                 this.safetydrivers = res.body;
+                this.originalSafetyDrivers = res.body.map(a => Object.assign({}, a));
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
@@ -57,7 +63,15 @@ export class ShiftUpdateComponent implements OnInit {
         this.start = { date: null, time: null };
         this.end = { date: null, time: null };
 
-        this.earliestDate = new Date(Date.now());
+        this.earliestDate = new Date(Date.now() - 1000 * 60 * 60 * 24);
+
+        if (this.shift !== undefined && this.shift !== null) {
+            this.start.date = this.getLocalDateTime(this.shift.start).split('T')[0];
+            this.start.time = this.getLocalDateTime(this.shift.start).split('T')[1];
+
+            this.end.date = this.getLocalDateTime(this.shift.end).split('T')[0];
+            this.end.time = this.getLocalDateTime(this.shift.end).split('T')[1];
+        }
     }
 
     previousState() {
@@ -66,18 +80,25 @@ export class ShiftUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
+
+        this.shift.start = new Date(this.combineDateAndTime(this.start)).getTime();
+        this.shift.end = new Date(this.combineDateAndTime(this.end)).getTime();
+
         if (this.shift.id !== undefined) {
             this.subscribeToSaveResponse(this.shiftService.update(this.shift));
         } else {
-            this.shift.start = new Date(this.combineDateAndTime(this.start)).getTime();
-            this.shift.end = new Date(this.combineDateAndTime(this.end)).getTime();
-
             this.subscribeToSaveResponse(this.shiftService.create(this.shift));
         }
     }
 
     private subscribeToSaveResponse(result: Observable<HttpResponse<IShift>>) {
-        result.subscribe((res: HttpResponse<IShift>) => this.onSaveSuccess(), (res: HttpErrorResponse) => this.onSaveError());
+        result.subscribe(
+            (res: HttpResponse<IShift>) => this.onSaveSuccess(),
+            (res: HttpErrorResponse) => {
+                this.onSaveError();
+                this.onError(res.message);
+            }
+        );
     }
 
     private onSaveSuccess() {
@@ -144,6 +165,43 @@ export class ShiftUpdateComponent implements OnInit {
 
         if (input_date < new Date(this.start.date)) {
             this.end.date = this.start.date;
+        }
+    }
+
+    checkDriversAndCars() {
+        this.shift.start = new Date(this.combineDateAndTime(this.start)).getTime();
+        this.shift.end = new Date(this.combineDateAndTime(this.end)).getTime();
+
+        if (
+            this.shift.end !== null &&
+            this.shift.end !== undefined &&
+            this.shift.start !== null &&
+            this.shift.start !== undefined &&
+            !isNaN(this.shift.start) &&
+            !isNaN(this.shift.end)
+        ) {
+            this.safetydrivers = this.originalSafetyDrivers.map(a => Object.assign({}, a));
+            this.cars = this.originalCars.map(a => Object.assign({}, a));
+
+            this.shiftService.getAllParallel(this.shift.id, this.shift.start, this.shift.end).subscribe(
+                (res: HttpResponse<IShift[]>) => {
+                    res.body.forEach(item => {
+                        this.cars.forEach((car, index) => {
+                            console.log(car);
+                            if ((car = item.car)) {
+                                this.cars.splice(index, 1);
+                            }
+                        });
+
+                        this.safetydrivers.forEach((safetyDriver, index) => {
+                            if ((safetyDriver = item.safetyDriver)) {
+                                this.safetydrivers.splice(index, 1);
+                            }
+                        });
+                    });
+                },
+                (res: HttpErrorResponse) => this.onError(res.message)
+            );
         }
     }
 }

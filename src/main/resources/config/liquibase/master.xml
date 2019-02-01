@@ -9,9 +9,13 @@
     <include file="config/liquibase/changelog/20181102120755_added_entity_SafetyDriver.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181102120756_added_entity_Shift.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181102120757_added_entity_CarLicence.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181214133641_added_entity_CarIssue.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190122214735_added_entity_ChatMessage.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20181102120754_added_entity_constraints_Car.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181102120755_added_entity_constraints_SafetyDriver.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20181102120756_added_entity_constraints_Shift.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20181214133641_added_entity_constraints_CarIssue.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190122214735_added_entity_constraints_ChatMessage.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>
