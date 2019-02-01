@@ -20,4 +20,6 @@ ENV JWT_ALGORITHM=HS512
 
 EXPOSE 80
 
-CMD yarn start
+RUN yarn add pm2
+
+CMD yarn pm2 start yarn -- start
