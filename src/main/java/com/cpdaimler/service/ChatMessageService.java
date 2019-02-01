@@ -1,7 +1,9 @@
 package com.cpdaimler.service;
 
 import com.cpdaimler.domain.ChatMessage;
+import com.cpdaimler.domain.User;
 import com.cpdaimler.repository.ChatMessageRepository;
+import com.cpdaimler.repository.UserRepository;
 import com.cpdaimler.repository.search.ChatMessageSearchRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -28,9 +31,12 @@ public class ChatMessageService {
 
     private ChatMessageSearchRepository chatMessageSearchRepository;
 
-    public ChatMessageService(ChatMessageRepository chatMessageRepository, ChatMessageSearchRepository chatMessageSearchRepository) {
+    private UserRepository userRepository;
+
+    public ChatMessageService(ChatMessageRepository chatMessageRepository, ChatMessageSearchRepository chatMessageSearchRepository, UserRepository userRepository) {
         this.chatMessageRepository = chatMessageRepository;
         this.chatMessageSearchRepository = chatMessageSearchRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -69,6 +75,19 @@ public class ChatMessageService {
     public Optional<ChatMessage> findOne(Long id) {
         log.debug("Request to get ChatMessage : {}", id);
         return chatMessageRepository.findById(id);
+    }
+
+    /**
+     * Get chatMessage history by user id.
+     *
+     * @param id the id of the entity
+     * @return the entity
+     */
+    @Transactional(readOnly = true)
+    public List<ChatMessage> getHistory(Long id) {
+        log.debug("Request to get Chat History : {}", id);
+        User user = userRepository.findById(id).get();
+        return chatMessageRepository.findTop20ByRecipientOrSenderOrderByIdAsc(user, user);
     }
 
     /**
