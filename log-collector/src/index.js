@@ -73,23 +73,21 @@ app.listen(PORT, () => {
     logger.debug({ message: 'Log collector started', port: PORT });
 });
 
-// Send mappings to elasticsearch
-esAxiosClient.put('/_mapping/doc', {
-    properties: {
-        hostname: { type: 'text' },
-        timestamp: { type: 'date' },
-        source: { type: 'keyword' },
-        type: { type: 'keyword' },
-        location: { type: 'geo_point' },
-        description: { type: 'text' },
-        destination: { type: 'geo_point' },
-        license: { type: 'keyword' },
-        driverId: { type: 'keyword' },
-        shiftId: { type: 'keyword' },
-    },
-}).then(() => {
-    logger.debug({ message: 'Added mappings to elasticsearch'});
-}).catch((e) => {
-    logger.fatal({ message: 'Failed to put mappings onto elasticsearch', error: e.response || e });
-    process.exit(-1);
-})
+const putMappingInterval = setInterval(() => {
+    esAxiosClient.put('/_mapping/doc', {
+        properties: {
+            hostname: { type: 'text' },
+            timestamp: { type: 'date' },
+            source: { type: 'keyword' },
+            type: { type: 'keyword' },
+            location: { type: 'geo_point' },
+            description: { type: 'text' },
+            destination: { type: 'geo_point' },
+            license: { type: 'keyword' },
+            driverId: { type: 'keyword' },
+            shiftId: { type: 'keyword' },
+        },
+    }).then(() => {
+        clearInterval(putMappingInterval);
+    }).catch((e) => { });
+}, 5000);

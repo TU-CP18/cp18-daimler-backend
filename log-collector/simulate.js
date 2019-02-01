@@ -4,6 +4,8 @@ const axios = require('axios').default;
 const { from, interval, merge }  = require('rxjs');
 const op = require('rxjs/operators');
 
+const HOST = process.env.HOST || 'localhost:8000';
+
 function readFakeRoute(gpsCsvFile) {
     const lines = fs.readFileSync(path.join(__dirname, 'fake-routes', gpsCsvFile)).toString();
     return lines
@@ -15,11 +17,17 @@ const fakeRoute1 = readFakeRoute('route1.csv')
 const fakeRoute2 = readFakeRoute('route2.csv')
 const fakeRoute3 = readFakeRoute('route3.csv')
 
-const carSimulator = (carLicense, coordinates) => {
+const carSimulator = (license, coordinates) => {
     const coordinates$ = from(coordinates);
     return interval(2500).pipe(
         op.zip(coordinates$),
-        op.map(([_, coordinate]) => ({ ...coordinate, carLicense, timestamp: new Date().toISOString() }))
+        op.map(([_, coordinate]) => ({
+            timestamp: new Date().toISOString(),
+            source: 'VEHICLE',
+            type: 'NAV_POSITION',
+            location: [coordinate[0], coordinate[1]],
+            license,
+        }))
     );
 }
 
@@ -27,8 +35,12 @@ merge(
     carSimulator('A', fakeRoute1),
     carSimulator('B', fakeRoute2).pipe(op.delay(250)),
     carSimulator('C', fakeRoute3).pipe(op.delay(500)),
-).subscribe(async carStatus => {
+).subscribe(async log => {
     try {
-        await axios.post('http://localhost:8000/api/log', carStatus);
-    } catch (e) { }
+        await axios.post(`http://${HOST}/api/log`, log);
+        console.log('--> ')
+    } catch (e) {
+        console.log('---> error posting log: ');
+        console.dir(e);
+    }
 });
