@@ -7,6 +7,8 @@ COPY . .
 
 RUN yarn install
 
+RUN apk add bind-tools
+
 ENV NODE_ENV production
 ENV LOG_LEVEL=debug
 ENV LOG_COLLECTOR_PORT=80
