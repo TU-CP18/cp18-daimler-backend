@@ -15,10 +15,6 @@
         "typeRoots": [
             "node_modules/@types"
         ],
-        "types": [
-            "jquery",
-            "ej.web.all"
-          ],
         "baseUrl": "./",
         "paths": {
             "app/*": ["src/main/webapp/app/*"]
