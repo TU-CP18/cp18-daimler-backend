@@ -5,6 +5,7 @@ import com.cpdaimler.domain.User;
 import com.cpdaimler.repository.ChatMessageRepository;
 import com.cpdaimler.repository.UserRepository;
 import com.cpdaimler.repository.search.ChatMessageSearchRepository;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +88,8 @@ public class ChatMessageService {
     public List<ChatMessage> getHistory(Long id) {
         log.debug("Request to get Chat History : {}", id);
         User user = userRepository.findById(id).get();
-        return chatMessageRepository.findTop20ByRecipientOrSenderOrderByIdAsc(user, user);
+        List historyRversed = chatMessageRepository.findFirst20ByRecipientOrSenderOrderByIdDesc(user, user);
+        return Lists.reverse(historyRversed);
     }
 
     /**

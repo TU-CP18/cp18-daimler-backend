@@ -20,6 +20,6 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
     @Query("select chat_message from ChatMessage chat_message where chat_message.recipient.login = ?#{principal.username}")
     List<ChatMessage> findByRecipientIsCurrentUser();
 
-    List<ChatMessage> findTop20ByRecipientOrSenderOrderByIdAsc(User recipient, User sender);
+    List<ChatMessage> findFirst20ByRecipientOrSenderOrderByIdDesc(User recipient, User sender);
 
 }
