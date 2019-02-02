@@ -14,6 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +52,11 @@ public class ChatMessageService {
      */
     public ChatMessage save(ChatMessage chatMessage) {
         log.debug("Request to save ChatMessage : {}", chatMessage);
+        // set createAt of message to current time
+        Instant now = Instant.now();
+        ZoneId zoneId = ZoneId.of("Europe/Berlin");
+        ZonedDateTime dateAndTimeInBerlin = ZonedDateTime.ofInstant(now, zoneId);
+        chatMessage.setCreatedAt(dateAndTimeInBerlin);
         ChatMessage result = chatMessageRepository.save(chatMessage);
         chatMessageSearchRepository.save(result);
         return result;
