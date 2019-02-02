@@ -149,6 +149,7 @@ export class ChatService {
                 createdAt: moment()
             };
             this.listenerObserver.next(messageObject); // add message to chat window
+            console.log('onReceivedMessage save to database.');
             this.chatMessageService.create(messageObject).subscribe(
                 () => {
                     /* console.log('send message success'); */

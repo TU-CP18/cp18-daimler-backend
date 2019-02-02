@@ -59,7 +59,6 @@ export class ChatComponent implements OnInit, OnDestroy {
             this.userService.find(account.login).subscribe(
                 backendUser => {
                     this.identity = backendUser.body;
-                    console.log(this.identity);
                 },
                 () => {
                     console.log('Error retrieving backend user.');
@@ -90,7 +89,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     loadChatHistory = response => {
         for (const msg in response.body) {
-            this.messages.push(response.body[msg]);
+            if (response.body[msg]) {
+                // avoid adding null in the end
+                this.messages.push(response.body[msg]);
+            }
         }
     };
 
