@@ -83,11 +83,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.messages = [];
         this.selectedUser = selectedUser;
         this.chatMessageService
-            .search({
-                query: 'recipient.id:' + selectedUser.id + ' OR sender.id:' + selectedUser.id,
-                sort: ['id,asc'],
-                page: '1'
-            })
+            .getHistory(selectedUser.id)
             .subscribe(this.loadChatHistory, (res: HttpErrorResponse) => this.onError(res.message));
         return;
     }
