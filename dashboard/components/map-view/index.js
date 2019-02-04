@@ -5,11 +5,11 @@ import Overlay from 'pigeon-overlay';
 import Measure from 'react-measure';
 
 import styles from './map-view.module.scss';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 
 export default class MapView extends React.Component {
   static defaultProps = {
-    cars: []
+    cars: [],
   };
 
   state = {
@@ -33,6 +33,11 @@ export default class MapView extends React.Component {
     this.setState({ mapSettings: { center, zoom }});
   }
 
+  handleCarMarkerClick = (license) => () => {
+    console.log('--> on click');
+    this.props.onCarSelect(license);
+  }
+
   render() {
     return (
       <div className={styles.mapViewContainer}>
@@ -50,8 +55,14 @@ export default class MapView extends React.Component {
                 onBoundsChanged={this.handleMapBoundsChanged}
               >
                 {this.props.cars.map(c => (
-                  <Overlay key={c.carLicense || c.license || c.carId} anchor={c.location} offset={[0, 0]}>
-                    <svg width={25} height={25}>
+                  <Overlay
+                    key={c.carLicense || c.license || c.carId} anchor={c.location} offset={[0, 0]}
+                  >
+                    <svg
+                      className={styles.carMarker}
+                      width={25} height={25}
+                      onClick={this.handleCarMarkerClick(c.carLicense)}
+                    >
                       <rect x={0} y={0} width={25} height={25} fill={this.isCarInEmergency(c.license) ? '#f00' : '#000'} />
                       <text x={7.5} y={17.5} fill="#fefefe">
                         { c.carLicense || c.license || c.carId }

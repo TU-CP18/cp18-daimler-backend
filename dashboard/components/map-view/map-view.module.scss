@@ -14,4 +14,9 @@
 .mapView {
   display: flex;
   flex: 1;
+
+  .carMarker {
+    z-index: 9999999;
+    cursor: pointer;
+  }
 }

@@ -14,6 +14,7 @@ export default class Index extends React.Component {
     cars: [],
     logs: [],
     emergencyEvents: [],
+    selectedCar: null,
   };
 
   refreshLogs = async () => {
@@ -39,6 +40,10 @@ export default class Index extends React.Component {
     } catch (e) { }
   }
 
+  handleCarSelect = (license) => {
+    this.setState({ selectedCar: license });
+  }
+
   componentDidMount() {
     if (typeof window !== 'undefined') {
       this.poller = setInterval(async () => {
@@ -60,10 +65,19 @@ export default class Index extends React.Component {
       <Layout className={styles.layout}>
         <Content className={styles.content}>
           <div className={styles.mapContainer}>
-            <MapView cars={this.state.cars} emergencyEvents={this.state.emergencyEvents} />
+            <MapView
+              cars={this.state.cars}
+              emergencyEvents={this.state.emergencyEvents}
+              selectedCar={this.state.selectedCar}
+              onCarSelect={this.handleCarSelect}
+            />
           </div>
           <div className={styles.sidebarContainer}>
-            <LogView title="Recent Events" logs={this.state.logs} />
+            <LogView
+              title={this.state.selectedCar ? `Car ${this.state.selectedCar} Events` : 'Recent Events'}
+              logs={this.state.logs}
+              selectedCar={this.state.selectedCar}
+            />
           </div>
         </Content>
       </Layout>
