@@ -114,6 +114,20 @@ public class ChatMessageResource {
     }
 
     /**
+     * GET  /chat-messages/history/:id : get chatMessage history of user "id".
+     *
+     * @param id the id of the user for which you want to receive the chatMessage history
+     * @return the ResponseEntity with status 200 (OK) and with body the chatMessage history, or with status 404 (Not Found)
+     */
+    @GetMapping("/chat-messages/history/{id}")
+    @Timed
+    public List<ChatMessage> getChatMessageHistory(@PathVariable Long id) {
+        log.debug("REST request to get ChatMessage history of user: {}", id);
+        List<ChatMessage> chatHistory = chatMessageService.getHistory(id);
+        return chatHistory;
+    }
+
+    /**
      * DELETE  /chat-messages/:id : delete the "id" chatMessage.
      *
      * @param id the id of the chatMessage to delete

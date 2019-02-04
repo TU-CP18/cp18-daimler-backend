@@ -1,6 +1,7 @@
 package com.cpdaimler.repository;
 
 import com.cpdaimler.domain.ChatMessage;
+import com.cpdaimler.domain.User;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -18,5 +19,7 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
 
     @Query("select chat_message from ChatMessage chat_message where chat_message.recipient.login = ?#{principal.username}")
     List<ChatMessage> findByRecipientIsCurrentUser();
+
+    List<ChatMessage> findFirst20ByRecipientOrSenderOrderByIdDesc(User recipient, User sender);
 
 }

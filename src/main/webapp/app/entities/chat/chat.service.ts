@@ -141,22 +141,14 @@ export class ChatService {
         const dataObject = JSON.parse(data.body);
         // this.listenerObserver.next(dataObject);
         if (dataObject.user._id !== this.backendUser.id) {
-            // save to database
+            // add message to chat window
             const messageObject = <IChatMessage>{
                 recipient: this.backendUser,
                 sender: this.appUser,
                 text: dataObject.text,
                 createdAt: moment()
             };
-            this.listenerObserver.next(messageObject); // add message to chat window
-            this.chatMessageService.create(messageObject).subscribe(
-                () => {
-                    /* console.log('send message success'); */
-                },
-                () => {
-                    console.log('Error on saving received message to database.');
-                }
-            );
+            this.listenerObserver.next(messageObject);
         }
     };
 
