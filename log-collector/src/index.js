@@ -1,4 +1,5 @@
 require('dotenv').config();
+const R = require('ramda');
 const logger = require('pino')({ level: process.env.LOG_LEVEL || 'info' });
 const express = require('express');
 const cors = require('cors');
@@ -38,13 +39,53 @@ app.post('/api/log', (req, res) => {
     return res.status(200).end();
 });
 
-app.get('/api/car-status', async (req, res, next) => {
+function formatEsDocument(doc) {
+    const FIELDS_TO_OMIT = ['@version', 'time', '@timestamp', 'v', 'port', 'pid', 'hostname', 'host', 'level'];
+    FIELDS_TO_OMIT.forEach(f => delete doc[f]);
+    return doc;
+}
+
+app.get('/api/logs', async (_, res, next) => {
     try {
         const response = await esAxiosClient.get('/_search', {
-            // TODO: Implement this
+            data: {
+                "size": 250,
+                "query": { "match": { "source": "VEHICLE" } },
+                "sort": [ { "timestamp": { "order": "desc" } } ]
+            }
         });
 
-        res.status(200).json();
+        const logs = response.data.hits.hits.map(d => ({ id: d._id, ...formatEsDocument(d._source) }));
+        res.status(200).json(logs);
+    } catch (e) {
+        next(e);
+    }
+});
+
+app.get('/api/cars', async (req, res, next) => {
+    try {
+        const response = await esAxiosClient.get('/_search', {
+            data: {
+                "size": 0,
+                "query": { "match": { "type": "NAV_POSITION" } },
+                "aggs": {
+                    "bucket": { "terms": { "field": "license.keyword" },
+                    "aggs": {
+                        "lastPosition": {
+                            "top_hits": {
+                                "size": 1,
+                                "sort": [{ "timestamp": { "order": "desc" } }]
+                            }
+                        }
+                    }
+                    }
+                }
+            }
+        });
+
+        const innerBuckets = response.data.aggregations.bucket.buckets.map(b => b.lastPosition.hits.hits);
+        const locationLogs = R.flatten(innerBuckets).map(d => ({ id: d._id, ...formatEsDocument(d._source) }));
+        res.status(200).json(locationLogs);
     } catch (e) {
         next(e);
     }

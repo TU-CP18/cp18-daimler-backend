@@ -1,26 +1,32 @@
 import React from 'react';
+import moment from 'moment';
 
 import styles from './log-view.module.scss';
 
 export default class LogView extends React.Component {
 
+  renderMessage = (l) => {
+    switch(l.type) {
+      case 'NAV_START':
+      case 'NAV_POSITION': return <span><span>{l.type}</span>&nbsp; Car: <strong>{l.license || l.carId}</strong>&nbsp;</span>
+    }
+  }
+
   renderLog = (l) => {
     return (
-      <div className={styles.log}>
-        <div className={styles.time}>10:42:AM</div>
-        <div className={styles.message}>This is my message</div>
+      <div key={l.id} className={styles.log}>
+        <div className={styles.time}>{moment(l.timestamp).format('hh:mm A')}</div>
+        <div className={styles.message}>{this.renderMessage(l)}</div>
       </div>
     )
   }
 
   render() {
-    const logs = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
-
     return (
       <div className={styles.logView}>
         <div className={styles.title}>{this.props.title}</div>
         <div className={styles.inner}>
-          {logs.map(l => this.renderLog(l))}
+          {this.props.logs.map(l => this.renderLog(l))}
         </div>
       </div>
     );

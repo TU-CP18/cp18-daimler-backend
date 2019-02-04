@@ -1,3 +1,4 @@
+const R = require('ramda');
 const path = require('path');
 const fs = require('fs');
 const axios = require('axios').default;
@@ -27,18 +28,43 @@ const carSimulator = (license, coordinates) => {
             type: 'NAV_POSITION',
             location: [coordinate.lat, coordinate.long],
             license,
-        }))
+        })),
     );
 }
 
+const carEmergencySimulator = (license, coordinates) => {
+    const coordinates$ = from(R.dropLast(2, coordinates));
+    const emergencyCoordinate$ = from(R.compose(R.takeLast(1), R.dropLast(1)))
+    return interval(2500).pipe(
+        op.zip(coordinates$),
+        op.map(([_, coordinate]) => ({
+            timestamp: new Date().toISOString(),
+            source: 'VEHICLE',
+            type: 'NAV_POSITION',
+            location: [coordinate.lat, coordinate.long],
+            license,
+        })),
+    ).pipe(
+        op.concat(emergencyCoordinate$.pipe(op.map(
+            ([_, coordinate]) => ({
+                timestamp: new Date().toISOString(),
+                source: 'VEHICLE',
+                type: 'NAV_ESTOP',
+                location: [coordinate.lat, coordinate.long],
+                license,
+            })
+        ))
+    )
+}
+
 merge(
-    carSimulator('A', fakeRoute1),
-    carSimulator('B', fakeRoute2).pipe(op.delay(250)),
-    carSimulator('C', fakeRoute3).pipe(op.delay(500)),
+    // carSimulator('A', fakeRoute1),
+    // carSimulator('B', fakeRoute2).pipe(op.delay(250)),
+    // carSimulator('C', fakeRoute3).pipe(op.delay(500)),
+    carEmergencySimulator('D', fakeRoute1).pipe(op.delay(2000)),
 ).subscribe(async log => {
     try {
         await axios.post(`http://${HOST}/api/log`, log);
-        console.log('--> ')
     } catch (e) {
         console.log('---> error posting log: ');
         console.dir(e);
