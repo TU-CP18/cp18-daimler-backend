@@ -8,40 +8,6 @@
 </head>
 <body>
 
-<!--<div class="row">-->
-    <!--<div class="col-md-3">-->
-        <!--<span class="hipster img-fluid img-rounded"></span>-->
-    <!--</div>-->
-    <!--<div class="col-md-9">-->
-        <!--<h2>Messages:</h2>-->
-        <!--<div class="chat-messages">-->
-            <!--<div class="row" *ngFor="let message of messages">-->
-                <!--<div class="col-sm-2">-->
-                    <!--<strong>{{message.sender}}</strong>-->
-                <!--</div>-->
-                <!--<div class="col-sm-8">-->
-                    <!--{{message.content}}-->
-                <!--</div>-->
-                <!--<div class="col-sm-2">-->
-                    <!--<div>-->
-                        <!--{{message.createdAt | date:'short'}}-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<form name="chatForm" (ngSubmit)="sendMessage(message)" #chatForm="ngForm">-->
-            <!--<div class="row chat-input">-->
-                <!--<div class="input-group">-->
-                    <!--<input type="text" class="form-control" name="message" [(ngModel)]="message" autocomplete="off" placeholder="Type a message...">-->
-                    <!--<span class="input-group-btn">-->
-                    <!--<button class="btn btn-secondary btn-success" type="submit">Send</button>-->
-                  <!--</span>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</form>-->
-    <!--</div>-->
-<!--</div>-->
-
 <mat-sidenav-container class="container">
     <mat-sidenav class="user-list" mode="side" opened>
         <mat-card>
@@ -60,7 +26,7 @@
             </mat-tab-group>
         </mat-card>
     </mat-sidenav>
-<!--<div>-->
+
     <section class="empty-conversation" *ngIf="!selectedUser">
         <h1 class="mat-display-1">Select a conversation from the left to start chatting</h1>
     </section>
@@ -79,10 +45,11 @@
             </div>
             <mat-divider></mat-divider>
             <mat-list dense class="conversation-history mat-typography">
-                <mat-list-item *ngFor="let message of messages; index as i" [dir]="message.sender === identity ? 'rtl' : 'ltr'">
-                    <img *ngIf="message.type == 'CHAT'" matListAvatar matTooltip="{{message.sender}}" src="https://randomuser.me/api/portraits/thumb/lego/{{i}}.jpg"
-                    />
-                    <p *ngIf="message.type == 'CHAT'" [dir]="'ltr'">{{message.content}}</p>
+                <mat-list-item *ngFor="let message of messages; index as i" [dir]="message.sender.id === identity.id ? 'rtl' : 'ltr'">
+                    <!--<img *ngIf="message.text != null" matListAvatar matTooltip="{{message.sender}}" src="https://randomuser.me/api/portraits/thumb/lego/{{i}}.jpg"/>-->
+                    <img matListAvatar matTooltip="{{message.sender.firstName}}" src="{{message.sender.imageUrl}}"/>
+                    <!--<p *ngIf="message.text != null" [dir]="'ltr'">{{message.text}}</p>-->
+                    <p [dir]="'ltr'">{{message.text}}</p>
                     <!--<p *ngIf="event.type == 'member:joined'" class="text-center">-->
                         <!--<b>{{selectedUser.members[event.from].user.name}}</b> has joined the conversation</p>-->
                 </mat-list-item>
@@ -97,17 +64,6 @@
                     <mat-icon matSuffix (click)="sendMessage(message)">send</mat-icon>
                 </mat-form-field>
 
-
-                <!--<form name="chatForm" (ngSubmit)="sendMessage(message)" #chatForm="ngForm">-->
-                    <!--<div class="">-->
-                        <!--<mat-form-field class="full-width">-->
-                            <!--<input matInput type="text" name="message" [(ngModel)]="message" autocomplete="off" placeholder="Type a message...">-->
-                        <!--</mat-form-field>-->
-                        <!--<span class="input-group-btn">-->
-                        <!--<button type="submit"><mat-icon>send</mat-icon></button>-->
-                      <!--</span>-->
-                    <!--</div>-->
-                <!--</form>-->
             </div>
         </div>
     </section>
