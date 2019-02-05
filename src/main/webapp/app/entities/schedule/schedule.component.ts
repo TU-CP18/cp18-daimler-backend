@@ -27,6 +27,7 @@ import { EventSettings } from '@syncfusion/ej2-schedule/src/schedule/models/even
 
 // component-specific imports
 import { SafetyDriverService } from './../safety-driver/safety-driver.service';
+import { ShiftService } from '../shift/shift.service';
 import { ScheduleService } from './schedule.service';
 import { ScheduleShift } from 'app/shared/model/schedule-shift.model';
 import { ScheduleDriver } from 'app/shared/model/schedule-driver.model';
@@ -97,6 +98,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
 
     constructor(
         private safetyDriverService: SafetyDriverService,
+        private shiftService: ShiftService,
         private scheduleService: ScheduleService,
         private jhiAlertService: JhiAlertService,
         private principal: Principal,
@@ -117,13 +119,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
             .subscribe((res: HttpResponse<IShift[]>) => this.parseShifts(res.body), (res: HttpErrorResponse) => this.onError(res.message));
     }
 
-    ngOnInit() {
-        this.loadAll();
-        this.principal.identity().then(account => {
-            this.currentAccount = account;
-        });
-        this.registerChangeInShifts();
-    }
+    ngOnInit() {}
 
     ngOnDestroy() {
         this.eventManager.destroy(this.eventSubscriber);
@@ -180,7 +176,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
     // adds loaded shifts to the schedule after a delay of two seconds
     // to prevent them from being added while the schedule is not fully initialized
     refreshSchedule() {
-        this.wait(2000);
+        // this.wait(2000);
         this.scheduleObj.addEvent(this.shifts);
     }
 
@@ -214,6 +210,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
 
     // Syncfusion: specify behaviour for user actions eventCreate and eventChange
     onActionBegin(args: ActionEventArgs): void {
+        console.log('myyyyyyy ' + args.requestType);
         if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
             const data: { [key: string]: Object } = args.data as { [key: string]: Object };
             const groupIndex: number = this.scheduleObj.eventBase.getGroupIndexFromEvent(data);
@@ -221,8 +218,26 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
                 args.cancel = true;
             }
         }
-        if (args.requestType === 'eventDelete') {
-            console.log('myyyy deleted');
+        if (args.requestType === 'eventRemove') {
+            const data: { [key: string]: ScheduleShift } = args.data as { [key: string]: ScheduleShift };
+            const groupIndex: number = this.scheduleObj.eventBase.getGroupIndexFromEvent(data);
+            console.log(data);
+            console.log(data[0].id);
+
+            this.shiftService.delete(data[0].id).subscribe(response => {
+                this.eventManager.broadcast({
+                    name: 'shiftListModification',
+                    content: 'Deleted an shift'
+                });
+            });
+        }
+
+        if (args.requestType === 'toolbarItemRendering') {
+            this.loadAll();
+            this.principal.identity().then(account => {
+                this.currentAccount = account;
+            });
+            this.registerChangeInShifts();
         }
     }
 
