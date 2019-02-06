@@ -169,7 +169,7 @@ public class ShiftService {
                 return true;
             }
         }
-        return false;
+        return true;
     }
 
 
