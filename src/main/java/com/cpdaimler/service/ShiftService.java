@@ -1,9 +1,11 @@
 package com.cpdaimler.service;
 
+import com.cpdaimler.domain.SafetyDriver;
 import com.cpdaimler.domain.Shift;
 import com.cpdaimler.repository.SafetyDriverRepository;
 import com.cpdaimler.repository.ShiftRepository;
 import com.cpdaimler.repository.search.ShiftSearchRepository;
+import com.cpdaimler.service.dto.Position;
 import com.cpdaimler.service.util.UserToSafetyDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +72,6 @@ public class ShiftService {
         shiftSearchRepository.save(result);
         return result;
     }
-
 
 
     /**
@@ -152,6 +153,23 @@ public class ShiftService {
     public Page<Shift> search(String query, Pageable pageable) {
         log.debug("Request to search for a page of Shifts for query {}", query);
         return shiftSearchRepository.search(queryStringQuery(query), pageable);
+    }
+
+    public boolean authorizeShift(Position position) {
+
+        Optional<Shift> optNextShift = findNextShift();
+
+        if (!optNextShift.isPresent()) {
+            return false;
+        } else {
+
+            Shift nextShift = optNextShift.get();
+
+            if ((((nextShift.getLatStart() - position.getLatitude()) >= -0.01) && ((nextShift.getLatStart() - position.getLatitude()) <= 0.01)) && (((nextShift.getLongStart() - position.getLongitude()) <= 0.1) && ((nextShift.getLongStart() - position.getLongitude()) >= -0.1))) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

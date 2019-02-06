@@ -3,6 +3,7 @@ package com.cpdaimler.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.cpdaimler.domain.Shift;
 import com.cpdaimler.service.ShiftService;
+import com.cpdaimler.service.dto.Position;
 import com.cpdaimler.web.rest.errors.BadRequestAlertException;
 import com.cpdaimler.web.rest.util.HeaderUtil;
 import com.cpdaimler.web.rest.util.PaginationUtil;
@@ -207,6 +208,18 @@ public class ShiftResource {
         log.debug("REST request to get all shifts for the active user");
         List<Shift> shift = shiftService.findAllShiftsForUser();
         return new ResponseEntity<List<Shift>>(shift, HttpStatus.OK);
+    }
+
+    @PostMapping("/shifts/{shiftID}/authorize")
+    @Timed
+    public ResponseEntity authorizeUserShift(@RequestBody Position position) {
+
+        if(shiftService.authorizeShift(position) == true) {
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
     }
 
 

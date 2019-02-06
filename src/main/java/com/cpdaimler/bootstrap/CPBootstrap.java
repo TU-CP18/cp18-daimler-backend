@@ -45,9 +45,6 @@ public class CPBootstrap implements CommandLineRunner {
 
         initShift();
 
-        System.out.println("Not working: "+safetyDriverRepository.findNumberOfInactiveSafetyDrivers(System.currentTimeMillis()));
-        System.out.println("Working: "+safetyDriverRepository.findNumberOfWorkingSafetyDrivers(System.currentTimeMillis()));
-
     }
 
     private void initShift() {
@@ -152,10 +149,19 @@ public class CPBootstrap implements CommandLineRunner {
     }
 
     private void initSafetyDriver() {
+
+        User u = userRepository.findOneByLogin("admin").get();
+        SafetyDriver safetyDriver = new SafetyDriver();
+
+        safetyDriver.setLogin("admin");
+        safetyDriver.setUser(u);
+        safetyDriver.getLicences().add(carLicence);
+        safetyDriverRepository.save(safetyDriver);
+
         
         for(int i = 1; i < 8; i++) {
-            User u = userRepository.findOneByLogin("driver" + i).get();
-            SafetyDriver safetyDriver = new SafetyDriver();
+            u = userRepository.findOneByLogin("driver" + i).get();
+            safetyDriver = new SafetyDriver();
             safetyDriver.setLogin("driver" + i);
             safetyDriver.setUser(u);
             safetyDriver.getLicences().add(carLicence);
