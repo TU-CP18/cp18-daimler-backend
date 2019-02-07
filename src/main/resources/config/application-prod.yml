@@ -49,7 +49,7 @@ spring:
             hibernate.generate_statistics: false
     data:
         jest:
-            uri: http://localhost:9200
+            uri: http://52.57.232.226:9200
     liquibase:
         contexts: prod
     mail:
