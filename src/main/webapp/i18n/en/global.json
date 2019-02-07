@@ -15,6 +15,7 @@
                 "chat": "Chat",
                 "schedule": "Schedule",
                 "chatMessage": "Chat Message",
+                "carCleanliness": "Car Cleanliness",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
