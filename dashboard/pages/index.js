@@ -14,7 +14,7 @@ export default class Index extends React.Component {
     cars: [],
     logs: [],
     emergencyEvents: [],
-    selectedCar: '1',
+    selectedCar: null,
     selectedLogItem: null,
   };
 
