@@ -1,0 +1,44 @@
+{
+    "name": "CarCleanliness",
+    "fields": [
+        {
+            "fieldName": "rating",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "event",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "part",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "createdAt",
+            "fieldType": "ZonedDateTime"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "car",
+            "otherEntityName": "car",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "shift",
+            "otherEntityName": "shift",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20190207215951",
+    "entityTableName": "car_cleanliness",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

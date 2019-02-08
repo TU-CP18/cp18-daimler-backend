@@ -1,70 +1,87 @@
+// JDL definition for application 'cpdaimler' generated with command 'jhipster export-jdl'
+
 entity Car {
-	model String,
-    status CARSTATUS
+  model String,
+  status CARSTATUS
 }
-
 entity SafetyDriver {
-	login String required
+  login String required
 }
-
 entity Shift {
-	start Long required,
-    end Long required,
-    longStart Double,
-    latStart Double
-
+  start Long required,
+  end Long required,
+  longStart Double,
+  latStart Double
+}
+entity CarLicence {
+  carLicence LICENCE
+}
+entity CarIssue {
+  description String,
+  part String,
+  posX Double,
+  posY Double,
+  status CARISSUESTATUS
 }
 
-entity CarIssue {
-    description String,
-    part String,
-    posX Double,
-    posY Double,
-    status CARISSUESTATUS
-
+entity CarCleanliness {
+ rating Double,
+ event String,
+ part String,
+ createdAt ZonedDateTime
 }
 
 entity ChatMessage {
-    text String,
-    createdAt ZonedDateTime
-
-}
-
-entity CarLicence {
-	carLicence LICENCE
-}
-
-enum LICENCE {
-	A, B, B96, BE, C1, C1E, C, CE, D1, D1E, D, DE
+  text String,
+  createdAt ZonedDateTime
 }
 
 enum CARSTATUS {
-	DRIVING_EMPTY, DRIVING_FULL, MAINTENANCE, AVAILABLE, INACTIVE
+  DRIVING_EMPTY,
+  DRIVING_FULL,
+  MAINTENANCE,
+  AVAILABLE,
+  INACTIVE
+}
+
+enum LICENCE {
+  A,
+  B,
+  B96,
+  BE,
+  C1,
+  C1E,
+  C,
+  CE,
+  D1,
+  D1E,
+  D,
+  DE
 }
 
 enum CARISSUESTATUS {
-	OPEN, CLOSED
+  OPEN,
+  CLOSED
 }
 
 relationship OneToOne {
-	SafetyDriver{user} to User
+  SafetyDriver{user} to User
 }
-
-relationship ManyToOne {
-	Shift{car} to Car
-	Shift{safetyDriver} to SafetyDriver
-    Car{licence} to CarLicence
-    ChatMessage{sender} to User
-    ChatMessage{recipient} to User
-}
-
 relationship OneToMany {
-    Car{issues} to CarIssue
-
+  Car{issues} to CarIssue{car},
 }
-
+relationship ManyToOne {
+  Car{licence} to CarLicence,
+  Shift{car} to Car,
+  Shift{safetyDriver} to SafetyDriver,
+  ChatMessage{sender} to User,
+  ChatMessage{recipient} to User,
+  CarCleanliness{car} to Car,
+  CarCleanliness {shift} to Shift
+}
 relationship ManyToMany {
-	SafetyDriver {licences} to CarLicence
+        SafetyDriver {licences} to CarLicence
 }
+
 service all with serviceClass
 paginate * with pagination

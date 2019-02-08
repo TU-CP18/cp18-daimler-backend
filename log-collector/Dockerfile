@@ -1,12 +1,17 @@
-FROM node:10.15.0-alpine as builder
+FROM node:10.15.0-alpine
 
+RUN mkdir -p /usr/src/app
+
+WORKDIR /usr/src/app
 COPY . .
 
-RUN yarn install --production=true
+RUN yarn install
+
+RUN apk add bind-tools
 
 ENV NODE_ENV production
 ENV LOG_LEVEL=debug
-ENV LOG_COLLECTOR_PORT=8000
+ENV LOG_COLLECTOR_PORT=80
 ENV LOGSTASH_HOST=localhost
 ENV LOGSTASH_PORT=5000
 ENV ELASTICSEARCH_HOST=localhost
@@ -17,4 +22,4 @@ ENV JWT_ALGORITHM=HS512
 
 EXPOSE 80
 
-CMD [ "npm", "start" ]
+CMD yarn start

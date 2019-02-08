@@ -1,0 +1,28 @@
+
+{
+    "cpdaimlerApp": {
+        "carCleanliness" : {
+            "home": {
+                "title": "Car Cleanlinesses",
+                "createLabel": "Car Cleanliness erstellen",
+                "createOrEditLabel": "Car Cleanliness erstellen oder bearbeiten",
+                "search": "Suche nach Car Cleanliness"
+            },
+            "created": "Car Cleanliness erstellt mit ID {{ param }}",
+            "updated": "Car Cleanliness aktualisiert mit ID {{ param }}",
+            "deleted": "Car Cleanliness gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Car Cleanliness {{ id }} wirklich dauerhaft gelöscht werden?"
+            },
+            "detail": {
+                "title": "Car Cleanliness"
+            },
+            "rating": "Rating",
+            "event": "Event",
+            "part": "Part",
+            "createdAt": "Created At",
+            "car": "Car",
+            "shift": "Shift"
+        }
+    }
+}

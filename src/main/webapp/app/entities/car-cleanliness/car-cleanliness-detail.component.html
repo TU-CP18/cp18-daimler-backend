@@ -1,0 +1,51 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="carCleanliness">
+            <h2><span jhiTranslate="cpdaimlerApp.carCleanliness.detail.title">Car Cleanliness</span> {{carCleanliness.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="cpdaimlerApp.carCleanliness.rating">Rating</span></dt>
+                <dd>
+                    <span>{{carCleanliness.rating}}</span>
+                </dd>
+                <dt><span jhiTranslate="cpdaimlerApp.carCleanliness.event">Event</span></dt>
+                <dd>
+                    <span>{{carCleanliness.event}}</span>
+                </dd>
+                <dt><span jhiTranslate="cpdaimlerApp.carCleanliness.part">Part</span></dt>
+                <dd>
+                    <span>{{carCleanliness.part}}</span>
+                </dd>
+                <dt><span jhiTranslate="cpdaimlerApp.carCleanliness.createdAt">Created At</span></dt>
+                <dd>
+                    <span>{{carCleanliness.createdAt}}</span>
+                </dd>
+                <dt><span jhiTranslate="cpdaimlerApp.carCleanliness.car">Car</span></dt>
+                <dd>
+                    <div *ngIf="carCleanliness.car">
+                        <a [routerLink]="['/car', carCleanliness.car?.id, 'view']">{{carCleanliness.car?.id}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="cpdaimlerApp.carCleanliness.shift">Shift</span></dt>
+                <dd>
+                    <div *ngIf="carCleanliness.shift">
+                        <a [routerLink]="['/shift', carCleanliness.shift?.id, 'view']">{{carCleanliness.shift?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/car-cleanliness', carCleanliness.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
