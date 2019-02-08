@@ -5,10 +5,10 @@ WORKDIR /usr/src/app
 COPY . .
 
 RUN yarn install
-RUN yarn build
+RUN yarn next build
 
 RUN rm -rf node_modules
-RUN yarn install --production=true
+RUN yarn install
 
 FROM node:10.13.0-alpine
 
@@ -24,4 +24,4 @@ ENV LOGGER_TRANSPORT console
 ENV DEBUG no-debug
 ENV PORT 80
 
-CMD yarn start
+CMD yarn start -p ${PORT}

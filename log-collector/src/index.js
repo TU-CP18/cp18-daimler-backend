@@ -1,4 +1,5 @@
 require('dotenv').config();
+const R = require('ramda');
 const logger = require('pino')({ level: process.env.LOG_LEVEL || 'info' });
 const express = require('express');
 const cors = require('cors');
@@ -38,29 +39,58 @@ app.post('/api/log', (req, res) => {
     return res.status(200).end();
 });
 
-app.get('/api/vehicle-log/:license', authorize(JWT_SECRET, JWT_ALGORITHM), async (req, res, next) => {
-    if (!req.params.license || !req.params.license.trim()) {
-        return res.status(400).end('Vehicle license not specified');
+function formatEsDocument(doc) {
+    const FIELDS_TO_OMIT = ['@version', 'time', '@timestamp', 'v', 'port', 'pid', 'hostname', 'host', 'level'];
+    FIELDS_TO_OMIT.forEach(f => delete doc[f]);
+    return doc;
+}
+
+app.get('/api/cars', async (req, res, next) => {
+    let data = {
+        "size": 0,
+        "query": { "match": { "type": "NAV_POSITION" } },
+        "aggs": {
+            "bucket": { "terms": { "field": "license.keyword" },
+            "aggs": {
+                "lastPosition": {
+                    "top_hits": {
+                        "size": 1,
+                        "sort": [{ "timestamp": { "order": "desc" } }]
+                    }
+                }
+            }
+            }
+        }
     }
 
-    const formatLog = ({ _source }) => ({
-        source: 'VEHICLE',
-        type: 'NAV_POSITION',
-        description: _source.description || '',
-        timestamp: _source.timestamp,
-        location: [ _source.lat, _source.long ],
-        license: _source.license,
-    });
+    try {
+        const response = await esAxiosClient.get('/_search', { data });
+        const innerBuckets = response.data.aggregations.bucket.buckets.map(b => b.lastPosition.hits.hits);
+        const locationLogs = R.flatten(innerBuckets).map(d => ({ id: d._id, ...formatEsDocument(d._source) }));
+        res.status(200).json(locationLogs);
+    } catch (e) {
+        next(e);
+    }
+});
+
+app.get('/api/logs', /* authorize(JWT_SECRET, JWT_ALGORITHM), */ async (req, res, next) => {
+    let query = {}
+
+    if (req.query.type) {
+        query = { match: { type: req.query.type } };
+    }
+
+    if (req.query.vehicleId) {
+        query = query.match ? { match: { ...query.match, vehicleId: req.query.vehicleId } } : { match: { vehicleId: req.query.vehicleId } };
+    }
+
+    const formatLog = ({ _id, _source }) => ({ id: _id, ..._source });
+
+    let data = { size: 250, sort: { timestamp: { order: 'desc' }} };
+    data = Object.keys(query).length > 0 ? { ...data, query } : data;
 
     try {
-        const response = await esAxiosClient.get('/_search', {
-            data: {
-                size: 250,
-                sort: { timestamp: { order: 'desc' }},
-                query: { match: { license: req.params.license }}
-            },
-        });
-
+        const response = await esAxiosClient.get('/_search', { data });
         res.status(200).json(response.data.hits.hits.map(h => formatLog(h)));
     } catch (e) {
         next(e);
@@ -73,23 +103,21 @@ app.listen(PORT, () => {
     logger.debug({ message: 'Log collector started', port: PORT });
 });
 
-// Send mappings to elasticsearch
-esAxiosClient.put('/_mapping/doc', {
-    properties: {
-        hostname: { type: 'text' },
-        timestamp: { type: 'date' },
-        source: { type: 'keyword' },
-        type: { type: 'keyword' },
-        location: { type: 'geo_point' },
-        description: { type: 'text' },
-        destination: { type: 'geo_point' },
-        license: { type: 'keyword' },
-        driverId: { type: 'keyword' },
-        shiftId: { type: 'keyword' },
-    },
-}).then(() => {
-    logger.debug({ message: 'Added mappings to elasticsearch'});
-}).catch((e) => {
-    logger.fatal({ message: 'Failed to put mappings onto elasticsearch', error: e.response || e });
-    process.exit(-1);
-})
+const putMappingInterval = setInterval(() => {
+    esAxiosClient.put('/_mapping/doc', {
+        properties: {
+            hostname: { type: 'text' },
+            timestamp: { type: 'date' },
+            source: { type: 'keyword' },
+            type: { type: 'keyword' },
+            location: { type: 'geo_point' },
+            description: { type: 'text' },
+            destination: { type: 'geo_point' },
+            license: { type: 'keyword' },
+            driverId: { type: 'keyword' },
+            shiftId: { type: 'keyword' },
+        },
+    }).then(() => {
+        clearInterval(putMappingInterval);
+    }).catch((e) => { });
+}, 5000);
