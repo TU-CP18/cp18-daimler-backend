@@ -63,26 +63,25 @@ app.get('/api/logs', async (_, res, next) => {
 });
 
 app.get('/api/cars', async (req, res, next) => {
-    try {
-        const response = await esAxiosClient.get('/_search', {
-            data: {
-                "size": 0,
-                "query": { "match": { "type": "NAV_POSITION" } },
-                "aggs": {
-                    "bucket": { "terms": { "field": "license.keyword" },
-                    "aggs": {
-                        "lastPosition": {
-                            "top_hits": {
-                                "size": 1,
-                                "sort": [{ "timestamp": { "order": "desc" } }]
-                            }
-                        }
-                    }
+    let data = {
+        "size": 0,
+        "query": { "match": { "type": "NAV_POSITION" } },
+        "aggs": {
+            "bucket": { "terms": { "field": "license.keyword" },
+            "aggs": {
+                "lastPosition": {
+                    "top_hits": {
+                        "size": 1,
+                        "sort": [{ "timestamp": { "order": "desc" } }]
                     }
                 }
             }
-        });
+            }
+        }
+    }
 
+    try {
+        const response = await esAxiosClient.get('/_search', { data });
         const innerBuckets = response.data.aggregations.bucket.buckets.map(b => b.lastPosition.hits.hits);
         const locationLogs = R.flatten(innerBuckets).map(d => ({ id: d._id, ...formatEsDocument(d._source) }));
         res.status(200).json(locationLogs);
@@ -91,29 +90,24 @@ app.get('/api/cars', async (req, res, next) => {
     }
 });
 
-app.get('/api/vehicle-log/:license', /* authorize(JWT_SECRET, JWT_ALGORITHM), */ async (req, res, next) => {
-    if (!req.params.license || !req.params.license.trim()) {
-        return res.status(400).end('Vehicle license not specified');
+app.get('/api/logs', /* authorize(JWT_SECRET, JWT_ALGORITHM), */ async (req, res, next) => {
+    let query = {}
+
+    if (req.query.type) {
+        query = { match: { type: req.query.type } };
     }
 
-    const formatLog = ({ _source }) => ({
-        source: 'VEHICLE',
-        type: 'NAV_POSITION',
-        description: _source.description || '',
-        timestamp: _source.timestamp,
-        location: [ _source.lat, _source.long ],
-        license: _source.license,
-    });
+    if (req.query.vehicleId) {
+        query = query.match ? { match: { ...query.match, vehicleId: req.query.vehicleId } } : { match: { vehicleId: req.query.vehicleId } };
+    }
+
+    const formatLog = ({ _source }) => ({ ..._source });
+
+    let data = { size: 250, sort: { timestamp: { order: 'desc' }} };
+    data = Object.keys(query).length > 0 ? { ...data, query } : data;
 
     try {
-        const response = await esAxiosClient.get('/_search', {
-            data: {
-                size: 250,
-                sort: { timestamp: { order: 'desc' }},
-                query: { match: { license: req.params.license }}
-            },
-        });
-
+        const response = await esAxiosClient.get('/_search', { data });
         res.status(200).json(response.data.hits.hits.map(h => formatLog(h)));
     } catch (e) {
         next(e);
