@@ -17,9 +17,9 @@ export default class MapView extends React.Component {
     mapSettings: { center: [52.5126276, 13.3218814], zoom: 15 },
   }
 
-  isCarInEmergency = (license) => {
+  isCarInEmergency = (id) => {
     return R.findIndex(
-      c => c.license === license,
+      c => c.vehicleId === id,
       this.props.emergencyEvents
     ) >= 0;
   }
@@ -33,9 +33,8 @@ export default class MapView extends React.Component {
     this.setState({ mapSettings: { center, zoom }});
   }
 
-  handleCarMarkerClick = (license) => () => {
-    console.log('--> on click');
-    this.props.onCarSelect(license);
+  handleCarMarkerClick = (id) => () => {
+    this.props.onCarSelect(id);
   }
 
   render() {
@@ -56,17 +55,15 @@ export default class MapView extends React.Component {
               >
                 {this.props.cars.map(c => (
                   <Overlay
-                    key={c.carLicense || c.license || c.carId} anchor={c.location} offset={[0, 0]}
+                    key={c.vehicleId} anchor={c.location} offset={[0, 0]}
                   >
                     <svg
                       className={styles.carMarker}
                       width={25} height={25}
-                      onClick={this.handleCarMarkerClick(c.carLicense)}
+                      onClick={this.handleCarMarkerClick(c.vehicleId)}
                     >
-                      <rect x={0} y={0} width={25} height={25} fill={this.isCarInEmergency(c.license) ? '#f00' : '#000'} />
-                      <text x={7.5} y={17.5} fill="#fefefe">
-                        { c.carLicense || c.license || c.carId }
-                      </text>
+                      <rect x={0} y={0} width={25} height={25} fill={this.isCarInEmergency(c.vehicleId) ? '#f00' : '#000'} />
+                      <text x={7.5} y={17.5} fill="#fefefe">{c.vehicleId}</text>
                     </svg>
                   </Overlay>
                 ))}

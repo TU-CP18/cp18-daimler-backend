@@ -45,23 +45,6 @@ function formatEsDocument(doc) {
     return doc;
 }
 
-app.get('/api/logs', async (_, res, next) => {
-    try {
-        const response = await esAxiosClient.get('/_search', {
-            data: {
-                "size": 250,
-                "query": { "match": { "source": "VEHICLE" } },
-                "sort": [ { "timestamp": { "order": "desc" } } ]
-            }
-        });
-
-        const logs = response.data.hits.hits.map(d => ({ id: d._id, ...formatEsDocument(d._source) }));
-        res.status(200).json(logs);
-    } catch (e) {
-        next(e);
-    }
-});
-
 app.get('/api/cars', async (req, res, next) => {
     let data = {
         "size": 0,
@@ -101,7 +84,7 @@ app.get('/api/logs', /* authorize(JWT_SECRET, JWT_ALGORITHM), */ async (req, res
         query = query.match ? { match: { ...query.match, vehicleId: req.query.vehicleId } } : { match: { vehicleId: req.query.vehicleId } };
     }
 
-    const formatLog = ({ _source }) => ({ ..._source });
+    const formatLog = ({ _id, _source }) => ({ id: _id, ..._source });
 
     let data = { size: 250, sort: { timestamp: { order: 'desc' }} };
     data = Object.keys(query).length > 0 ? { ...data, query } : data;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, message } from 'antd';
+import { Layout, message, Modal, Icon } from 'antd';
 import axios from 'axios';
 
 import styles from './index.module.scss';
@@ -14,12 +14,13 @@ export default class Index extends React.Component {
     cars: [],
     logs: [],
     emergencyEvents: [],
-    selectedCar: null,
+    selectedCar: '1',
+    selectedLogItem: null,
   };
 
   refreshLogs = async () => {
     try {
-      const response = await this.http.get('/logs');
+      const response = await this.http.get('/logs' + (this.state.selectedCar ? `?vehicleId=${this.state.selectedCar}` : ''));
       this.setState({ logs: response.data });
     } catch (e) { }
   }
@@ -40,8 +41,20 @@ export default class Index extends React.Component {
     } catch (e) { }
   }
 
-  handleCarSelect = (license) => {
-    this.setState({ selectedCar: license });
+  handleCarSelect = (id) => {
+    this.setState({ selectedCar: id });
+  }
+
+  handleCarUnselect = () => {
+    this.setState({ selectedCar: null });
+  }
+
+  handleLogItemSelect = (id) => {
+    this.setState({ selectedLogItem: id });
+  }
+
+  handleLogModalClose = () => {
+    this.setState({ selectedLogItem: null });
   }
 
   componentDidMount() {
@@ -61,6 +74,8 @@ export default class Index extends React.Component {
   }
 
   render() {
+    const selectedLogItem = this.state.logs.filter(({ id }) => id === this.state.selectedLogItem)[0];
+
     return (
       <Layout className={styles.layout}>
         <Content className={styles.content}>
@@ -74,11 +89,27 @@ export default class Index extends React.Component {
           </div>
           <div className={styles.sidebarContainer}>
             <LogView
-              title={this.state.selectedCar ? `Car ${this.state.selectedCar} Events` : 'Recent Events'}
+              title={
+                <span>
+                  {this.state.selectedCar ? `Car ${this.state.selectedCar} Events   ` : 'Recent Events'}
+                  {this.state.selectedCar && <Icon type="close-circle" onClick={this.handleCarUnselect} />}
+                </span>
+              }
               logs={this.state.logs}
               selectedCar={this.state.selectedCar}
+              onLogItemSelect={this.handleLogItemSelect}
             />
           </div>
+          <Modal
+            visible={!!this.state.selectedLogItem}
+            onOk={this.handleLogModalClose}
+            onCancel={this.handleLogModalClose}
+            title={`Log item: ${this.state.selectedLogItem}`}
+            okButtonProps={{ style: { display: 'none' } }}
+            cancelButtonProps={{ style: { display: 'none' } }}
+          >
+            <pre>{JSON.stringify(selectedLogItem, null, 2)}</pre>
+          </Modal>
         </Content>
       </Layout>
     );

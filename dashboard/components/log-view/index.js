@@ -5,16 +5,17 @@ import styles from './log-view.module.scss';
 
 export default class LogView extends React.Component {
 
+  handleLogItemSelect = (id) => () => {
+    this.props.onLogItemSelect(id);
+  }
+
   renderMessage = (l) => {
-    switch(l.type) {
-      case 'NAV_START':
-      case 'NAV_POSITION': return <span><span>{l.type}</span>&nbsp; Car: <strong>{l.license || l.carId}</strong>&nbsp;</span>
-    }
+    return <span><span>{l.type}</span>&nbsp; Car: <strong>{l.vehicleId}</strong>&nbsp;</span>
   }
 
   renderLog = (l) => {
     return (
-      <div key={l.id} className={styles.log}>
+      <div key={l.id} className={styles.log} onClick={this.handleLogItemSelect(l.id)}>
         <div className={styles.time}>{moment(l.timestamp).format('hh:mm A')}</div>
         <div className={styles.message}>{this.renderMessage(l)}</div>
       </div>
