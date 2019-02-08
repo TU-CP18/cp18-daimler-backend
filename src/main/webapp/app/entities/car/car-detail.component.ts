@@ -35,4 +35,7 @@ export class CarDetailComponent implements OnInit {
     previousState() {
         window.history.back();
     }
+    trackId(index: number, item: ICarIssue) {
+        return item.id;
+    }
 }

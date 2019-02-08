@@ -20,22 +20,23 @@
                     </div>
                 </dd>
             </dl>
-
-            <div *ngIf="carIssues">
-                    <table *ngFor="let carIssue of carIssues ;trackBy: trackId">
-                    <h2><span>Current Issues</span></h2> 
+            <h2>Open Issues</h2>
+            <div class="table-responsive" *ngIf="carIssues">
+                <table class="table table-striped">
+                    <thead>
                     <tr>
-                    <th>Description</th>
-                    <th>Part</th>
-
+                                <th>Description</th>
+                                <th>Part</th>
                     </tr>
-                    <tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let carIssue of carIssues ;trackBy: trackId">
                     <td>{{carIssue.description}}</td>
                     <td>{{carIssue.part}}</td>
-
                     </tr>    
-                    </table>                     
+                </table> 
             </div>
+
             <button type="submit"
                     (click)="previousState()"
                     class="btn btn-info">
