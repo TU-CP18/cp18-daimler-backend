@@ -21,6 +21,21 @@
                 </dd>
             </dl>
 
+            <div *ngIf="carIssues">
+                    <table *ngFor="let carIssue of carIssues ;trackBy: trackId">
+                    <h2><span>Current Issues</span></h2> 
+                    <tr>
+                    <th>Description</th>
+                    <th>Part</th>
+
+                    </tr>
+                    <tr>
+                    <td>{{carIssue.description}}</td>
+                    <td>{{carIssue.part}}</td>
+
+                    </tr>    
+                    </table>                     
+            </div>
             <button type="submit"
                     (click)="previousState()"
                     class="btn btn-info">
@@ -33,5 +48,8 @@
                 <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
             </button>
         </div>
+
+
+
     </div>
 </div>

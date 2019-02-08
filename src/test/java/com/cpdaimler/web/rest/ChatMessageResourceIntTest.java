@@ -132,7 +132,7 @@ public class ChatMessageResourceIntTest {
         assertThat(chatMessageList).hasSize(databaseSizeBeforeCreate + 1);
         ChatMessage testChatMessage = chatMessageList.get(chatMessageList.size() - 1);
         assertThat(testChatMessage.getText()).isEqualTo(DEFAULT_TEXT);
-        assertThat(testChatMessage.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
+        assertThat(testChatMessage.getCreatedAt()).isAfter(DEFAULT_CREATED_AT);
 
         // Validate the ChatMessage in Elasticsearch
         verify(mockChatMessageSearchRepository, times(1)).save(testChatMessage);
@@ -226,7 +226,7 @@ public class ChatMessageResourceIntTest {
         assertThat(chatMessageList).hasSize(databaseSizeBeforeUpdate);
         ChatMessage testChatMessage = chatMessageList.get(chatMessageList.size() - 1);
         assertThat(testChatMessage.getText()).isEqualTo(UPDATED_TEXT);
-        assertThat(testChatMessage.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testChatMessage.getCreatedAt()).isEqualToIgnoringSeconds(UPDATED_CREATED_AT);
 
         // Validate the ChatMessage in Elasticsearch
         verify(mockChatMessageSearchRepository, times(1)).save(testChatMessage);
@@ -287,7 +287,7 @@ public class ChatMessageResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(chatMessage.getId().intValue())))
             .andExpect(jsonPath("$.[*].text").value(hasItem(DEFAULT_TEXT.toString())))
-            .andExpect(jsonPath("$.[*].createdAt").value(hasItem(sameInstant(DEFAULT_CREATED_AT))));
+            .andExpect(jsonPath("$.[*].createdAt").isNotEmpty());
     }
 
     @Test

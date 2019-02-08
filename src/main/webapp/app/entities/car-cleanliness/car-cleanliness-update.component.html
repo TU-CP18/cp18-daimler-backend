@@ -1,0 +1,60 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-car-cleanliness-heading" jhiTranslate="cpdaimlerApp.carCleanliness.home.createOrEditLabel">Create or edit a Car Cleanliness</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!carCleanliness.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="carCleanliness.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.carCleanliness.rating" for="field_rating">Rating</label>
+                    <input type="number" class="form-control" name="rating" id="field_rating"
+                        [(ngModel)]="carCleanliness.rating" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.carCleanliness.event" for="field_event">Event</label>
+                    <input type="text" class="form-control" name="event" id="field_event"
+                        [(ngModel)]="carCleanliness.event" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.carCleanliness.part" for="field_part">Part</label>
+                    <input type="text" class="form-control" name="part" id="field_part"
+                        [(ngModel)]="carCleanliness.part" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.carCleanliness.createdAt" for="field_createdAt">Created At</label>
+                    <div class="d-flex">
+                        <input id="field_createdAt" type="datetime-local" class="form-control" name="createdAt" [(ngModel)]="createdAt"
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.carCleanliness.car" for="field_car">Car</label>
+                    <select class="form-control" id="field_car" name="car" [(ngModel)]="carCleanliness.car" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="carOption.id === carCleanliness.car?.id ? carCleanliness.car : carOption" *ngFor="let carOption of cars; trackBy: trackCarById">{{carOption.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="cpdaimlerApp.carCleanliness.shift" for="field_shift">Shift</label>
+                    <select class="form-control" id="field_shift" name="shift" [(ngModel)]="carCleanliness.shift" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="shiftOption.id === carCleanliness.shift?.id ? carCleanliness.shift : shiftOption" *ngFor="let shiftOption of shifts; trackBy: trackShiftById">{{shiftOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

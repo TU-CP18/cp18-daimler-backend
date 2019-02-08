@@ -103,37 +103,35 @@ export class ChatService {
 
     sendMessage(message: string) {
         if (this.stompClient !== null && this.stompClient.connected) {
-            // create message
-            const messageObject = {
+            // send message via websocket
+            const giftedMessage = {
                 _id: Date.now(),
                 user: {
                     _id: this.backendUser.id,
-                    avatar: 'https://placeimg.com/140/140/any'
+                    avatar: this.backendUser.imageUrl
                 },
-                sender: 'backenduser',
-                content: message,
+                sender: this.backendUser.firstName + ' ' + this.backendUser.lastName,
                 text: message,
                 createdAt: new Date(),
                 type: 'CHAT'
             };
-            // send message via websocket
-            this.stompClient.send(this.topic, JSON.stringify(messageObject), {});
+            this.stompClient.send(this.topic, JSON.stringify(giftedMessage), {});
             // save to database
-            this.chatMessageService
-                .create(<IChatMessage>{
-                    recipient: this.appUser,
-                    sender: this.backendUser,
-                    text: message,
-                    createdAt: moment()
-                })
-                .subscribe(
-                    () => {
-                        /* console.log('send message success'); */
-                    },
-                    () => {
-                        console.log('Error on saving sent message to database.');
-                    }
-                );
+            const messageObject = <IChatMessage>{
+                recipient: this.appUser,
+                sender: this.backendUser,
+                text: message,
+                createdAt: moment()
+            };
+            this.listenerObserver.next(messageObject); // add message to chat window
+            this.chatMessageService.create(messageObject).subscribe(
+                () => {
+                    /* console.log('send message success'); */
+                },
+                () => {
+                    console.log('Error on saving sent message to database.');
+                }
+            );
         } else {
             console.log('STOMP ERROR');
         }
@@ -141,24 +139,16 @@ export class ChatService {
 
     onReceivedMessage = data => {
         const dataObject = JSON.parse(data.body);
-        this.listenerObserver.next(dataObject);
+        // this.listenerObserver.next(dataObject);
         if (dataObject.user._id !== this.backendUser.id) {
-            // save to database
-            this.chatMessageService
-                .create(<IChatMessage>{
-                    recipient: this.backendUser,
-                    sender: this.appUser,
-                    text: dataObject.content,
-                    createdAt: moment()
-                })
-                .subscribe(
-                    () => {
-                        /* console.log('send message success'); */
-                    },
-                    () => {
-                        console.log('Error on saving received message to database.');
-                    }
-                );
+            // add message to chat window
+            const messageObject = <IChatMessage>{
+                recipient: this.backendUser,
+                sender: this.appUser,
+                text: dataObject.text,
+                createdAt: moment()
+            };
+            this.listenerObserver.next(messageObject);
         }
     };
 

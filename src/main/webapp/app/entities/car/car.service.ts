@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { ICar } from 'app/shared/model/car.model';
+import { ICarIssue } from 'app/shared/model/car-issue.model';
 
 type EntityResponseType = HttpResponse<ICar>;
 type EntityArrayResponseType = HttpResponse<ICar[]>;
@@ -49,5 +50,8 @@ export class CarService {
 
     getCarStatistics(): Observable<HttpResponse<any>> {
         return this.http.get<Number>(`${this.resourceUrl}/statistics`, { observe: 'response' });
+    }
+    getIssueForCar(id: Number): Observable<HttpResponse<any>> {
+        return this.http.get<ICarIssue[]>(`${this.resourceUrl}/` + `${id}` + '/issues', { observe: 'response' });
     }
 }

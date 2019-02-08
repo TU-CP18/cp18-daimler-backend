@@ -21,37 +21,37 @@
                     </span>
                 </a>
             </li>
+            <li *jhiHasAnyAuthority="'ROLE_FLEETMANAGER'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <a class="nav-link" routerLink="schedule"  >
+                    <fa-icon [icon]="'calendar-alt'" [fixedWidth]="true"></fa-icon>
+                    <span jhiTranslate="global.menu.entities.schedule">Schedule</span>
+                </a>
+            </li>
             <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
            <!-- <li *jhiHasAnyAuthority="'ROLE_FLEETMANAGER'" ngbDropdown class="nav-item dropdown pointer" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
             -->
             <li *jhiHasAnyAuthority="'ROLE_FLEETMANAGER'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 <a class="nav-link" routerLink="car">
                     <fa-icon [icon]="'car'"></fa-icon>
-                    <span jhiTranslate="global.menu.entities.car">Car</span>
+                    <span jhiTranslate="global.menu.entities.car">Cars</span>
                 </a>
             </li>
             <li *jhiHasAnyAuthority="'ROLE_FLEETMANAGER'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 <a class="nav-link" routerLink="safety-driver">
                     <fa-icon [icon]="'male'"></fa-icon>
-                    <span jhiTranslate="global.menu.entities.safetyDriver">Safety Driver</span>
+                    <span jhiTranslate="global.menu.entities.safetyDriver">Safety Drivers</span>
                 </a>
             </li>
-            <li *jhiHasAnyAuthority="'ROLE_FLEETMANAGER'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <!--<li *jhiHasAnyAuthority="'ROLE_FLEETMANAGER'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 <a class="nav-link" routerLink="shift" >
                     <fa-icon [icon]="'list'" [fixedWidth]="true"></fa-icon>
                     <span jhiTranslate="global.menu.entities.shift">Shift</span>
                 </a>
-            </li>
+            </li>-->
             <li *jhiHasAnyAuthority="'ROLE_FLEETMANAGER'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 <a class="nav-link" routerLink="car-licence"  >
                     <fa-icon [icon]="'id-card'" [fixedWidth]="true"></fa-icon>
-                    <span jhiTranslate="global.menu.entities.carLicence">Car Licence</span>
-                </a>
-            </li>
-            <li *jhiHasAnyAuthority="'ROLE_FLEETMANAGER'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-                <a class="nav-link" routerLink="schedule"  >
-                    <fa-icon [icon]="'calendar-alt'" [fixedWidth]="true"></fa-icon>
-                    <span jhiTranslate="global.menu.entities.schedule">Schedule</span>
+                    <span jhiTranslate="global.menu.entities.carLicence">Car Licences</span>
                 </a>
             </li>
             <li *jhiHasAnyAuthority="'ROLE_FLEETMANAGER'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
@@ -59,6 +59,7 @@
                     <fa-icon [icon]="'comments'" [fixedWidth]="true"></fa-icon>
                     <span jhiTranslate="global.menu.entities.chat">Chat</span>
             </li>
+
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
           <!--  </li> -->
             <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
