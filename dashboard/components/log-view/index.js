@@ -5,6 +5,8 @@ import styles from './log-view.module.scss';
 
 export default class LogView extends React.Component {
 
+  isEmergencyType = (type) => [ 'ESTOP', 'AP_OVERRIDE', 'RIDE_AWARENESS_IGNORED' ].includes(type)
+
   handleLogItemSelect = (id) => () => {
     this.props.onLogItemSelect(id);
   }
@@ -15,7 +17,7 @@ export default class LogView extends React.Component {
 
   renderLog = (l) => {
     return (
-      <div key={l.id} className={styles.log} onClick={this.handleLogItemSelect(l.id)}>
+      <div key={l.id} className={[styles.log, this.isEmergencyType(l.type) ? styles.emergency : ''].join(' ')} onClick={this.handleLogItemSelect(l.id)}>
         <div className={styles.time}>{moment(l.timestamp).format('hh:mm A')}</div>
         <div className={styles.message}>{this.renderMessage(l)}</div>
       </div>

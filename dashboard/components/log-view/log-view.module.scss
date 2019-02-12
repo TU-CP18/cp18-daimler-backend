@@ -25,6 +25,10 @@
       padding: 1.5em 1em;
       border-bottom: 1px solid #e5e5e5;
 
+      &.emergency {
+        background: rgba(255, 0, 0, 0.35);
+      }
+
       .time {
         position: absolute;
         top: 0;

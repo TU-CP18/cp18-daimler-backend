@@ -16,6 +16,11 @@ function readFakeRoute(gpsCsvFile) {
 const fakeRoute1 = readFakeRoute('route1.csv')
 const fakeRoute2 = readFakeRoute('route2.csv')
 const fakeRoute3 = readFakeRoute('route3.csv')
+const fakeRoute4 = readFakeRoute('route4.csv')
+const fakeRoute5 = readFakeRoute('route5.csv')
+const fakeRoute6 = readFakeRoute('route6.csv')
+
+const emergencyFakeRoute1 = readFakeRoute('eroute1.csv');
 
 const carSimulator = (vehicleId, coordinates) => {
     const coordinates$ = Observable.from(coordinates);
@@ -31,7 +36,8 @@ const carSimulator = (vehicleId, coordinates) => {
 }
 
 const carEmergencySimulator = (vehicleId, coordinates) => {
-    const coordinates$ = Observable.from(coordinates);
+    const coordinates$ = Observable.from(R.dropLast(1, coordinates));
+    const coordinatesE$ = Observable.from(R.takeLast(1, coordinates));
     return Observable
         .interval(2500)
         .zip(coordinates$)
@@ -42,12 +48,25 @@ const carEmergencySimulator = (vehicleId, coordinates) => {
             type: 'NAV_POSITION',
             location: [coordinate.lat, coordinate.long],
         }))
+        .concat(
+            coordinatesE$.map((coordinate) => ({
+                vehicleId,
+                timestamp: new Date().toISOString(),
+                source: 'VEHICLE',
+                type: 'ESTOP',
+                location: [coordinate.lat, coordinate.long],
+            }))
+        );
 }
 
 Observable.merge(
-    carSimulator('A', fakeRoute1),
-    carSimulator('B', fakeRoute2).delay(250),
-    carSimulator('C', fakeRoute3).delay(500),
+    // carSimulator('A', fakeRoute1),
+    // carSimulator('B', fakeRoute2).delay(250),
+    // carSimulator('C', fakeRoute3).delay(500),
+    // carSimulator('D', fakeRoute4).delay(750),
+    // carSimulator('E', fakeRoute5).delay(1000),
+    // carSimulator('F', fakeRoute6).delay(1250),
+    carEmergencySimulator('X', emergencyFakeRoute1),
 ).subscribe(async log => {
     try {
         await axios.post(`http://${HOST}/api/log`, log);

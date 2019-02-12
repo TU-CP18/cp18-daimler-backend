@@ -5,7 +5,10 @@ import Overlay from 'pigeon-overlay';
 import Measure from 'react-measure';
 
 import styles from './map-view.module.scss';
-import { Button, Tooltip } from 'antd';
+import { Button, message } from 'antd';
+
+const DEFAULT_CENTER_COORD = [52.5126276, 13.3218814];
+const DEFAULT_ZOOM = 16;
 
 export default class MapView extends React.Component {
   static defaultProps = {
@@ -14,7 +17,15 @@ export default class MapView extends React.Component {
 
   state = {
     dimensions: { width: -1, height: -1 },
-    mapSettings: { center: [52.5126276, 13.3218814], zoom: 15 },
+    mapSettings: { center: DEFAULT_CENTER_COORD, zoom: DEFAULT_ZOOM },
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('--> componentWillReceiveProps');
+    console.log('---> ', nextProps.emergencyEvents);
+    R.differenceWith((a, b) => a.id === b.id, nextProps.emergencyEvents, this.props.emergencyEvents).forEach((l) => {
+      message.error(`Emergency Event: ${l.type} Car: ${l.vehicleId || 'Unknown'} Driver: ${l.driverId || 'Unknown'}`, 10 * 1000);
+    });
   }
 
   isCarInEmergency = (id) => {
@@ -25,7 +36,7 @@ export default class MapView extends React.Component {
   }
 
   handleResetMap = () => {
-    this.setState({ mapSettings: { center: [52.5126276, 13.3218814], zoom: 15  } });
+    this.setState({ mapSettings: { center: DEFAULT_CENTER_COORD, zoom: DEFAULT_ZOOM } });
     this.forceUpdate();
   }
 

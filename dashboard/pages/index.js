@@ -1,4 +1,5 @@
 import React from 'react';
+import * as R from 'ramda';
 import { Layout, message, Modal, Icon } from 'antd';
 import axios from 'axios';
 
@@ -34,10 +35,9 @@ export default class Index extends React.Component {
 
   getEmergencyEvents = async () => {
     try {
-      if (this.state.emergencyEvents.length === 0) {
-        message.error('Car A Emergency STOP!', 10 * 1000);
-      }
-      this.setState({ emergencyEvents: [{ message: 'Car A Emergency STOP', license: 'A' }] });
+      const response = await this.http.get('/logs');
+      const emergencyEvents = response.data.filter(({ type }) => ['ESTOP', 'AP_OVERRIDE', 'RIDE_AWARENESS_IGNORED'].includes(type));
+      this.setState({ emergencyEvents });
     } catch (e) { }
   }
 
@@ -60,7 +60,8 @@ export default class Index extends React.Component {
   componentDidMount() {
     if (typeof window !== 'undefined') {
       this.poller = setInterval(async () => {
-        const HOSTNAME = window.location.hostname === 'localhost' ? 'localhost:8000' : 'log-collector.isecp.de'
+        // const HOSTNAME = window.location.hostname === 'localhost' ? 'localhost:8000' : 'log-collector.isecp.de'
+        const HOSTNAME = 'log-collector.isecp.de';
         this.http = axios.create({ baseURL: `http://${HOSTNAME}/api/`});
         this.refreshLogs();
         this.refreshCars();
