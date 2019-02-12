@@ -22,7 +22,6 @@ import {
     WorkHoursModel,
     View
 } from '@syncfusion/ej2-angular-schedule';
-import { DataManager, Query } from '@syncfusion/ej2-data';
 import { EventSettings } from '@syncfusion/ej2-schedule/src/schedule/models/event-settings';
 
 // component-specific imports
@@ -68,7 +67,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
     shifts: ScheduleShift[] = [];
 
     // DataManager object used to connect the schedule to the array of shifts retrieved from the DB
-    dataManager: DataManager = new DataManager(this.shifts);
+    // dataManager: DataManager = new DataManager(this.shifts);
 
     // only allow one driver per shift
     public allowMultiple: Boolean = false;
@@ -79,11 +78,12 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
     // define event settings model of the schedule
     public eventSettings: EventSettingsModel = {
         // set dataManager as data source to connect schedule to array of shifts
-        dataSource: this.dataManager,
+        dataSource: <Object[]>extend([], this.shifts, null, true), // this.dataManager,
         // map schedule model fields to corresponding ScheduleShift fields
         fields: {
             id: 'id',
             subject: { title: 'Vehicle', name: 'vehicleId' },
+            location: { title: 'Location', name: 'vehicleModel' },
             description: { title: 'Vehicle Model', name: 'vehicleModel' },
             startTime: { title: 'Start', name: 'startTime' },
             endTime: { title: 'End', name: 'endTime' }
@@ -163,20 +163,12 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         console.log(this.drivers);
     }
 
-    // used by wait(), returns after a given number of ms
-    private reloadDelay(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    // same effect as Thread.sleep(ms)
-    async wait(ms: number) {
-        await this.reloadDelay(ms);
-    }
-
     // adds loaded shifts to the schedule after a delay of two seconds
     // to prevent them from being added while the schedule is not fully initialized
     refreshSchedule() {
-        // this.wait(2000);
+        this.shifts.forEach(shift => {
+            this.scheduleObj.deleteEvent(shift.id);
+        });
         this.scheduleObj.addEvent(this.shifts);
     }
 
