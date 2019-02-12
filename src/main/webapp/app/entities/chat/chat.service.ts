@@ -44,7 +44,7 @@ export class ChatService {
         }
         // building absolute path so that websocket doesnt fail when deploying with a context path
         // const loc = this.$window.location;
-        const url = 'http://localhost:8080/websocket/chat/';
+        const url = 'http://webapp.isecp.de/websocket/chat/';
         // const authToken = this.authServerProvider.getToken();
         // if (authToken) {
         //     url += '?access_token=' + authToken;
