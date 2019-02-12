@@ -50,7 +50,7 @@ app.get('/api/cars', async (req, res, next) => {
         "size": 0,
         "query": { "match": { "type": "NAV_POSITION" } },
         "aggs": {
-            "bucket": { "terms": { "field": "license.keyword" },
+            "bucket": { "terms": { "field": "vehicleId.keyword" },
             "aggs": {
                 "lastPosition": {
                     "top_hits": {
@@ -113,7 +113,7 @@ const putMappingInterval = setInterval(() => {
             location: { type: 'geo_point' },
             description: { type: 'text' },
             destination: { type: 'geo_point' },
-            license: { type: 'keyword' },
+            vehicleId: { type: 'keyword' },
             driverId: { type: 'keyword' },
             shiftId: { type: 'keyword' },
         },

@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@reactivex/rxjs": "^6.3.3",
+    "@reactivex/rxjs": "5",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
