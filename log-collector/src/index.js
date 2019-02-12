@@ -108,14 +108,14 @@ const putMappingInterval = setInterval(() => {
         properties: {
             hostname: { type: 'text' },
             timestamp: { type: 'date' },
-            source: { type: 'keyword' },
-            type: { type: 'keyword' },
+            source: { type: 'text' },
+            type: { type: 'text' },
             location: { type: 'geo_point' },
             description: { type: 'text' },
             destination: { type: 'geo_point' },
-            vehicleId: { type: 'keyword' },
-            driverId: { type: 'keyword' },
-            shiftId: { type: 'keyword' },
+            vehicleId: { type: 'text' },
+            driverId: { type: 'text' },
+            shiftId: { type: 'text' },
         },
     }).then(() => {
         logger.debug({ message: 'Log collector inserted mapping successfully' });
