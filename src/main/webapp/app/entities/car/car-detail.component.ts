@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ICar } from 'app/shared/model/car.model';
 import { ICarIssue } from 'app/shared/model/car-issue.model';
+import { ICarCleanliness } from 'app/shared/model/car-cleanliness.model';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
@@ -13,6 +14,7 @@ import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 export class CarDetailComponent implements OnInit {
     car: ICar;
     carIssues: ICarIssue[];
+    carCleanLiness: ICarCleanliness[];
 
     constructor(private activatedRoute: ActivatedRoute, private carService: CarService, private jhiAlertService: JhiAlertService) {}
     private onError(errorMessage: string) {
@@ -30,12 +32,21 @@ export class CarDetailComponent implements OnInit {
             },
             (res: HttpErrorResponse) => this.onError(res.message)
         );
+        this.carService.getCleanlinessForCar().subscribe(
+            (res: HttpResponse<ICarCleanliness[]>) => {
+                this.carCleanLiness = res.body.filter(data => data.car.id === this.car.id);
+                console.log(res);
+            },
+            (res: HttpErrorResponse) => this.onError(res.message)
+        );
     }
-
     previousState() {
         window.history.back();
     }
     trackId(index: number, item: ICarIssue) {
+        return item.id;
+    }
+    trackIdc(index: number, item: ICarCleanliness) {
         return item.id;
     }
 }

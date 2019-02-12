@@ -37,6 +37,25 @@
                 </table> 
             </div>
 
+            <h2>Cleanliness</h2>
+            <div class="table-responsive" *ngIf="carCleanLiness">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                                <th>Rating</th>
+                                <th>Event</th>
+                                <th>Part</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let carClean of carCleanLiness ;trackBy: trackIdc">
+                    <td>{{carClean.rating}}</td>
+                    <td>{{carClean.event}}</td>
+                    <td>{{carClean.part}}</td>
+                    </tr>    
+                </table> 
+            </div>
+
             <button type="submit"
                     (click)="previousState()"
                     class="btn btn-info">

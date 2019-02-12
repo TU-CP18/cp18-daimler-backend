@@ -6,6 +6,7 @@ import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { ICar } from 'app/shared/model/car.model';
 import { ICarIssue } from 'app/shared/model/car-issue.model';
+import { ICarCleanliness } from 'app/shared/model/car-cleanliness.model';
 
 type EntityResponseType = HttpResponse<ICar>;
 type EntityArrayResponseType = HttpResponse<ICar[]>;
@@ -14,6 +15,7 @@ type EntityArrayResponseType = HttpResponse<ICar[]>;
 export class CarService {
     public resourceUrl = SERVER_API_URL + 'api/cars';
     public resourceSearchUrl = SERVER_API_URL + 'api/_search/cars';
+    public resourceUrlCC = SERVER_API_URL + 'api/car-cleanlinesses';
 
     constructor(private http: HttpClient) {}
 
@@ -53,5 +55,8 @@ export class CarService {
     }
     getIssueForCar(id: Number): Observable<HttpResponse<any>> {
         return this.http.get<ICarIssue[]>(`${this.resourceUrl}/` + `${id}` + '/issues', { observe: 'response' });
+    }
+    getCleanlinessForCar(): Observable<HttpResponse<any>> {
+        return this.http.get<ICarCleanliness[]>(`${this.resourceUrlCC}`, { observe: 'response' });
     }
 }
