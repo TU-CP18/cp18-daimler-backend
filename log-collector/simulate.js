@@ -51,6 +51,7 @@ Observable.merge(
 ).subscribe(async log => {
     try {
         await axios.post(`http://${HOST}/api/log`, log);
+        console.log('-');
     } catch (e) {
         console.log('---> error posting log: ');
         console.dir(e);

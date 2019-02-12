@@ -118,6 +118,7 @@ const putMappingInterval = setInterval(() => {
             shiftId: { type: 'keyword' },
         },
     }).then(() => {
+        logger.debug({ message: 'Log collector inserted mapping successfully' });
         clearInterval(putMappingInterval);
     }).catch((e) => { });
 }, 5000);
