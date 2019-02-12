@@ -60,8 +60,8 @@ export default class Index extends React.Component {
   componentDidMount() {
     if (typeof window !== 'undefined') {
       this.poller = setInterval(async () => {
-        // const HOSTNAME = window.location.hostname === 'localhost' ? 'localhost:8000' : 'log-collector.isecp.de'
-        const HOSTNAME = 'log-collector.isecp.de';
+        const HOSTNAME = window.location.hostname === 'localhost' ? 'localhost:8000' : 'log-collector.isecp.de'
+        // const HOSTNAME = 'log-collector.isecp.de';
         this.http = axios.create({ baseURL: `http://${HOSTNAME}/api/`});
         this.refreshLogs();
         this.refreshCars();
