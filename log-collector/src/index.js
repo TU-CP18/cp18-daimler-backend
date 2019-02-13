@@ -84,7 +84,7 @@ app.get('/api/logs', /* authorize(JWT_SECRET, JWT_ALGORITHM), */ async (req, res
         query = query.match ? { match: { ...query.match, vehicleId: req.query.vehicleId } } : { match: { vehicleId: req.query.vehicleId } };
     }
 
-    const formatLog = ({ _id, _source }) => ({ id: _id, ..._source });
+    const formatLog = ({ _id, _source }) => ({ id: _id, ...formatEsDocument(_source) });
 
     let data = { size: 250, sort: { timestamp: { order: 'desc' }} };
     data = Object.keys(query).length > 0 ? { ...data, query } : data;

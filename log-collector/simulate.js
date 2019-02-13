@@ -66,16 +66,16 @@ const carEmergencySimulator = (vehicleId, coordinates) => {
 }
 
 Observable.merge(
-    carSimulator('A', fakeRoute1),
-    carSimulator('B', fakeRoute2).delay(250),
-    carSimulator('C', fakeRoute3).delay(500),
-    carSimulator('D', fakeRoute4).delay(750),
-    carSimulator('E', fakeRoute5).delay(1000),
-    carSimulator('F', fakeRoute6).delay(1250),
-    carSimulator('G', fakeRoute7).delay(1250),
-    carSimulator('H', fakeRoute8).delay(1500),
-    carSimulator('I', fakeRoute9).delay(1750),
-    carSimulator('J', fakeRoute10).delay(2000),
+    // carSimulator('A', fakeRoute1),
+    // carSimulator('B', fakeRoute2).delay(250),
+    // carSimulator('C', fakeRoute3).delay(500),
+    // carSimulator('D', fakeRoute4).delay(750),
+    // carSimulator('E', fakeRoute5).delay(1000),
+    // carSimulator('F', fakeRoute6).delay(1250),
+    // carSimulator('G', fakeRoute7).delay(1250),
+    // carSimulator('H', fakeRoute8).delay(1500),
+    // carSimulator('I', fakeRoute9).delay(1750),
+    // carSimulator('J', fakeRoute10).delay(2000),
     carEmergencySimulator('X', emergencyFakeRoute1),
 ).subscribe(async log => {
     try {
