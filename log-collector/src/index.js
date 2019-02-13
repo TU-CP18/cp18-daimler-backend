@@ -50,7 +50,7 @@ app.get('/api/cars', async (req, res, next) => {
         "size": 0,
         "query": { "match": { "type": "NAV_POSITION" } },
         "aggs": {
-            "bucket": { "terms": { "field": "vehicleId.keyword" },
+            "bucket": { "terms": { "field": "vehicleId.keyword", "size": 25 },
             "aggs": {
                 "lastPosition": {
                     "top_hits": {
