@@ -22,8 +22,18 @@ export default class MapView extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     R.differenceWith((a, b) => a.id === b.id, nextProps.emergencyEvents, this.props.emergencyEvents).forEach((l) => {
-      message.error(`Emergency Event: ${l.type} Car: ${l.vehicleId || 'Unknown'} Driver: ${l.driverId || 'Unknown'}`, 10 * 1000);
+      message.error(
+        <span style={{ cursor: 'pointer' }} onClick={this.handleEmergencyClick(l.vehicleId)}>Emergency Event: {l.type} Car: {l.vehicleId || 'Unknown'} Driver: {l.driverId || 'Unknown'}</span>, 10
+      )
     });
+
+    if (this.props.selectedCar !== nextProps.selectedCar && nextProps.selectedCar) {
+      const selectedCarLog = this.props.cars.filter(c => c.vehicleId === nextProps.selectedCar);
+      if (selectedCarLog.length > 0 && selectedCarLog[0].location) {
+        console.log('--> setting state');
+        this.setState({ mapSettings: { center: selectedCarLog[0].location, zoom: DEFAULT_ZOOM + 2 }})
+      }
+    }
   }
 
   isCarInEmergency = (id) => {
@@ -31,6 +41,12 @@ export default class MapView extends React.Component {
       c => c.vehicleId === id,
       this.props.emergencyEvents
     ) >= 0;
+  }
+
+  handleEmergencyClick = (vehicleId) => () => {
+    if (vehicleId) {
+      this.props.onCarSelect(vehicleId);
+    }
   }
 
   handleResetMap = () => {
