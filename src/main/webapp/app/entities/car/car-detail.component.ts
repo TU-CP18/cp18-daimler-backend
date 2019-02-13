@@ -24,6 +24,7 @@ export class CarDetailComponent implements OnInit {
         private config: NgbRatingConfig
     ) {
         this.config.max = 5;
+        this.config.readonly = true;
     }
     private onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
