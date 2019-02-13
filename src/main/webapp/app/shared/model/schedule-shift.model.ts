@@ -1,23 +1,23 @@
 export interface IScheduleShift {
-    id?: number;
-    vehicleId?: number;
-    vehicleModel?: string;
-    startTime?: Date;
-    endTime?: Date;
-    driverId?: number;
-    longStart?: number;
-    latStart?: number;
+    Id?: number;
+    VehicleId?: string;
+    VehicleModel?: string;
+    StartTime?: Date;
+    EndTime?: Date;
+    DriverId?: number;
+    LongStart?: number;
+    LatStart?: number;
 }
 
 export class ScheduleShift implements IScheduleShift {
     constructor(
         public id?: number,
-        public vehicleId?: number,
-        public vehicleModel?: string,
-        public startTime?: Date,
-        public endTime?: Date,
-        public driverId?: number,
-        public longStart?: number,
-        public latStart?: number
+        public VehicleId?: string,
+        public VehicleModel?: string,
+        public StartTime?: Date,
+        public EndTime?: Date,
+        public DriverId?: number,
+        public LongStart?: number,
+        public LatStart?: number
     ) {}
 }

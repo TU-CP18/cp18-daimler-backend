@@ -1,43 +1,14 @@
 <div>
     <h2 id="page-heading">
         <span jhiTranslate="cpdaimlerApp.schedule.home.title">Shifts</span>
-        <!--add shift button-->
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-shift" [routerLink]="['/shift/new']">
-            <fa-icon [icon]="'plus'"></fa-icon>
-            <span class="hidden-sm-down"  jhiTranslate="cpdaimlerApp.shift.home.createLabel">
-            Create new Shift
-            </span>
-        </button>
     </h2>
-
-    <jhi-alert></jhi-alert>
-
-    <!--search field-
-    <div class="row" style="margin-bottom: 10px">
-        <div class="col-sm-12">
-            <form name="searchForm" class="form-inline">
-                <div class="input-group w-100 mt-3">
-                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'cpdaimlerApp.safetyDriver.home.search' | translate }}">
-                    <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
-                        <fa-icon [icon]="'search'"></fa-icon>
-                    </button>
-                    <button class="input-group-append btn btn-danger" (click)="clear()" *ngIf="currentSearch">
-                        <fa-icon [icon]="'trash-alt'"></fa-icon>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-    -->
-
-
     <div class="control-section">
         <div class="col-lg-12 content-wrapper">
             <ejs-schedule #scheduleObj width="100%" cssClass="timeline-resource" height="650px" [timeScale]="timeScale" [currentView]="currentView"
                 [workHours]="workHours" [selectedDate]="selectedDate" [group]="group" [eventSettings]="eventSettings" (eventRendered)="onEventRendered($event)"
                 (actionBegin)="onActionBegin($event)" (renderCell)="onRenderCell($event)" (popupOpen)="onPopupOpen($event)">
                 <e-resources>
-                    <e-resource field="driverId" title="Safety Driver" [dataSource]="drivers" [allowMultiple]="allowMultiple" name="Driver"
+                    <e-resource field="DriverId" title="Safety Driver" [dataSource]="resourceDataSource" [allowMultiple]="allowMultiple" name="Driver"
                         textField="fullName" idField="driverId" colorField="color">
                     </e-resource>
                 </e-resources>
