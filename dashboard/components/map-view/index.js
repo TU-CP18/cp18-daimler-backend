@@ -30,7 +30,6 @@ export default class MapView extends React.Component {
     if (this.props.selectedCar !== nextProps.selectedCar && nextProps.selectedCar) {
       const selectedCarLog = this.props.cars.filter(c => c.vehicleId === nextProps.selectedCar);
       if (selectedCarLog.length > 0 && selectedCarLog[0].location) {
-        console.log('--> setting state');
         this.setState({ mapSettings: { center: selectedCarLog[0].location, zoom: DEFAULT_ZOOM + 2 }})
       }
     }
