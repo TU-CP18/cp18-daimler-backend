@@ -6,6 +6,7 @@ import { ICarIssue } from 'app/shared/model/car-issue.model';
 import { ICarCleanliness } from 'app/shared/model/car-cleanliness.model';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
+import { NgbRatingConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'jhi-car-detail',
@@ -16,7 +17,14 @@ export class CarDetailComponent implements OnInit {
     carIssues: ICarIssue[];
     carCleanLiness: ICarCleanliness[];
 
-    constructor(private activatedRoute: ActivatedRoute, private carService: CarService, private jhiAlertService: JhiAlertService) {}
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private carService: CarService,
+        private jhiAlertService: JhiAlertService,
+        private config: NgbRatingConfig
+    ) {
+        this.config.max = 5;
+    }
     private onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
     }

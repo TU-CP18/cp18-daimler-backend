@@ -49,12 +49,13 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let carClean of carCleanLiness ;trackBy: trackIdc">
-                    <td>{{carClean.rating}}</td>
+                    <td><ngb-rating [(rate)]="carClean.rating"></ngb-rating></td>
                     <td>{{carClean.event}}</td>
                     <td>{{carClean.part}}</td>
                     </tr>    
                 </table> 
             </div>
+            
 
             <button type="submit"
                     (click)="previousState()"
