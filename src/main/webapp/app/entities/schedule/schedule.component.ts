@@ -34,6 +34,7 @@ import { ISafetyDriver } from 'app/shared/model/safety-driver.model';
 import { IShift } from 'app/shared/model/shift.model';
 
 import { Principal } from 'app/core';
+import { shiftData } from './datasource';
 
 @Component({
     selector: 'jhi-schedule',
@@ -42,23 +43,26 @@ import { Principal } from 'app/core';
     encapsulation: ViewEncapsulation.None
 })
 export class CPScheduleComponent implements OnInit, OnDestroy {
-    // default date displayed by the schedule (set to 14.02.2019 for demo)
-    public selectedDate: Date = new Date(2019, 1, 14);
-
-    // time scale of the schedule view
+    public selectedDate: Date = new Date(Date.now());
     public timeScale: TimeScaleModel = { interval: 60, slotCount: 1 };
-
-    // working hours are displayed in a lighter shade than non-working hours
     public workHours: WorkHoursModel = { start: '08:00', end: '20:00' };
-
-    // set default view of the schedule to weekly timeline
     public currentView: View = 'TimelineWeek';
-
-    // group model used by the schedule
     public group: GroupModel = {
         enableCompactView: false,
         resources: ['Driver']
     };
+    public resourceDataSource: Object[] = [
+        { lastName: 'Kent', firstName: 'Clark', fullName: 'Clark Kent', driverId: 1, color: '#ea7a57' },
+        { lastName: 'Wayne', firstName: 'Bruce', fullName: 'Bruce Wayne', driverId: 2, color: '#7fa900' },
+        { lastName: 'Stark', firstName: 'Tony', fullName: 'Tony Stark', driverId: 3, color: '#5978ee' },
+        { lastName: 'Parker', firstName: 'Peter', fullName: 'Clark Kent', driverId: 4, color: '#fec200' },
+        { lastName: 'Romanov', firstName: 'Natasha', fullName: 'Clark Kent', driverId: 5, color: '#df5286' },
+        { lastName: 'Banner', firstName: 'Bruce', fullName: 'Clark Kent', driverId: 6, color: '#00bdae' },
+        { lastName: 'Xavier', firstName: 'Charles', fullName: 'Clark Kent', driverId: 7, color: '#865fcf' },
+        { lastName: 'Queen', firstName: 'Oliver', fullName: 'Clark Kent', driverId: 8, color: '#1aaa55' },
+        { lastName: 'Rogers', firstName: 'Steve', fullName: 'Clark Kent', driverId: 9, color: '#df5286' },
+        { lastName: 'Strange', firstName: 'Stephen', fullName: 'Clark Kent', driverId: 10, color: '#710193' }
+    ];
 
     // array of drivers, populated by querying the API
     public drivers: ScheduleDriver[] = [];
@@ -75,22 +79,18 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
     // array of colours used to display shifts
     private colours: string[] = ['#ea7a57', '#7fa900', '#5978ee', '#fec200', '#df5286', '#00bdae', '#865fcf', '#1aaa55'];
 
-    // define event settings model of the schedule
     public eventSettings: EventSettingsModel = {
-        // set dataManager as data source to connect schedule to array of shifts
-        dataSource: <Object[]>extend([], this.shifts, null, true), // this.dataManager,
-        // map schedule model fields to corresponding ScheduleShift fields
+        dataSource: <Object[]>extend([], this.shifts, null, true),
         fields: {
-            id: 'id',
-            subject: { title: 'Vehicle', name: 'vehicleId' },
-            location: { title: 'Location', name: 'vehicleModel' },
-            description: { title: 'Vehicle Model', name: 'vehicleModel' },
-            startTime: { title: 'Start', name: 'startTime' },
-            endTime: { title: 'End', name: 'endTime' }
+            id: 'Id',
+            subject: { title: 'Vehicle', name: 'VehicleId' },
+            location: { title: 'Location', name: 'Location' },
+            description: { title: 'Description', name: 'Description' },
+            startTime: { title: 'From', name: 'StartTime' },
+            endTime: { title: 'To', name: 'EndTime' }
         }
     };
 
-    // connect local schedule object to ScheduleComponent
     @ViewChild('scheduleObj') public scheduleObj: ScheduleComponent;
 
     currentAccount: any;
@@ -135,7 +135,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
             x =>
                 new ScheduleShift(
                     x.id,
-                    x.car.id,
+                    x.car.model + ' ' + x.car.id,
                     x.car.model,
                     new Date(x.start),
                     new Date(x.end),
@@ -163,25 +163,30 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         console.log(this.drivers);
     }
 
-    // adds loaded shifts to the schedule after a delay of two seconds
-    // to prevent them from being added while the schedule is not fully initialized
+    // reloads the schedule by deleting all of its internal events and loading a new set of events from this.shifts
     refreshSchedule() {
-        this.shifts.forEach(shift => {
-            this.scheduleObj.deleteEvent(shift.id);
-        });
+        if (this.scheduleObj.getEvents.length > 0) {
+            console.log('ASDF: deleting shifts');
+            this.shifts.forEach(shift => {
+                this.scheduleObj.deleteEvent(shift.id);
+            });
+        } else {
+            console.log('ASDF: no shifts to delete');
+        }
         this.scheduleObj.addEvent(this.shifts);
+        console.log('ASDF: now have ' + this.scheduleObj.getEvents.length + ' events');
     }
 
     private onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
     }
 
-    // Syncfusion: shifts in the past are read-only
     isReadOnly(endDate: Date): boolean {
         return endDate < new Date(Date.now());
     }
 
-    // Syncfusion: specify options for popups that open when a shift is selected
+    // SYNCFUSION
+
     onPopupOpen(args: PopupOpenEventArgs): void {
         const data: { [key: string]: Object } = <{ [key: string]: Object }>args.data;
         if (args.type === 'QuickInfo' || args.type === 'Editor' || args.type === 'RecurrenceAlert' || args.type === 'DeleteAlert') {
@@ -200,9 +205,7 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         }
     }
 
-    // Syncfusion: specify behaviour for user actions eventCreate and eventChange
     onActionBegin(args: ActionEventArgs): void {
-        console.log('myyyyyyy ' + args.requestType);
         if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
             const data: { [key: string]: Object } = args.data as { [key: string]: Object };
             const groupIndex: number = this.scheduleObj.eventBase.getGroupIndexFromEvent(data);
@@ -233,7 +236,6 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         }
     }
 
-    // Syncfusion: define how cells should be rendered
     onRenderCell(args: RenderCellEventArgs): void {
         if (args.element.classList.contains('e-work-cells')) {
             if (args.date < new Date(2018, 6, 31, 0, 0)) {
@@ -243,12 +245,10 @@ export class CPScheduleComponent implements OnInit, OnDestroy {
         }
         if (args.elementType === 'emptyCells' && args.element.classList.contains('e-resource-left-td')) {
             const target: HTMLElement = args.element.querySelector('.e-resource-text') as HTMLElement;
-            target.innerHTML =
-                '<div class="lastName">Last Name</div><div class="firstName">First Name</div><div class="driverId">Driver ID</div>';
+            target.innerHTML = '<div class="lastName">Last Name</div><div class="firstName">First Name</div><div class="driverId">ID</div>';
         }
     }
 
-    // Syncfusion: define how events should be rendered
     onEventRendered(args: EventRenderedArgs): void {
         const data: { [key: string]: Object } = args.data;
         if (this.isReadOnly(data.EndTime as Date)) {
