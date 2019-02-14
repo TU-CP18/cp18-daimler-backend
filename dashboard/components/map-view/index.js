@@ -23,7 +23,7 @@ export default class MapView extends React.Component {
   componentWillReceiveProps(nextProps) {
     R.differenceWith((a, b) => a.id === b.id, nextProps.emergencyEvents, this.props.emergencyEvents).forEach((l) => {
       message.error(
-        <span style={{ cursor: 'pointer' }} onClick={this.handleEmergencyClick(l.vehicleId)}>Emergency Event: {l.type} Car: {l.vehicleId || 'Unknown'} Driver: {l.driverId || 'Unknown'}</span>, 10
+        <span style={{ cursor: 'pointer' }} onClick={this.handleEmergencyClick(l.vehicleId)}>Emergency Event: {l.type} Car: {l.vehicleId || 'Unknown'} Driver: {l.driverId || 'Unknown'}</span>, 60
       )
     });
 
