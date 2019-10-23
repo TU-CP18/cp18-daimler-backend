@@ -93,7 +93,7 @@
     "rxjs": "6.3.3",
     "rxjs-compat": "6.3.3",
     "sockjs-client": "1.1.4",
-    "swagger-ui": "2.2.10",
+    "swagger-ui": "3.23.11",
     "syncfusion-javascript": "^16.4.46",
     "tslib": "1.9.3",
     "webstomp-client": "1.2.0",
